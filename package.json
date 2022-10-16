@@ -8,10 +8,11 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
-    "build": "nest build api",
+    "build": "nest build",
     "start:local": "NODE_ENV=local nest start --watch",
     "start:dev": "NODE_ENV=dev nest build && node dist/apps/api/main",
     "start:prod": "NODE_ENV=prod nest build && node dist/apps/api/main",
+    "deploy": "npm ci && npm run build && npm run start:prod",
     "admin:build": "nest build admin",
     "admin:start:local": "NODE_ENV=local nest start admin --watch",
     "admin:start:dev": "NODE_ENV=dev nest build api && node dist/apps/admin/main",
