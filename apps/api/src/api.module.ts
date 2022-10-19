@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import validationSchema from './config.schema';
 import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
 
@@ -9,6 +10,7 @@ import { ApiService } from './api.service';
     ConfigModule.forRoot({
       envFilePath: [`environments/.${process.env.NODE_ENV}.env`],
       isGlobal: true,
+      validationSchema,
     }),
   ],
   controllers: [ApiController],
