@@ -7,7 +7,7 @@ import { ApiService } from './api.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`.env`],
+      envFilePath: [`environments/.${process.env.NODE_ENV}.env`],
       isGlobal: true,
     }),
   ],
