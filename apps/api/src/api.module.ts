@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { PrismaModule } from '@app/prisma';
+import { JwtModule } from '@app/jwt';
 
 import validationSchema from './config.schema';
 import { ApiController } from './api.controller';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { ApiController } from './api.controller';
       validationSchema,
     }),
     PrismaModule,
+    AuthenticationModule,
+    UsersModule,
+    JwtModule,
   ],
   controllers: [ApiController],
 })
