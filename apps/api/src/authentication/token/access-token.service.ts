@@ -7,7 +7,7 @@ import { InvalidAccessTokenFormatException } from './exception';
 export class AccessTokenService {
   constructor(@Inject('JwtService') private readonly jwtService: JwtService) {}
 
-  generateAccessToken(payload: { userId: number }) {
+  generateAccessToken(payload: { userId: number }): string {
     if (!payload.userId) {
       throw new InvalidAccessTokenFormatException();
     }
