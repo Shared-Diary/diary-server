@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { PrismaModule } from '@app/prisma';
+
 import validationSchema from './config.schema';
 import { ApiController } from './api.controller';
-import { ApiService } from './api.service';
 
 @Module({
   imports: [
@@ -12,8 +13,8 @@ import { ApiService } from './api.service';
       isGlobal: true,
       validationSchema,
     }),
+    PrismaModule,
   ],
   controllers: [ApiController],
-  providers: [ApiService],
 })
 export class ApiModule {}
