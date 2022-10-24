@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { PrismaModule } from '@app/prisma';
+import { JwtModule } from '@app/jwt';
 
 import validationSchema from './config.schema';
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { ApiService } from './api/api.service';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -19,8 +19,8 @@ import { UsersModule } from './users/users.module';
     PrismaModule,
     AuthenticationModule,
     UsersModule,
+    JwtModule,
   ],
   controllers: [ApiController],
-  providers: [ApiService],
 })
 export class ApiModule {}
