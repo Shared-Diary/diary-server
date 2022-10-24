@@ -31,6 +31,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/jwt": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
     "@prisma/client": "4.4.0",
@@ -91,7 +92,8 @@
       "<rootDir>/apps/"
     ],
     "moduleNameMapper": {
-      "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1"
+      "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
+      "^@app/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1"
     }
   }
 }
