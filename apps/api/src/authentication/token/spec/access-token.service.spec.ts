@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AccessTokenService } from '../service/access-token.service';
+import { AccessTokenService, AccessTokenServiceImpl } from '../service';
 import { InvalidAccessTokenFormatException } from '../exception';
-import { AccessTokenServiceImpl } from '../service/access-token.service.impl';
 
 describe('Access Token Service', () => {
   let accessTokenService: AccessTokenService;
-  let jwtService;
 
   const mockJwtService = () => ({
     sign: jest.fn().mockResolvedValue('accessToken'),
@@ -29,7 +27,6 @@ describe('Access Token Service', () => {
     accessTokenService = await module.get<AccessTokenService>(
       AccessTokenService,
     );
-    jwtService = await module.get<'JwtService'>('JwtService');
   });
 
   describe('Generate Access Token', () => {
