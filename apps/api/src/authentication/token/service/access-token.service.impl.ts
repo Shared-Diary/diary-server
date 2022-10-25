@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { InvalidAccessTokenFormatException } from './exception';
+import { InvalidAccessTokenFormatException } from '../exception';
+import { AccessTokenService } from './access-token.service';
 
 @Injectable()
-export class AccessTokenService {
+export class AccessTokenServiceImpl implements AccessTokenService {
   constructor(@Inject('JwtService') private readonly jwtService: JwtService) {}
 
   generateAccessToken(payload: { userId: number }): string {
