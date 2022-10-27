@@ -38,6 +38,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/jwt/tsconfig.lib.json"
       }
+    },
+    "regex": {
+      "type": "library",
+      "root": "libs/regex",
+      "entryFile": "index",
+      "sourceRoot": "libs/regex/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/regex/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {

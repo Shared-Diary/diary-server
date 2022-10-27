@@ -29,6 +29,12 @@
       ],
       "@app/jwt/*": [
         "libs/jwt/src/*"
+      ],
+      "@app/regex": [
+        "libs/regex/src"
+      ],
+      "@app/regex/*": [
+        "libs/regex/src/*"
       ]
     }
   }

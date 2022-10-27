@@ -38,6 +38,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.11.6",
     "dotenv-cli": "^6.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-plugin-import": "^2.25.2",
@@ -93,7 +94,8 @@
     ],
     "moduleNameMapper": {
       "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
-      "^@app/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1"
+      "^@app/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1",
+      "^@app/regex(|/.*)$": "<rootDir>/libs/regex/src/$1"
     }
   }
 }
