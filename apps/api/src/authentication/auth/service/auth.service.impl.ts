@@ -9,6 +9,6 @@ export class AuthServiceImpl implements AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   async register({ email, password }: RegisterRequestDto): Promise<void> {
-    await this.usersService.validateIsExistEmail(email);
+    await this.usersService.createUser({ email, password });
   }
 }

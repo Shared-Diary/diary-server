@@ -1,1 +1,1 @@
-export * from './invalid-access-token-format-exception';
+export * from './invalid-access-token-format.exception';

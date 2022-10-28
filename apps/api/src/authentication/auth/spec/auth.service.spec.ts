@@ -6,10 +6,10 @@ import { UsersService } from '../../../users/service';
 
 describe('Auth Service', () => {
   let authService: AuthService;
-  let usersService;
+  let usersService: UsersService;
 
   const mockUsersService = () => ({
-    validateIsExistEmail: jest.fn(),
+    createUser: jest.fn(),
   });
 
   beforeEach(async () => {
@@ -43,7 +43,7 @@ describe('Auth Service', () => {
       };
       const result = await authService.register(dto);
 
-      expect(usersService.validateIsExistEmail).toHaveBeenCalledTimes(1);
+      expect(usersService.createUser).toHaveBeenCalledTimes(1);
       expect(result).toBeUndefined();
     });
   });

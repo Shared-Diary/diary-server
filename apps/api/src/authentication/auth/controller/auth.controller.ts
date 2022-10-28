@@ -13,7 +13,9 @@ export class AuthController {
   @ApiOperation({
     summary: '회원가입 API',
   })
-  async register(@Body() registerRequestDto: RegisterRequestDto) {
+  async register(
+    @Body() registerRequestDto: RegisterRequestDto,
+  ): Promise<null> {
     await this.authService.register(registerRequestDto);
 
     return null;

@@ -1,20 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { PrismaModule } from '@app/prisma';
+
 import { AuthController } from '../controller';
-import { AuthService, AuthServiceImpl } from '../service';
+import { AuthService } from '../service';
 import { UsersModule } from '../../../users/users.module';
 
 describe('Auth Controller', () => {
   let authController: AuthController;
 
+  const mockAuthService = () => ({
+    register: jest.fn(),
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [UsersModule],
+      imports: [PrismaModule, UsersModule],
       controllers: [AuthController],
       providers: [
         {
           provide: AuthService,
-          useClass: AuthServiceImpl,
+          useFactory: mockAuthService,
         },
       ],
     }).compile();
