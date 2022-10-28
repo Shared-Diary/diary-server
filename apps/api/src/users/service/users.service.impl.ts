@@ -11,7 +11,7 @@ export class UsersServiceImpl implements UsersService {
 
   private async validateIsExistEmail(email: string): Promise<void> {
     const user = await this.usersRepository.findByEmail(email);
-    if (!user) {
+    if (user) {
       throw new DuplicateEmailException();
     }
   }
