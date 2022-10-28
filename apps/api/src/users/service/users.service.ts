@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
-
-@Injectable()
-export class UsersService {}
+export abstract class UsersService {
+  abstract validateIsExistEmail(email: string): Promise<void>;
+}
