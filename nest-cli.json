@@ -47,6 +47,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/regex/tsconfig.lib.json"
       }
+    },
+    "password-encoder": {
+      "type": "library",
+      "root": "libs/password-encoder",
+      "entryFile": "index",
+      "sourceRoot": "libs/password-encoder/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/password-encoder/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {

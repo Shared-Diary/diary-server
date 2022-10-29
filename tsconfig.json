@@ -36,6 +36,12 @@
       ],
       "@app/regex/*": [
         "libs/regex/src/*"
+      ],
+      "@app/password-encoder": [
+        "libs/password-encoder/src"
+      ],
+      "@app/password-encoder/*": [
+        "libs/password-encoder/src/*"
       ]
     }
   }
