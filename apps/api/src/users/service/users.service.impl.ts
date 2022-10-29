@@ -21,6 +21,5 @@ export class UsersServiceImpl implements UsersService {
     password,
   }: Prisma.UsersUncheckedCreateInput): Promise<void> {
     await this.validateIsExistEmail(email);
-    console.log('2');
   }
 }

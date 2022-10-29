@@ -1,18 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body } from '@nestjs/common';
 
+import {
+  AuthController as Controller,
+  Register,
+} from './auth.controller.decorator';
 import { RegisterRequestDto } from '../dto';
 import { AuthService } from '../service';
 
-@Controller({ path: '/auth', version: ['1'] })
-@ApiTags('Auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/register')
-  @ApiOperation({
-    summary: '회원가입 API',
-  })
+  @Register()
   async register(
     @Body() registerRequestDto: RegisterRequestDto,
   ): Promise<null> {
