@@ -1,8 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import { AccessTokenService } from './access-token.service';
+import { AccessTokenService, AccessTokenServiceImpl } from './service';
 
 @Module({
-  providers: [AccessTokenService],
+  providers: [
+    {
+      provide: AccessTokenService,
+      useClass: AccessTokenServiceImpl,
+    },
+  ],
+  exports: [AccessTokenService],
 })
 export class TokenModule {}
