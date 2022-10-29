@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 
 import {
+  PasswordEncoderService,
   BcryptPasswordEncoderService,
-  IPasswordEncoder,
 } from './service';
 
 @Module({
   providers: [
     {
-      provide: IPasswordEncoder,
+      provide: PasswordEncoderService,
       useClass: BcryptPasswordEncoderService,
     },
   ],
-  exports: [IPasswordEncoder],
+  exports: [PasswordEncoderService],
 })
 export class PasswordEncoderModule {}

@@ -1,26 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  PasswordEncoderInterface,
+  PasswordEncoderService,
   BcryptPasswordEncoderService,
-  IPasswordEncoder,
 } from '../service';
 
 describe('PasswordEncoderService', () => {
-  let passwordEncoderService: PasswordEncoderInterface;
+  let passwordEncoderService: PasswordEncoderService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: IPasswordEncoder,
+          provide: PasswordEncoderService,
           useClass: BcryptPasswordEncoderService,
         },
       ],
     }).compile();
 
-    passwordEncoderService = await module.get<PasswordEncoderInterface>(
-      IPasswordEncoder,
+    passwordEncoderService = await module.get<PasswordEncoderService>(
+      PasswordEncoderService,
     );
   });
 

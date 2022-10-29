@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-import { PasswordEncoderInterface } from './password-encoder.interface';
+import { PasswordEncoderService } from './password-encoder.service';
 
 @Injectable()
-export class BcryptPasswordEncoderService implements PasswordEncoderInterface {
+export class BcryptPasswordEncoderService implements PasswordEncoderService {
   private readonly SALT_OR_ROUNDS = 10;
 
   async encode(password: string): Promise<string> {
