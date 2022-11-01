@@ -3,6 +3,7 @@ import { Body } from '@nestjs/common';
 import {
   AuthController as Controller,
   Register,
+  LoginUser,
 } from './auth.controller.decorator';
 import { RegisterRequestDto } from '../dto';
 import { AuthService } from '../service';
@@ -18,5 +19,10 @@ export class AuthController {
     await this.authService.register(registerRequestDto);
 
     return null;
+  }
+
+  @LoginUser()
+  async loginUser() {
+    return 1;
   }
 }
