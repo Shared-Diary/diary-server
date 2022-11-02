@@ -1,18 +1,14 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { PasswordEncoderService } from '@app/password-encoder';
-
 import { UsersService } from './users.service';
 import { UsersRepository } from '../repository';
-import { DuplicateEmailException } from '../exception';
+import { DuplicateEmailException, NotFoundUserException } from '../exception';
+import { UsersEntity } from '../entity';
 
 @Injectable()
 export class UsersServiceImpl implements UsersService {
-  constructor(
-    private readonly usersRepository: UsersRepository,
-    private readonly passwordEncoderService: PasswordEncoderService,
-  ) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   private async validateIsExistEmail(email: string): Promise<void> {
     const user = await this.usersRepository.findByEmail(email);
@@ -27,14 +23,22 @@ export class UsersServiceImpl implements UsersService {
   }: Prisma.UsersUncheckedCreateInput): Promise<void> {
     await this.validateIsExistEmail(email);
 
-    const hashedPassword = await this.passwordEncoderService.encode(password);
     try {
       await this.usersRepository.create({
         email,
-        password: hashedPassword,
+        password,
       });
     } catch (error) {
       throw new InternalServerErrorException({ message: error });
     }
+  }
+
+  async findUserByEmail(email: string): Promise<UsersEntity> {
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) {
+      throw new NotFoundUserException();
+    }
+
+    return user;
   }
 }

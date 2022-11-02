@@ -42,7 +42,10 @@
       ],
       "@app/password-encoder/*": [
         "libs/password-encoder/src/*"
-      ]
+      ],
+      "@app/shared/*": [
+        "libs/shared/*"
+      ],
     }
   }
 }

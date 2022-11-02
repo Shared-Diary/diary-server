@@ -17,3 +17,11 @@ export const Register = () =>
       schema: {},
     }),
   );
+
+export const LoginUser = () =>
+  applyDecorators(
+    Post('/login'),
+    ApiOperation({
+      summary: '로그인 API',
+    }),
+  );
