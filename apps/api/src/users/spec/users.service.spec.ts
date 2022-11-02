@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { Mock } from '@app/shared/type';
+
 import { UsersService, UsersServiceImpl } from '../service';
 import { UsersController } from '../controller';
 import { UsersRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
-
-type Mock<T = any> = Partial<Record<keyof T, jest.Mock>>;
 
 describe('UsersService', () => {
   let usersService: UsersService;

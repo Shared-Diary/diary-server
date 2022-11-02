@@ -50,7 +50,9 @@ export class AuthServiceImpl implements AuthService {
     await this.validatePasswordMatch(password, hashedPassword);
 
     return {
-      accessToken: this.accessTokenService.generateAccessToken({ userId }),
+      accessToken: this.accessTokenService.generateAccessToken({
+        userId,
+      }),
       refreshToken: '',
     };
   }
