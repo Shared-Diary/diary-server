@@ -12,6 +12,7 @@ export class AccessTokenServiceImpl implements AccessTokenService {
     if (!payload.userId) {
       throw new InvalidAccessTokenFormatException();
     }
+
     return this.jwtService.sign(payload);
   }
 }

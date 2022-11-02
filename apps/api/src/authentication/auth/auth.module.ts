@@ -5,9 +5,10 @@ import { PasswordEncoderModule } from '@app/password-encoder';
 import { AuthController } from './controller';
 import { AuthService, AuthServiceImpl } from './service';
 import { UsersModule } from '../../users/users.module';
+import { TokenModule } from '../token/token.module';
 
 @Module({
-  imports: [UsersModule, PasswordEncoderModule],
+  imports: [UsersModule, PasswordEncoderModule, TokenModule],
   controllers: [AuthController],
   providers: [
     {
