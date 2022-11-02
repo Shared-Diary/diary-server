@@ -1,26 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PasswordEncoderService } from '@app/password-encoder';
 import { UsersService, UsersServiceImpl } from '../service';
 import { UsersController } from '../controller';
 import { UsersRepository } from '../repository';
-import { DuplicateEmailException } from '../exception';
+import { DuplicateEmailException, NotFoundUserException } from '../exception';
 
 type Mock<T = any> = Partial<Record<keyof T, jest.Mock>>;
 
 describe('UsersService', () => {
   let usersService: UsersService;
   let usersRepository: Mock<UsersRepository>;
-  let passwordEncoderService: PasswordEncoderService;
 
   const mockUsersRepository = () => ({
     create: jest.fn(),
     findByEmail: jest.fn(),
-  });
-
-  const mockPasswordEncoderService = () => ({
-    encode: jest.fn(),
-    isMatches: jest.fn(),
   });
 
   beforeEach(async () => {
@@ -35,29 +28,21 @@ describe('UsersService', () => {
           provide: UsersRepository,
           useFactory: mockUsersRepository,
         },
-        {
-          provide: PasswordEncoderService,
-          useFactory: mockPasswordEncoderService,
-        },
       ],
     }).compile();
 
     usersService = await module.get<UsersService>(UsersService);
     usersRepository = await module.get(UsersRepository);
-    passwordEncoderService = await module.get<PasswordEncoderService>(
-      PasswordEncoderService,
-    );
   });
 
-  describe('Create User', () => {
-    it('Success', async () => {
+  describe('createUser', () => {
+    it('유저 생성 성공', async () => {
       const result = await usersService.createUser({
         email: 'test@test.com',
         password: 'testPassword',
       });
 
       expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
-      expect(passwordEncoderService.encode).toHaveBeenCalledTimes(1);
       expect(result).toBeUndefined();
     });
 
@@ -69,6 +54,15 @@ describe('UsersService', () => {
           password: 'testpassword',
         });
       }).rejects.toThrow(new DuplicateEmailException());
+    });
+  });
+
+  describe('findUserByEmail', () => {
+    it('유저가 존재하지 않는다면 Not Found Exception 을 전송한다', async () => {
+      usersRepository.findByEmail.mockResolvedValue(null);
+      await expect(async () => {
+        await usersService.findUserByEmail('email@email.com');
+      }).rejects.toThrow(new NotFoundUserException());
     });
   });
 });
