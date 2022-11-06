@@ -1,6 +1,6 @@
-import { ThrottlerModule as tm } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 
-export const ThrottlerModule = tm.forRoot({
+export default ThrottlerModule.forRoot({
   ttl: 5,
   limit: 3,
 });

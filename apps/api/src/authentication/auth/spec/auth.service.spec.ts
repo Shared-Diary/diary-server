@@ -10,7 +10,7 @@ import { LoginUserRequestDto, RegisterRequestDto } from '../dto';
 import { AccessTokenService } from '../../token/service';
 import { PasswordMismatchException } from '../exception';
 import { JwtStrategy } from '../strategy/jwt.strategy';
-import { ThrottlerModule } from '../../../configs';
+import ThrottlerModule from '../../../configs/throttler.module';
 
 describe('Auth Service', () => {
   let authService: AuthService;
