@@ -6,11 +6,13 @@ import { AuthController } from './controller';
 import { AuthService, AuthServiceImpl } from './service';
 import { UsersModule } from '../../users/users.module';
 import { TokenModule } from '../token/token.module';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [UsersModule, PasswordEncoderModule, TokenModule],
   controllers: [AuthController],
   providers: [
+    JwtStrategy,
     {
       provide: AuthService,
       useClass: AuthServiceImpl,
