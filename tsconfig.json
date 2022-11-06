@@ -19,6 +19,12 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@api/shared": [
+        "apps/api/src/shared",
+      ],
+      "@api/shared/*": [
+        "apps/api/src/shared/*",
+      ],
       "@app/prisma": [
         "libs/prisma/src"
       ],
