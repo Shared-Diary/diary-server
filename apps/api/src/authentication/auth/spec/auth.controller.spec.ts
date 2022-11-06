@@ -5,6 +5,8 @@ import { PrismaModule } from '@app/prisma';
 import { AuthController } from '../controller';
 import { AuthService } from '../service';
 import { UsersModule } from '../../../users/users.module';
+import { JwtStrategy } from '../strategy/jwt.strategy';
+import { ThrottlerModule } from '../../../configs';
 
 describe('Auth Controller', () => {
   let authController: AuthController;
@@ -15,12 +17,16 @@ describe('Auth Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule, UsersModule],
+      imports: [PrismaModule, UsersModule, ThrottlerModule],
       controllers: [AuthController],
       providers: [
         {
           provide: AuthService,
           useFactory: mockAuthService,
+        },
+        {
+          provide: JwtStrategy,
+          useFactory: () => ({}),
         },
       ],
     }).compile();

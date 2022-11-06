@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
 
 import { PrismaModule } from '@app/prisma';
 import { JwtModule } from '@app/jwt';
-
 import validationSchema from './config.schema';
+
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
+import { ThrottlerModule } from './configs';
 
 @Module({
   imports: [
@@ -22,10 +22,7 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
       validationSchema,
     }),
-    ThrottlerModule.forRoot({
-      ttl: 5,
-      limit: 3,
-    }),
+    ThrottlerModule,
     PrismaModule,
     AuthenticationModule,
     UsersModule,

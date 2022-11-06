@@ -9,6 +9,8 @@ import { UsersService } from '../../../users/service';
 import { LoginUserRequestDto, RegisterRequestDto } from '../dto';
 import { AccessTokenService } from '../../token/service';
 import { PasswordMismatchException } from '../exception';
+import { JwtStrategy } from '../strategy/jwt.strategy';
+import { ThrottlerModule } from '../../../configs';
 
 describe('Auth Service', () => {
   let authService: AuthService;
@@ -30,8 +32,11 @@ describe('Auth Service', () => {
     generateAccessToken: jest.fn(),
   });
 
+  const mockJwtStrategy = () => ({});
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule],
       controllers: [AuthController],
       providers: [
         {
@@ -49,6 +54,10 @@ describe('Auth Service', () => {
         {
           provide: AccessTokenService,
           useFactory: mockAccessTokenService,
+        },
+        {
+          provide: JwtStrategy,
+          useFactory: mockJwtStrategy,
         },
       ],
     }).compile();
