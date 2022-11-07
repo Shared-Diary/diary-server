@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { UsersEntity } from '../entity';
+import { UserEntity } from '../entity';
 
 export abstract class UsersService {
-  abstract createUser(user: Prisma.UsersUncheckedCreateInput): Promise<void>;
+  abstract createUser(user: Prisma.UserUncheckedCreateInput): Promise<void>;
 
-  abstract findUserByEmail(email: string): Promise<UsersEntity>;
+  abstract findUserByEmail(email: string): Promise<UserEntity>;
 }

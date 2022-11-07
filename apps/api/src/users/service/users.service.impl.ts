@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { UsersService } from './users.service';
 import { UsersRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
-import { UsersEntity } from '../entity';
+import { UserEntity } from '../entity';
 
 @Injectable()
 export class UsersServiceImpl implements UsersService {
@@ -20,7 +20,7 @@ export class UsersServiceImpl implements UsersService {
   async createUser({
     email,
     password,
-  }: Prisma.UsersUncheckedCreateInput): Promise<void> {
+  }: Prisma.UserUncheckedCreateInput): Promise<void> {
     await this.validateIsExistEmail(email);
 
     try {
@@ -33,7 +33,7 @@ export class UsersServiceImpl implements UsersService {
     }
   }
 
-  async findUserByEmail(email: string): Promise<UsersEntity> {
+  async findUserByEmail(email: string): Promise<UserEntity> {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
       throw new NotFoundUserException();

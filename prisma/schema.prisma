@@ -11,17 +11,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
     id                          Int                         @default(autoincrement()) @id
     createdAt                   DateTime                    @default(now())
     updatedAt                   DateTime                    @updatedAt
     email                       String                      @unique
     password                    String
 
-    userProfiles                UserProfiles?
+    diary                       Diary[]
+    userProfile                 UserProfile?
 }
 
-model UserProfiles {
+model UserProfile {
     id                          Int                         @default(autoincrement()) @id
     createdAt                   DateTime                    @default(now())
     updatedAt                   DateTime                    @updatedAt
@@ -30,5 +31,16 @@ model UserProfiles {
     nickName                    String?
     introduce                   String
 
-    users                       Users                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user                        User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Diary {
+    id                          Int                         @default(autoincrement()) @id
+    createdAt                   DateTime                    @default(now())
+    updatedAt                   DateTime                    @updatedAt
+    userId                      Int
+    title                       String
+    content                     String
+
+    user                        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
