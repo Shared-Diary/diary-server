@@ -11,15 +11,9 @@ import { JwtModule } from '@app/jwt';
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
-import ThrottlerModule from './configs/throttler.module';
-import EnvConfigModule from './configs/env-config.module';
+import configs from './configs';
 
-const configModules = [
-  EnvConfigModule,
-  ThrottlerModule,
-  JwtModule,
-  PrismaModule,
-];
+const configModules = [JwtModule, PrismaModule, ...configs];
 
 const apiModules = [AuthenticationModule, UsersModule];
 

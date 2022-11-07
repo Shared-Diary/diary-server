@@ -68,10 +68,6 @@ describe('Auth Service', () => {
     accessTokenService = await module.get(AccessTokenService);
   });
 
-  it('should be defined', () => {
-    expect(authService).toBeDefined();
-  });
-
   describe('register', () => {
     it('회원가입 성공', async () => {
       const dto: RegisterRequestDto = {
