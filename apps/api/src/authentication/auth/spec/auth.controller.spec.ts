@@ -6,7 +6,7 @@ import { AuthController } from '../controller';
 import { AuthService } from '../service';
 import { UsersModule } from '../../../users/users.module';
 import { JwtStrategy } from '../strategy/jwt.strategy';
-import ThrottlerModule from '../../../configs/throttler.module';
+import ThrottlerModule from '../../../configs/modules/throttler.module';
 
 describe('Auth Controller', () => {
   let authController: AuthController;

@@ -11,7 +11,7 @@ import { JwtModule } from '@app/jwt';
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
-import configs from './configs';
+import configs from './configs/modules';
 
 const configModules = [JwtModule, PrismaModule, ...configs];
 
