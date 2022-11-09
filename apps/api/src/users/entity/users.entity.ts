@@ -12,6 +12,9 @@ export class UserEntity implements User {
   updatedAt: Date;
 
   @ApiProperty()
+  status: boolean;
+
+  @ApiProperty()
   email: string;
 
   @ApiProperty()
