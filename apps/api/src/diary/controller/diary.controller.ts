@@ -1,4 +1,7 @@
-import { Controller } from '@nestjs/common';
+import { DiaryController as Controller } from './diary.controller.decorator';
+import { DiaryService } from '../service';
 
-@Controller('diary')
-export class DiaryController {}
+@Controller()
+export class DiaryController {
+  constructor(private readonly diaryService: DiaryService) {}
+}
