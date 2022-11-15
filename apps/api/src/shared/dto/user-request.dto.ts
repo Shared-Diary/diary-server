@@ -1,5 +1,5 @@
 export class UserRequestDto {
-  readonly userId: string;
+  readonly userId: number;
 
   readonly iat: number;
 
