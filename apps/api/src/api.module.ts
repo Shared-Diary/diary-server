@@ -11,6 +11,7 @@ import { JwtModule } from '@app/jwt';
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
+import { DiaryModule } from './diary/diary.module';
 import configs from './configs/modules';
 
 const configModules = [JwtModule, PrismaModule, ...configs];
@@ -18,7 +19,7 @@ const configModules = [JwtModule, PrismaModule, ...configs];
 const apiModules = [AuthenticationModule, UsersModule];
 
 @Module({
-  imports: [...configModules, ...apiModules],
+  imports: [...configModules, ...apiModules, DiaryModule],
   controllers: [ApiController],
   providers: [
     {
