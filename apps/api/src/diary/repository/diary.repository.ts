@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Diary, Prisma } from '@prisma/client';
 
-import { PrismaType } from '@app/prisma/type';
+import { PrismaType, PrismaCreateType } from '@app/prisma/type';
+import { getKSTDate } from '@app/utils/date';
 
 @Injectable()
 export class DiaryRepository {
   create(
     prisma: PrismaType,
-    diary: Prisma.DiaryUncheckedCreateInput,
+    diary: PrismaCreateType<Prisma.DiaryUncheckedCreateInput>,
   ): Promise<Diary> {
     return prisma.diary.create({
-      data: diary,
+      data: {
+        createdAt: getKSTDate(),
+        updatedAt: getKSTDate(),
+        ...diary,
+      },
     });
   }
 }
