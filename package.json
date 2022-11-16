@@ -28,6 +28,7 @@
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@aws-sdk/types": "^3.208.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -37,6 +38,7 @@
     "@nestjs/swagger": "^6.1.2",
     "@nestjs/throttler": "^3.1.0",
     "@prisma/client": "4.4.0",
+    "aws-sdk": "^2.1255.0",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
@@ -106,7 +108,8 @@
       "^@app/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1",
       "^@app/regex(|/.*)$": "<rootDir>/libs/regex/src/$1",
       "^@app/password-encoder(|/.*)$": "<rootDir>/libs/password-encoder/src/$1",
-      "^@app/utils(|/.*)$": "<rootDir>/libs/utils/src/$1"
+      "^@app/utils(|/.*)$": "<rootDir>/libs/utils/src/$1",
+      "^@app/aws(|/.*)$": "<rootDir>/libs/aws/src/$1"
     }
   }
 }
