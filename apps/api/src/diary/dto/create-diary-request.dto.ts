@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 import { MAX_CONTENT_LENGTH, MAX_TITLE_LENGTH } from '@api/shared/constant';
+import { ToBoolean } from '@app/utils/decorators';
 
 export class CreateDiaryRequestDto {
   @ApiProperty()
@@ -15,4 +16,10 @@ export class CreateDiaryRequestDto {
   @IsString()
   @MaxLength(MAX_CONTENT_LENGTH)
   readonly content: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @ToBoolean()
+  @IsBoolean()
+  readonly isOpen: boolean;
 }

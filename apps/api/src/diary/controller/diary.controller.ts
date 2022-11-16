@@ -23,12 +23,12 @@ export class DiaryController {
     @User() { userId }: UserRequestDto,
     @Body() createDiaryRequestDto: CreateDiaryRequestDto,
     @UploadedFiles()
-    { diaryImageFile }: { diaryImageFile?: Express.Multer.File[] },
+    files: { diaryImageFile?: Express.Multer.File[] },
   ): Promise<null> {
     await this.diaryService.createDiary(
       createDiaryRequestDto,
       userId,
-      diaryImageFile,
+      files?.diaryImageFile,
     );
 
     return null;

@@ -14,15 +14,16 @@ export class DiaryServiceImpl implements DiaryService {
   ) {}
 
   async createDiary(
-    { title, content }: CreateDiaryRequestDto,
+    { title, content, isOpen }: CreateDiaryRequestDto,
     userId: number,
-    diaryImageFile: Express.Multer.File[],
+    diaryImageFile?: Express.Multer.File[],
   ): Promise<void> {
     await this.prismaService.$transaction(async (prisma) => {
       const { id: diaryId } = await this.diaryRepository.create(prisma, {
         userId,
         title,
         content,
+        isOpen,
       });
     });
   }

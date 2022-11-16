@@ -44,6 +44,7 @@ model Diary {
     userId                      Int
     title                       String
     content                     String
+    isOpen                      Boolean
 
     user                        User                       @relation(fields: [userId], references: [id], onDelete: Restrict)
     diaryImage                  DiaryImage[]
