@@ -18,4 +18,27 @@ export class DiaryRepository {
       },
     });
   }
+
+  getCountBetweenDatesByUser({
+    prisma,
+    userId,
+    startDate,
+    endDate,
+  }: {
+    prisma: PrismaType;
+    userId: number;
+    startDate: Date;
+    endDate: Date;
+  }) {
+    return prisma.diary.count({
+      where: {
+        createdAt: {
+          lt: endDate,
+          gte: startDate,
+        },
+        userId,
+        status: true,
+      },
+    });
+  }
 }

@@ -4,10 +4,13 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
 
+import { getDiaryStartAndEndAt } from '@app/utils';
+import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 import { DiaryService } from './diary.service';
 import { CreateDiaryRequestDto } from '../dto';
 import { DiaryImageRepository, DiaryRepository } from '../repository';
 import { CreateDiaryImagesType } from '../type';
+import { MaxDiaryCreateCountException } from '../exception';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -23,6 +26,8 @@ export class DiaryServiceImpl implements DiaryService {
     userId: number,
     diaryImageFiles?: Express.Multer.File[],
   ): Promise<void> {
+    await this.validateExceedMaxCountOfDailyCreate(userId);
+
     await this.prismaService.$transaction(async (prisma) => {
       const { id: diaryId } = await this.diaryRepository.create(prisma, {
         userId,
@@ -35,6 +40,21 @@ export class DiaryServiceImpl implements DiaryService {
         await this.createDiaryImages({ diaryId, diaryImageFiles, prisma });
       }
     });
+  }
+
+  private async validateExceedMaxCountOfDailyCreate(userId: number) {
+    const { startAt, endAt } = getDiaryStartAndEndAt();
+    const dailyDiaryCount =
+      await this.diaryRepository.getCountBetweenDatesByUser({
+        prisma: this.prismaService,
+        userId,
+        startDate: startAt,
+        endDate: endAt,
+      });
+
+    if (dailyDiaryCount >= DAILY_MAX_CREATE_COUNT) {
+      throw new MaxDiaryCreateCountException(DAILY_MAX_CREATE_COUNT);
+    }
   }
 
   private async createDiaryImages({
