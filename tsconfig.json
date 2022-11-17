@@ -20,10 +20,10 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@api/shared": [
-        "apps/api/src/shared",
+        "apps/api/src/shared"
       ],
       "@api/shared/*": [
-        "apps/api/src/shared/*",
+        "apps/api/src/shared/*"
       ],
       "@app/prisma": [
         "libs/prisma/src"
@@ -57,6 +57,18 @@
       ],
       "@app/utils/*": [
         "libs/utils/src/*"
+      ],
+      "@app/aws": [
+        "libs/aws/src"
+      ],
+      "@app/aws/*": [
+        "libs/aws/src/*"
+      ],
+      "@app/upload-file": [
+        "libs/upload-file/src"
+      ],
+      "@app/upload-file/*": [
+        "libs/upload-file/src/*"
       ]
     }
   }

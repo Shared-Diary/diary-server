@@ -8,14 +8,16 @@ services:
     environment:
       - REDIS_PASSWORD=redis
   db:
-    image: postgres:14.1
-    container_name: postgres
+    image: mysql:8.0
+    container_name: mysql
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      MYSQL_ROOT_PASSWORD: 'test'
+      MYSQL_USER: 'choi'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'docker'
     command:
-      - —character-set-server=utf8mb4
-      - —collation-server=utf8mb4_unicode_ci
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
     ports:
-      - "5432:5432"
+      - "3306:3306"

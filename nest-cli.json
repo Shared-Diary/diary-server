@@ -65,6 +65,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/utils/tsconfig.lib.json"
       }
+    },
+    "aws": {
+      "type": "library",
+      "root": "libs/aws",
+      "entryFile": "index",
+      "sourceRoot": "libs/aws/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/aws/tsconfig.lib.json"
+      }
+    },
+    "upload-file": {
+      "type": "library",
+      "root": "libs/upload-file",
+      "entryFile": "index",
+      "sourceRoot": "libs/upload-file/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/upload-file/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {
