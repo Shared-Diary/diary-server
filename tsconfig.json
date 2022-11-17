@@ -63,6 +63,12 @@
       ],
       "@app/aws/*": [
         "libs/aws/src/*"
+      ],
+      "@app/upload-file": [
+        "libs/upload-file/src"
+      ],
+      "@app/upload-file/*": [
+        "libs/upload-file/src/*"
       ]
     }
   }
