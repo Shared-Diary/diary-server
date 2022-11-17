@@ -15,6 +15,16 @@ import { UploadFileService } from './upload-file.service';
 export class AwsS3UploadFileService implements UploadFileService {
   constructor(private readonly s3Provider: AwsS3ConfigProvider) {}
 
+  getUploadedImageList(files: Express.Multer.File[]): Promise<string[]> {
+    return Promise.all(
+      files.map(async (file) => {
+        const { Location: imageUrl } = await this.uploadFile(file);
+
+        return imageUrl;
+      }),
+    );
+  }
+
   async getUploadedImage(file: Express.Multer.File): Promise<string> {
     const { Location: imageUrl } = await this.uploadFile(file);
 
@@ -29,7 +39,7 @@ export class AwsS3UploadFileService implements UploadFileService {
       return this.uploadS3({
         file: buffer,
         mimetype,
-        name: `${originalname}/${RandomId.generateId()}`,
+        name: `${RandomId.generateId()}/${originalname}`,
         bucket: s3Bucket,
       }) as Promise<UploadFileType>;
     } catch (error) {

@@ -13,6 +13,7 @@ export class AwsS3ConfigProvider {
     this.s3 = new S3({
       accessKeyId: this.configService.get<string>('AWS_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.get<string>('AWS_SECRET_ACCESS_KEY'),
+      region: this.configService.get<string>('AWS_REGION', 'ap-northeast-2'),
       logger: console,
     });
   }
