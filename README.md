@@ -17,3 +17,6 @@ import { AppService } from './app.service';
 
 ### Commit Message
 - [Conventional Commits](https://www.conventionalcommits.org/ko/v1.0.0-beta.4/) 을 따릅니다
+
+### Stack
+- **Javascript, Typescript, NestJS, Jest, MySQL, Aws S3** 
