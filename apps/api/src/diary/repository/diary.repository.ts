@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Diary, Prisma } from '@prisma/client';
 
-import { PrismaType, PrismaCreateType } from '@app/prisma/type';
+import { PrismaCreateAndUpdateType } from '@app/prisma/type';
 import { getKSTDate } from '@app/utils/date';
+import { PrismaService } from '@app/prisma';
 
 @Injectable()
 export class DiaryRepository {
+  constructor(private readonly prismaService: PrismaService) {}
+
   create(
-    prisma: PrismaType,
-    diary: PrismaCreateType<Prisma.DiaryUncheckedCreateInput>,
+    diary: PrismaCreateAndUpdateType<Prisma.DiaryUncheckedCreateInput>,
   ): Promise<Diary> {
-    return prisma.diary.create({
+    return this.prismaService.diary.create({
       data: {
         createdAt: getKSTDate(),
         updatedAt: getKSTDate(),
@@ -20,17 +22,15 @@ export class DiaryRepository {
   }
 
   getCountBetweenDatesByUser({
-    prisma,
     userId,
     startDate,
     endDate,
   }: {
-    prisma: PrismaType;
     userId: number;
     startDate: Date;
     endDate: Date;
   }) {
-    return prisma.diary.count({
+    return this.prismaService.diary.count({
       where: {
         createdAt: {
           lt: endDate,
