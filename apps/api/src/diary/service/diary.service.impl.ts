@@ -1,58 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
+import { DatabaseErrorException } from '@app/prisma/exception';
+import { getDiaryStartAndEndAt } from '@app/utils';
+import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService } from './diary.service';
 import { CreateDiaryRequestDto } from '../dto';
-import { DiaryImageRepository, DiaryRepository } from '../repository';
-import { CreateDiaryImagesType } from '../type';
+import { DiaryRepository } from '../repository';
+import { MaxDiaryCreateCountException } from '../exception';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
   constructor(
-    private readonly prismaService: PrismaService,
     private readonly diaryRepository: DiaryRepository,
-    private readonly diaryImageRepository: DiaryImageRepository,
     private readonly uploadFileService: UploadFileService,
   ) {}
 
   async createDiary(
-    { title, content, isOpen }: CreateDiaryRequestDto,
+    dto: CreateDiaryRequestDto,
     userId: number,
     diaryImageFiles?: Express.Multer.File[],
   ): Promise<void> {
-    await this.prismaService.$transaction(async (prisma) => {
-      const { id: diaryId } = await this.diaryRepository.create(prisma, {
+    const { title, content, isOpen } = dto;
+
+    await this.validateExceedMaxCountOfDailyCreate(userId);
+
+    try {
+      await this.diaryRepository.create({
         userId,
         title,
         content,
         isOpen,
+        ...(diaryImageFiles && {
+          diaryImage: {
+            create:
+              diaryImageFiles &&
+              (await this.parseCreateDiaryImageInput(diaryImageFiles)),
+          },
+        }),
+      });
+    } catch (error) {
+      if (PrismaService.isPrismaError(error)) {
+        throw new DatabaseErrorException();
+      }
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  private async validateExceedMaxCountOfDailyCreate(userId: number) {
+    const { startAt, endAt } = getDiaryStartAndEndAt();
+    const dailyDiaryCount =
+      await this.diaryRepository.getCountBetweenDatesByUser({
+        userId,
+        startDate: startAt,
+        endDate: endAt,
       });
 
-      if (diaryImageFiles) {
-        await this.createDiaryImages({ diaryId, diaryImageFiles, prisma });
-      }
-    });
+    if (dailyDiaryCount >= DAILY_MAX_CREATE_COUNT) {
+      throw new MaxDiaryCreateCountException(DAILY_MAX_CREATE_COUNT);
+    }
   }
 
-  private async createDiaryImages({
-    diaryId,
-    diaryImageFiles,
-    prisma,
-  }: CreateDiaryImagesType) {
-    const imageUrls = await this.uploadFileService.getUploadedImageList(
-      diaryImageFiles,
-    );
-    const createInput = this.parseCreateDiaryImageInput(diaryId, imageUrls);
-    await this.diaryImageRepository.createImages(prisma, createInput);
+  private async parseCreateDiaryImageInput(
+    diaryImageFiles: Express.Multer.File[],
+  ): Promise<Prisma.DiaryImageCreateManyDiaryInput[]> {
+    const imageUrls = await this.getImageUrls(diaryImageFiles);
+
+    return imageUrls.map((imageUrl) => ({ imageUrl }));
   }
 
-  private parseCreateDiaryImageInput(
-    diaryId: number,
-    imageUrls: string[],
-  ): Prisma.DiaryImageUncheckedCreateInput[] {
-    return imageUrls.map((imageUrl) => ({ diaryId, imageUrl }));
+  private getImageUrls(diaryImageFiles: Express.Multer.File[]) {
+    return this.uploadFileService.getUploadedImageList(diaryImageFiles);
   }
 }
