@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
-
+import { DatabaseErrorException } from '@app/prisma/exception';
 import { getDiaryStartAndEndAt } from '@app/utils';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
+
 import { DiaryService } from './diary.service';
 import { CreateDiaryRequestDto } from '../dto';
 import { DiaryImageRepository, DiaryRepository } from '../repository';
@@ -22,24 +23,33 @@ export class DiaryServiceImpl implements DiaryService {
   ) {}
 
   async createDiary(
-    { title, content, isOpen }: CreateDiaryRequestDto,
+    dto: CreateDiaryRequestDto,
     userId: number,
     diaryImageFiles?: Express.Multer.File[],
   ): Promise<void> {
+    const { title, content, isOpen } = dto;
+
     await this.validateExceedMaxCountOfDailyCreate(userId);
 
-    await this.prismaService.$transaction(async (prisma) => {
-      const { id: diaryId } = await this.diaryRepository.create(prisma, {
-        userId,
-        title,
-        content,
-        isOpen,
-      });
+    try {
+      await this.prismaService.$transaction(async (prisma) => {
+        const { id: diaryId } = await this.diaryRepository.create(prisma, {
+          userId,
+          title,
+          content,
+          isOpen,
+        });
 
-      if (diaryImageFiles) {
-        await this.createDiaryImages({ diaryId, diaryImageFiles, prisma });
+        if (diaryImageFiles) {
+          await this.createDiaryImages({ diaryId, diaryImageFiles, prisma });
+        }
+      });
+    } catch (error) {
+      if (PrismaService.isPrismaError(error)) {
+        throw new DatabaseErrorException();
       }
-    });
+      throw new InternalServerErrorException(error);
+    }
   }
 
   private async validateExceedMaxCountOfDailyCreate(userId: number) {
