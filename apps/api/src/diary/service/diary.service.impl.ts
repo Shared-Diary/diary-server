@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
-import { DatabaseErrorException } from '@app/prisma/exception';
+import { PrismaErrorException } from '@app/prisma/exception';
 import { getDiaryStartAndEndAt } from '@app/utils';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
@@ -44,7 +44,7 @@ export class DiaryServiceImpl implements DiaryService {
       });
     } catch (error) {
       if (PrismaService.isPrismaError(error)) {
-        throw new DatabaseErrorException();
+        throw new PrismaErrorException(error?.code);
       }
       throw new InternalServerErrorException();
     }

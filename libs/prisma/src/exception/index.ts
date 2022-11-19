@@ -1,1 +1,1 @@
-export * from './database-error.exception';
+export * from './prisma-error.exception';
