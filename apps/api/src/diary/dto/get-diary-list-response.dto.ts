@@ -11,8 +11,8 @@ export class DiaryIncludeImagesAndLikeCount extends DiaryEntity {
 }
 
 export class GetDiaryListResponseDto {
-  @ApiProperty({ type: [DiaryIncludeImagesAndLikeCount] })
-  readonly diaries: DiaryIncludeImagesAndLikeCount[];
+  @ApiProperty({ type: [DiaryIncludeImagesAndLikeCount], nullable: true })
+  readonly diaries: DiaryIncludeImagesAndLikeCount[] | null;
 
   constructor(partial: Partial<GetDiaryListResponseDto>) {
     Object.assign(this, partial);

@@ -13,5 +13,5 @@ export abstract class DiaryService {
 
   abstract getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<DiaryIncludeImagesAndLikeCount[]>;
+  ): Promise<DiaryIncludeImagesAndLikeCount[] | null>;
 }

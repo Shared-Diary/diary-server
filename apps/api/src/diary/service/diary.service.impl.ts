@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import * as _ from 'radash';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
@@ -83,7 +84,7 @@ export class DiaryServiceImpl implements DiaryService {
 
   async getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<DiaryIncludeImagesAndLikeCount[]> {
+  ): Promise<DiaryIncludeImagesAndLikeCount[] | null> {
     const { page, pageSize } = queryDto;
 
     const diariesIncludeLikeAndImage =
@@ -92,7 +93,9 @@ export class DiaryServiceImpl implements DiaryService {
         pageSize,
       });
 
-    return this.parseGetListImageResponse(diariesIncludeLikeAndImage);
+    return _.isEmpty(diariesIncludeLikeAndImage)
+      ? null
+      : this.parseGetListImageResponse(diariesIncludeLikeAndImage);
   }
 
   private parseGetListImageResponse(
