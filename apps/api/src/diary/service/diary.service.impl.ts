@@ -8,7 +8,11 @@ import { getDiaryStartAndEndAt } from '@app/utils';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService } from './diary.service';
-import { CreateDiaryRequestDto } from '../dto';
+import {
+  CreateDiaryRequestDto,
+  GetDiaryListQueryRequestDto,
+  GetDiaryListResponseDto,
+} from '../dto';
 import { DiaryRepository } from '../repository';
 import { MaxDiaryCreateCountException } from '../exception';
 
@@ -74,5 +78,11 @@ export class DiaryServiceImpl implements DiaryService {
 
   private getImageUrls(diaryImageFiles: Express.Multer.File[]) {
     return this.uploadFileService.getUploadedImageList(diaryImageFiles);
+  }
+
+  async getDiaryList(
+    queryDto: GetDiaryListQueryRequestDto,
+  ): Promise<GetDiaryListResponseDto> {
+    return Promise.resolve(undefined);
   }
 }

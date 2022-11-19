@@ -41,4 +41,24 @@ export class DiaryRepository {
       },
     });
   }
+
+  getListIncludeLiekAndImage({
+    page,
+    pageSize,
+  }: {
+    page: number;
+    pageSize: number;
+  }) {
+    return this.prismaService.diary.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        diaryImage: true,
+        diaryLike: true,
+      },
+    });
+  }
 }

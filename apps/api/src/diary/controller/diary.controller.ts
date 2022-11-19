@@ -7,7 +7,8 @@ import { UserRequestDto } from '@api/shared/dto';
 import {
   DiaryController as Controller,
   CreateDiary,
-} from './diary.controller.decorator';
+  GetDiaryList,
+} from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import { CreateDiaryRequestDto } from '../dto';
 
@@ -32,5 +33,10 @@ export class DiaryController {
     );
 
     return null;
+  }
+
+  @GetDiaryList()
+  async getDiaryList() {
+    return 1;
   }
 }
