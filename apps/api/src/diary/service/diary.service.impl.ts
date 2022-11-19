@@ -46,7 +46,7 @@ export class DiaryServiceImpl implements DiaryService {
       if (PrismaService.isPrismaError(error)) {
         throw new DatabaseErrorException();
       }
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException();
     }
   }
 

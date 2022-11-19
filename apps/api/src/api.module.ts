@@ -3,10 +3,11 @@ import {
   Module,
   ValidationPipe,
 } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import { PrismaModule } from '@app/prisma';
 import { JwtModule } from '@app/jwt';
+import { AllExceptionsFilter } from '@app/utils/filters';
 
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
@@ -33,6 +34,10 @@ const apiModules = [AuthenticationModule, UsersModule];
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
     },
   ],
 })
