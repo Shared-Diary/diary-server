@@ -42,7 +42,7 @@ export class DiaryRepository {
     });
   }
 
-  getListIncludeLiekAndImage({
+  getListIncludeLikeAndImage({
     page,
     pageSize,
   }: {
@@ -52,6 +52,10 @@ export class DiaryRepository {
     return this.prismaService.diary.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
+      where: {
+        status: true,
+        isOpen: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },

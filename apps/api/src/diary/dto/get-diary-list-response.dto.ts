@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { DiaryEntity, DiaryImageEntity } from '../entity';
 
-class DiaryIncludeImagesAndLikeCount extends DiaryEntity {
+export class DiaryIncludeImagesAndLikeCount extends DiaryEntity {
   @ApiProperty({ type: [DiaryImageEntity] })
   diaryImage: DiaryImageEntity[];
 

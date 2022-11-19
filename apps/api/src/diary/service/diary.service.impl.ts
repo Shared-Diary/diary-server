@@ -10,11 +10,12 @@ import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 import { DiaryService } from './diary.service';
 import {
   CreateDiaryRequestDto,
+  DiaryIncludeImagesAndLikeCount,
   GetDiaryListQueryRequestDto,
-  GetDiaryListResponseDto,
 } from '../dto';
 import { DiaryRepository } from '../repository';
 import { MaxDiaryCreateCountException } from '../exception';
+import { GetDiaryListIncludeImageAndLikeType } from '../type';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -82,7 +83,29 @@ export class DiaryServiceImpl implements DiaryService {
 
   async getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<GetDiaryListResponseDto> {
-    return Promise.resolve(undefined);
+  ): Promise<DiaryIncludeImagesAndLikeCount[]> {
+    const { page, pageSize } = queryDto;
+
+    const diariesIncludeLikeAndImage =
+      await this.diaryRepository.getListIncludeLikeAndImage({
+        page,
+        pageSize,
+      });
+
+    return this.parseGetListImageResponse(diariesIncludeLikeAndImage);
+  }
+
+  private parseGetListImageResponse(
+    diaries: GetDiaryListIncludeImageAndLikeType[],
+  ): DiaryIncludeImagesAndLikeCount[] {
+    return diaries.map((diary: GetDiaryListIncludeImageAndLikeType) => {
+      const { diaryImage, diaryLike, ...rest } = diary;
+
+      return {
+        ...rest,
+        diaryImage,
+        diaryLikeCount: diaryLike.length,
+      };
+    });
   }
 }
