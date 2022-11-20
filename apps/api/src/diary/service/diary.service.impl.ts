@@ -13,6 +13,7 @@ import {
   CreateDiaryRequestDto,
   DiaryIncludeImagesAndLikeCount,
   GetDiaryListQueryRequestDto,
+  GetDiaryListResponseDto,
 } from '../dto';
 import { DiaryRepository } from '../repository';
 import { MaxDiaryCreateCountException } from '../exception';
@@ -84,18 +85,21 @@ export class DiaryServiceImpl implements DiaryService {
 
   async getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<DiaryIncludeImagesAndLikeCount[] | null> {
+  ): Promise<GetDiaryListResponseDto> {
     const { page, pageSize } = queryDto;
 
-    const diariesIncludeLikeAndImage =
+    const [diariesIncludeLikeAndImage, total] =
       await this.diaryRepository.getListIncludeLikeAndImage({
         page,
         pageSize,
       });
 
-    return _.isEmpty(diariesIncludeLikeAndImage)
-      ? null
-      : this.parseGetListImageResponse(diariesIncludeLikeAndImage);
+    return {
+      diaries: _.isEmpty(diariesIncludeLikeAndImage)
+        ? null
+        : this.parseGetListImageResponse(diariesIncludeLikeAndImage),
+      total,
+    };
   }
 
   private parseGetListImageResponse(

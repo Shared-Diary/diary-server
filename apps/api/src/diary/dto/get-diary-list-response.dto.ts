@@ -14,6 +14,9 @@ export class GetDiaryListResponseDto {
   @ApiProperty({ type: [DiaryIncludeImagesAndLikeCount], nullable: true })
   readonly diaries: DiaryIncludeImagesAndLikeCount[] | null;
 
+  @ApiProperty()
+  readonly total: number;
+
   constructor(partial: Partial<GetDiaryListResponseDto>) {
     Object.assign(this, partial);
   }

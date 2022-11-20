@@ -1,7 +1,7 @@
 import {
   CreateDiaryRequestDto,
-  DiaryIncludeImagesAndLikeCount,
   GetDiaryListQueryRequestDto,
+  GetDiaryListResponseDto,
 } from '../dto';
 
 export abstract class DiaryService {
@@ -13,5 +13,5 @@ export abstract class DiaryService {
 
   abstract getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<DiaryIncludeImagesAndLikeCount[] | null>;
+  ): Promise<GetDiaryListResponseDto>;
 }

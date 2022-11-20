@@ -41,10 +41,13 @@ export class DiaryController {
 
   @GetDiaryList()
   async getDiaryList(@Query() queryRequestDto: GetDiaryListQueryRequestDto) {
-    const diaries = await this.diaryService.getDiaryList(queryRequestDto);
+    const { diaries, total } = await this.diaryService.getDiaryList(
+      queryRequestDto,
+    );
 
     return new GetDiaryListResponseDto({
       diaries,
+      total,
     });
   }
 }

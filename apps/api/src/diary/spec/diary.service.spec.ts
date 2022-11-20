@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { UploadFileService } from '@app/upload-file';
 
-import { Mock } from '@app/shared/type';
+import { Mock, WithTotal } from '@app/shared/type';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryRepository } from '../repository';
@@ -93,35 +93,44 @@ describe('DiaryService', () => {
 
   describe('get diary list', () => {
     it('다이어리 리스트 조회 성공', async () => {
-      const mockData: GetDiaryListIncludeImageAndLikeType[] = [
-        {
-          id: 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          status: true,
-          isOpen: true,
-          userId: 1,
-          title: 'title',
-          content: 'content',
-          diaryImage: [],
-          diaryLike: [],
-        },
+      const mockData: WithTotal<GetDiaryListIncludeImageAndLikeType[]> = [
+        [
+          {
+            id: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            status: true,
+            isOpen: true,
+            userId: 1,
+            title: 'title',
+            content: 'content',
+            diaryImage: [],
+            diaryLike: [],
+          },
+        ],
+        1,
       ];
       diaryRepository.getListIncludeLikeAndImage.mockResolvedValue(mockData);
 
-      const result = await diaryService.getDiaryList({ page: 1, pageSize: 10 });
-      expect(Array.isArray(result)).toBe(true);
+      const { diaries } = await diaryService.getDiaryList({
+        page: 1,
+        pageSize: 10,
+      });
+      expect(Array.isArray(diaries)).toBe(true);
       expect(diaryRepository.getListIncludeLikeAndImage).toHaveBeenCalledTimes(
         1,
       );
-      expect(result[0].diaryLikeCount).toBe(0);
+      expect(diaries[0].diaryLikeCount).toBe(0);
     });
 
     it('리스트가 빈 배열일 경우 null 을 return 한다', async () => {
       diaryRepository.getListIncludeLikeAndImage.mockResolvedValue([]);
 
-      const result = await diaryService.getDiaryList({ page: 1, pageSize: 10 });
-      expect(result).toBe(null);
+      const { diaries } = await diaryService.getDiaryList({
+        page: 1,
+        pageSize: 10,
+      });
+      expect(diaries).toBe(null);
     });
   });
 });
