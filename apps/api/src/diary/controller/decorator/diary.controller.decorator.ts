@@ -1,7 +1,7 @@
 import { applyDecorators, Controller, Get, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { JwtAuth } from '@app/utils/guards';
+import { JwtAuth, Throttler } from '@app/utils/guards';
 
 export const DiaryController = () =>
   applyDecorators(
@@ -24,6 +24,7 @@ export const CreateDiary = () =>
 export const GetDiaryList = () =>
   applyDecorators(
     Get('/'),
+    Throttler(),
     ApiOperation({
       summary: '일기장 리스트 조회 With 좋아요 개수',
     }),
