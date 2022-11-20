@@ -1,4 +1,10 @@
-import { Body, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Param,
+  Query,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { User } from '@app/utils/decorators';
@@ -8,12 +14,14 @@ import {
   DiaryController as Controller,
   CreateDiary,
   GetDiaryList,
+  GetDiary,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
   GetDiaryListResponseDto,
+  GetDiaryParamRequestDto,
 } from '../dto';
 
 @Controller()
@@ -49,5 +57,10 @@ export class DiaryController {
       diaries,
       total,
     });
+  }
+
+  @GetDiary()
+  async getDiary(@Param() paramRequestDto: GetDiaryParamRequestDto) {
+    return 1;
   }
 }
