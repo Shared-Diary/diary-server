@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import * as _ from 'radash';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
@@ -8,9 +9,15 @@ import { getDiaryStartAndEndAt } from '@app/utils';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService } from './diary.service';
-import { CreateDiaryRequestDto } from '../dto';
+import {
+  CreateDiaryRequestDto,
+  DiaryIncludeImagesAndLikeCount,
+  GetDiaryListQueryRequestDto,
+  GetDiaryListResponseDto,
+} from '../dto';
 import { DiaryRepository } from '../repository';
 import { MaxDiaryCreateCountException } from '../exception';
+import { GetDiaryListIncludeImageAndLikeType } from '../type';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -74,5 +81,38 @@ export class DiaryServiceImpl implements DiaryService {
 
   private getImageUrls(diaryImageFiles: Express.Multer.File[]) {
     return this.uploadFileService.getUploadedImageList(diaryImageFiles);
+  }
+
+  async getDiaryList(
+    queryDto: GetDiaryListQueryRequestDto,
+  ): Promise<GetDiaryListResponseDto> {
+    const { page, pageSize } = queryDto;
+
+    const [diariesIncludeLikeAndImage, total] =
+      await this.diaryRepository.getListIncludeLikeAndImage({
+        page,
+        pageSize,
+      });
+
+    return {
+      diaries: _.isEmpty(diariesIncludeLikeAndImage)
+        ? null
+        : this.parseGetListImageResponse(diariesIncludeLikeAndImage),
+      total,
+    };
+  }
+
+  private parseGetListImageResponse(
+    diaries: GetDiaryListIncludeImageAndLikeType[],
+  ): DiaryIncludeImagesAndLikeCount[] {
+    return diaries.map((diary: GetDiaryListIncludeImageAndLikeType) => {
+      const { diaryImage, diaryLike, ...rest } = diary;
+
+      return {
+        ...rest,
+        diaryImage,
+        diaryLikeCount: diaryLike.length,
+      };
+    });
   }
 }
