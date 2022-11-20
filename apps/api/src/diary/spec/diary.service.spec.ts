@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UploadFileService } from '@app/upload-file';
-
 import { Mock, WithTotal } from '@app/shared/type';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
+
 import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryRepository } from '../repository';
 import { MaxDiaryCreateCountException } from '../exception';
-import { DiaryIncludeImagesAndLikeCount } from '../dto';
 import { GetDiaryListIncludeImageAndLikeType } from '../type';
 
 describe('DiaryService', () => {

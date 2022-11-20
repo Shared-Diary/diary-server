@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { DiaryController } from '../controller';
 import { DiaryService } from '../service';
+import ThrottlerModule from '../../configs/modules/throttler.module';
 
 describe('DiaryController', () => {
   let controller: DiaryController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule],
       controllers: [DiaryController],
       providers: [
         {
