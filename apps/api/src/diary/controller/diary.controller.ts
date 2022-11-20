@@ -22,6 +22,7 @@ import {
   GetDiaryListQueryRequestDto,
   GetDiaryListResponseDto,
   GetDiaryParamRequestDto,
+  GetDiaryResponseDto,
 } from '../dto';
 
 @Controller()
@@ -61,6 +62,14 @@ export class DiaryController {
 
   @GetDiary()
   async getDiary(@Param() paramRequestDto: GetDiaryParamRequestDto) {
-    return 1;
+    const { diary, likeCount, images } = await this.diaryService.getDiary(
+      paramRequestDto,
+    );
+
+    return new GetDiaryResponseDto({
+      diary,
+      likeCount,
+      images,
+    });
   }
 }

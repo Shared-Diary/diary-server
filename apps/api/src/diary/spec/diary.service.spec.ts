@@ -7,7 +7,7 @@ import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryRepository } from '../repository';
 import { MaxDiaryCreateCountException } from '../exception';
-import { GetDiaryListIncludeImageAndLikeType } from '../type';
+import { GetDiaryIncludeImageAndLikeType } from '../type';
 
 describe('DiaryService', () => {
   let diaryService: DiaryService;
@@ -92,7 +92,7 @@ describe('DiaryService', () => {
 
   describe('get diary list', () => {
     it('다이어리 리스트 조회 성공', async () => {
-      const mockData: WithTotal<GetDiaryListIncludeImageAndLikeType[]> = [
+      const mockData: WithTotal<GetDiaryIncludeImageAndLikeType[]> = [
         [
           {
             id: 1,
@@ -119,7 +119,7 @@ describe('DiaryService', () => {
       expect(diaryRepository.getListIncludeLikeAndImage).toHaveBeenCalledTimes(
         1,
       );
-      expect(diaries[0].diaryLikeCount).toBe(0);
+      expect(diaries[0].likeCount).toBe(0);
     });
 
     it('리스트가 빈 배열일 경우 null 을 return 한다', async () => {

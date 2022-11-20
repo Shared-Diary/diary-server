@@ -6,7 +6,7 @@ import { getKSTDate } from '@app/utils/date';
 import { PrismaService } from '@app/prisma';
 import { WithTotal } from '@app/shared/type';
 
-import { GetDiaryListIncludeImageAndLikeType } from '../type';
+import { GetDiaryIncludeImageAndLikeType } from '../type';
 
 @Injectable()
 export class DiaryRepository {
@@ -51,7 +51,7 @@ export class DiaryRepository {
   }: {
     page: number;
     pageSize: number;
-  }): Promise<WithTotal<GetDiaryListIncludeImageAndLikeType[]>> {
+  }): Promise<WithTotal<GetDiaryIncludeImageAndLikeType[]>> {
     const where = {
       status: true,
       isOpen: true,
@@ -74,5 +74,17 @@ export class DiaryRepository {
         where,
       }),
     ]);
+  }
+
+  getIncludeLikeAndImage(id: number) {
+    return this.prismaService.diary.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        diaryImage: true,
+        diaryLike: true,
+      },
+    });
   }
 }

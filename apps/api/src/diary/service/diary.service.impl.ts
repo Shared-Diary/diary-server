@@ -14,10 +14,15 @@ import {
   DiaryIncludeImagesAndLikeCount,
   GetDiaryListQueryRequestDto,
   GetDiaryListResponseDto,
+  GetDiaryParamRequestDto,
+  GetDiaryResponseDto,
 } from '../dto';
 import { DiaryRepository } from '../repository';
-import { MaxDiaryCreateCountException } from '../exception';
-import { GetDiaryListIncludeImageAndLikeType } from '../type';
+import {
+  MaxDiaryCreateCountException,
+  NotFoundDiaryException,
+} from '../exception';
+import { GetDiaryIncludeImageAndLikeType } from '../type';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -103,16 +108,39 @@ export class DiaryServiceImpl implements DiaryService {
   }
 
   private parseGetListImageResponse(
-    diaries: GetDiaryListIncludeImageAndLikeType[],
+    diaries: GetDiaryIncludeImageAndLikeType[],
   ): DiaryIncludeImagesAndLikeCount[] {
-    return diaries.map((diary: GetDiaryListIncludeImageAndLikeType) => {
+    return diaries.map((diary: GetDiaryIncludeImageAndLikeType) => {
       const { diaryImage, diaryLike, ...rest } = diary;
 
       return {
         ...rest,
-        diaryImage,
-        diaryLikeCount: diaryLike.length,
+        image: diaryImage,
+        likeCount: diaryLike.length,
       };
     });
+  }
+
+  async getDiary({
+    diaryId,
+  }: GetDiaryParamRequestDto): Promise<GetDiaryResponseDto> {
+    const diaryIncludeLikeAndImage =
+      await this.diaryRepository.getIncludeLikeAndImage(diaryId);
+
+    this.validateIsOpenedDiary(diaryIncludeLikeAndImage);
+
+    const { diaryImage, diaryLike, ...diary } = diaryIncludeLikeAndImage;
+
+    return {
+      diary,
+      images: diaryImage,
+      likeCount: diaryLike.length,
+    };
+  }
+
+  private validateIsOpenedDiary(diary: GetDiaryIncludeImageAndLikeType) {
+    if (!diary || !diary.status || !diary.isOpen) {
+      throw new NotFoundDiaryException();
+    }
   }
 }
