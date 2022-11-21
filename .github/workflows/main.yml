@@ -47,7 +47,7 @@ jobs:
 
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment
-        --application-name 	diary-server-codedeploy
-        --deployment-config-name CodeDeployDefault.OneAtATime 
-        --deployment-group-name diary-server 
-        --s3-location bucket=bmart5-s3-bucket,bundleType=tgz,key=public/diary-server.tar.gz
+          --application-name 	diary-server-codedeploy
+          --deployment-config-name CodeDeployDefault.OneAtATime 
+          --deployment-group-name diary-server 
+          --s3-location bucket=bmart5-s3-bucket,bundleType=tgz,key=public/diary-server.tar.gz
