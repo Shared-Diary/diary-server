@@ -29,10 +29,10 @@ jobs:
         working-directory: ./environments
         run: |
           touch .prod.env
-          cat << EOF >> .env
+          cat << EOF >> .prod.env
           ${{ secrets.ENV }}
 
-      - name: archive drcloud
+      - name: zip application
         run: tar cvfz ./diary-server.tar.gz *
 
       - name: AWS configure credentials
@@ -42,12 +42,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./diary-server.tar.gz s3://diary-server/public/
+#      - name: upload to S3
+#        run: aws s3 cp --region ap-northeast-2 ./diary-server.tar.gz s3://diary-server/public/
 
-      - name: deploy with AWS codeDeploy
-        run: aws deploy create-deployment
-          --application-name 	diary-server-codedeploy
-          --deployment-config-name CodeDeployDefault.OneAtATime 
-          --deployment-group-name diary-server 
-          --s3-location bucket=diary-server,bundleType=tgz,key=public/diary-server.tar.gz
+#      - name: deploy with AWS codeDeploy
+#        run: aws deploy create-deployment
+#          --application-name 	diary-server-codedeploy
+#          --deployment-config-name CodeDeployDefault.OneAtATime
+#          --deployment-group-name diary-server
+#          --s3-location bucket=diary-server,bundleType=tgz,key=public/diary-server.tar.gz
