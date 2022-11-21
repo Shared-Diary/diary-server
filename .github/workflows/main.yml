@@ -28,7 +28,7 @@ jobs:
       - name: create env file
         working-directory: ./environments
         run: |
-          touch .env
+          touch .prod.env
           cat << EOF >> .env
           ${{ secrets.ENV }}
 
@@ -40,4 +40,4 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./diary-server.zip s3://diary-server/public/
+        run: aws s3 cp --region ap-northeast-2 ./diary-server.tar.gz s3://diary-server/public/
