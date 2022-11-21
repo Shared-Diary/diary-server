@@ -50,4 +50,4 @@ jobs:
           --application-name 	diary-server-codedeploy
           --deployment-config-name CodeDeployDefault.OneAtATime 
           --deployment-group-name diary-server 
-          --s3-location bucket=bmart5,bundleType=tgz,key=public/diary-server.tar.gz
+          --s3-location bucket=diary-server,bundleType=tgz,key=public/diary-server.tar.gz
