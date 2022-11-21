@@ -32,6 +32,9 @@ jobs:
           cat << EOF >> .env
           ${{ secrets.ENV }}
 
+      - name: archive drcloud
+      run: tar cvfz ./diary-server.tar.gz *
+
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
