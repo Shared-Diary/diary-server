@@ -44,3 +44,10 @@ jobs:
 
       - name: upload to S3
         run: aws s3 cp --region ap-northeast-2 ./diary-server.tar.gz s3://diary-server/public/
+
+      - name: deploy with AWS codeDeploy
+        run: aws deploy create-deployment
+        --application-name 	diary-server-codedeploy
+        --deployment-config-name CodeDeployDefault.OneAtATime 
+        --deployment-group-name diary-server 
+        --s3-location bucket=bmart5-s3-bucket,bundleType=tgz,key=public/diary-server.tar.gz
