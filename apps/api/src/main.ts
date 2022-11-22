@@ -10,13 +10,13 @@ async function bootstrap() {
   app.enableVersioning();
 
   app.enableCors(corsOptions);
-  if (isDevelopment) {
-    buildSwagger(app, {
-      title: 'Diary Server',
-      description: 'Diary Server API 입니다',
-      path: '/api',
-    });
-  }
+  // if (isDevelopment) {
+  buildSwagger(app, {
+    title: 'Diary Server',
+    description: 'Diary Server API 입니다',
+    path: '/api',
+  });
+  // }
 
   await app.listen(process.env.PORT || 3000);
 }
