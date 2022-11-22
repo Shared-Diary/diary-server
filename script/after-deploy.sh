@@ -1,14 +1,8 @@
 #!/bin/bash
-REPOSITORY=/home/ec2-user/build
+REPOSITORY=/home/ubuntu/diary-server
 
-cd $REPOSITORY
+cd $REPOSITORY || exit
 
-sudo npm install
-
-sudo npm run prisma:generate
-
-sudo npm run build
-
-sudo npm run start:prod
+sudo npm run pm2:start:prod
 
 echo "success!!"
