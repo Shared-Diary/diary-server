@@ -12,7 +12,7 @@
     "start:local": "NODE_ENV=local nest start --watch",
     "start:dev": "nest build && NODE_ENV=dev node dist/apps/api/main",
     "start:prod": "nest build && NODE_ENV=prod node dist/apps/api/main",
-    "pm2:start:prod": "nest build && pm2 start ecosystem.config.js",
+    "pm2:start:prod": "pm2 start ecosystem.config.js",
     "deploy": "npm install && npm run build && npm run start:prod",
     "admin:build": "nest build admin",
     "admin:start:local": "NODE_ENV=local nest start admin --watch",
