@@ -20,3 +20,9 @@ import { AppService } from './app.service';
 
 ### Stack
 - **Javascript, Typescript, NestJS, Jest, MySQL, Aws S3** 
+
+### CI
+- GitHub Actions
+
+### CD
+- AWS CodeDeploy
