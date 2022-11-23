@@ -3,6 +3,10 @@ REPOSITORY=/home/ubuntu/diary-server
 
 cd $REPOSITORY || exit
 
-npm run prisma:generate
+sudo npm run build
 
-npm run pm2:start:prod
+sudo npm run prisma:generate
+
+sudo npm run pm2:start:prod
+
+echo "success!!"
