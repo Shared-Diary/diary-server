@@ -14,7 +14,7 @@ describe('ApiController', () => {
 
   describe('/', () => {
     it('should return "Hello World!"', () => {
-      expect(apiController.getHello()).toBe(null);
+      expect(apiController.getHello()).toBe('health check');
     });
   });
 });
