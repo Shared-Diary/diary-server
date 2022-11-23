@@ -48,8 +48,7 @@ jobs:
           ${{ secrets.ENV }}
 
       - name: zip application
-        run: tar -cpvzf ./diary-server.tar.gz *
-        shell: bash
+        run: tar cvfz ./diary-server.tar.gz *
 
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
