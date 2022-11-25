@@ -29,3 +29,12 @@ export const GetDiaryList = () =>
       summary: '일기장 리스트 조회 With 좋아요 개수',
     }),
   );
+
+export const GetDiary = () =>
+  applyDecorators(
+    Get('/:diaryId/detail'),
+    Throttler(),
+    ApiOperation({
+      summary: '일기장 상세 조회 API',
+    }),
+  );

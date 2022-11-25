@@ -6,3 +6,4 @@ export const MAX_CONTENT_LENGTH = 500;
 
 export const MIN_PAGE = 1;
 export const MIN_PAGE_SIZE = 1;
+export const MIN_ID = 1;
