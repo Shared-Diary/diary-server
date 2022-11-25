@@ -3,10 +3,10 @@ REPOSITORY=/home/ubuntu/diary-server
 
 cd $REPOSITORY
 
-npm run prisma:generate
+npx prisma generate
 
 pm2 save --force
 
-npm run pm2:start:prod
+pm2 start ecosystem.config.js
 
 echo "success!!"
