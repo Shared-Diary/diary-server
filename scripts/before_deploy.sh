@@ -1,7 +1,8 @@
 #!/bin/bash
 REPOSITORY=/home/ec2-user
-cd $REPOSITORY || exit
+
+cd $REPOSITORY
 
 pm2 delete all
 
-rm -rf diary-server
+sudo rm -rf diary-server
