@@ -1,7 +1,7 @@
 #!/bin/bash
-REPOSITORY=/home/ubuntu/diary-server
+REPOSITORY=/home/ec2-user/diary-server
 
-cd $REPOSITORY || exit
+cd $REPOSITORY
 
 npm run prisma:generate
 

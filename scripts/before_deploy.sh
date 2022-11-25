@@ -1,5 +1,5 @@
 #!/bin/bash
-REPOSITORY=/home/ubuntu
+REPOSITORY=/home/ec2-user
 cd $REPOSITORY || exit
 
 pm2 delete all
