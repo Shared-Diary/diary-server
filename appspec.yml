@@ -3,17 +3,14 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/diary-server
+    destination: /home/ubuntu
 permissions:
-  - object: /home/ubuntu/diary-server
-    pattern: '**'
+  - object: /home/ubuntu
     owner: ubuntu
     group: ubuntu
 
 hooks:
   BeforeInstall:
     - location: scripts/before_deploy.sh
-      runas: ubuntu
   AfterInstall:
     - location: scripts/after_deploy.sh
-      runas: ubuntu
