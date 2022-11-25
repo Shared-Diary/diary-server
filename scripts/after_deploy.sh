@@ -5,6 +5,6 @@ cd $REPOSITORY
 
 sudo npm run prisma:generate
 
-sudo pm2 reload app
+pm2 reload app
 
 echo "success!!"
