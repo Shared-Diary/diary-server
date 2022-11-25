@@ -1,5 +1,5 @@
 #!/bin/bash
-REPOSITORY=/home/ec2-user/build
+REPOSITORY=/home/ec2-user/diary-server
 
 cd $REPOSITORY
 
