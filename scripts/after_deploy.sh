@@ -7,6 +7,4 @@ npm run prisma:generate
 
 npm run pm2:start:prod
 
-mkdir testFolder
-
 echo "success!!"
