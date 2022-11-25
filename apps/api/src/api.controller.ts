@@ -4,6 +4,6 @@ import { Controller, Get } from '@nestjs/common';
 export class ApiController {
   @Get('/')
   getHello(): string {
-    return 'health check!';
+    return 'health check!!';
   }
 }
