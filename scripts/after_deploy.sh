@@ -5,6 +5,6 @@ cd $REPOSITORY
 
 sudo npm run prisma:generate
 
-pm2 reload app
+pm2 reload $REPOSITORY/ecosystem.config.js
 
 echo "success!!"
