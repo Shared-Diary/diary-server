@@ -5,6 +5,6 @@ cd $REPOSITORY || exit
 
 npm run prisma:generate
 
-npm run pm2:start:prod
+pm2 restart app
 
 echo "success!!"

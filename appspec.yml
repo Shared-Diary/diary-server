@@ -11,11 +11,9 @@ permissions:
     group: ubuntu
 
 hooks:
-  BeforeInstall:
-    - location: scripts/before_deploy.sh
-      runas: ubuntu
-#  AfterInstall:
-#    - location: scripts/after_deploy.sh
+#  BeforeInstall:
+#    - location: scripts/before_deploy.sh
 #      runas: ubuntu
-  ApplicationStart:
+  AfterInstall:
     - location: scripts/after_deploy.sh
+      runas: ubuntu
