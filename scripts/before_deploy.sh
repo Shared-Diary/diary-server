@@ -2,6 +2,6 @@
 REPOSITORY=/home/ubuntu
 cd $REPOSITORY
 
-pm2 delete all
+sudo pm2 kill
 
 rm -rf diary-server

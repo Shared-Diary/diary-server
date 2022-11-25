@@ -5,8 +5,7 @@ cd $REPOSITORY
 
 npm run prisma:generate
 
-pm2 save --force
-
+pm2 kill
 npm run pm2:start:prod
 
 echo "success!!"
