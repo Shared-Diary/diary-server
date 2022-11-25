@@ -6,7 +6,10 @@ import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryRepository } from '../repository';
-import { MaxDiaryCreateCountException } from '../exception';
+import {
+  MaxDiaryCreateCountException,
+  NotFoundDiaryException,
+} from '../exception';
 import { GetDiaryIncludeImageAndLikeType } from '../type';
 
 describe('DiaryService', () => {
@@ -27,6 +30,7 @@ describe('DiaryService', () => {
             getCountBetweenDatesByUser: jest.fn(),
             create: jest.fn(),
             getListIncludeLikeAndImage: jest.fn(),
+            getIncludeLikeAndImage: jest.fn(),
           }),
         },
         {
@@ -111,7 +115,7 @@ describe('DiaryService', () => {
       ];
       diaryRepository.getListIncludeLikeAndImage.mockResolvedValue(mockData);
 
-      const { diaries } = await diaryService.getDiaryList({
+      const { diaries, total } = await diaryService.getDiaryList({
         page: 1,
         pageSize: 10,
       });
@@ -120,6 +124,7 @@ describe('DiaryService', () => {
         1,
       );
       expect(diaries[0].likeCount).toBe(0);
+      expect(total).toBe(1);
     });
 
     it('리스트가 빈 배열일 경우 null 을 return 한다', async () => {
@@ -130,6 +135,73 @@ describe('DiaryService', () => {
         pageSize: 10,
       });
       expect(diaries).toBe(null);
+    });
+  });
+
+  describe('get diary', () => {
+    it('다이어리 상세 조회 성공', async () => {
+      const mockData: GetDiaryIncludeImageAndLikeType = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        isOpen: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        diaryImage: [],
+        diaryLike: [],
+      };
+      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(mockData);
+
+      const { diary, images, likeCount } = await diaryService.getDiary({
+        diaryId: 1,
+      });
+
+      expect(diaryRepository.getIncludeLikeAndImage).toHaveBeenCalledTimes(1);
+      expect(diary.status).toBe(true);
+      expect(diary.isOpen).toBe(true);
+      expect(likeCount).toBe(0);
+      expect(images).toStrictEqual([]);
+    });
+
+    it('공개된 일기장이 아닐 경우 NotFoundDiaryException 을 반환한다', async () => {
+      const mockData = {
+        status: true,
+        isOpen: false,
+      };
+
+      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(mockData);
+
+      await expect(async () => {
+        await diaryService.getDiary({
+          diaryId: 1,
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('status 가 false 일 경우 NotFoundDiaryException 을 반환한다', async () => {
+      const mockData = {
+        status: false,
+        isOpen: true,
+      };
+      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(mockData);
+
+      await expect(async () => {
+        await diaryService.getDiary({
+          diaryId: 1,
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('존재하지 않는 일기장일 경우 NotFoundDiaryException 을 반환한다', async () => {
+      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(null);
+
+      await expect(async () => {
+        await diaryService.getDiary({
+          diaryId: 1,
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
     });
   });
 });
