@@ -10,6 +10,8 @@ async function bootstrap() {
   app.enableVersioning();
 
   app.enableCors(corsOptions);
+
+  // TODO: Production 배포 시 if 문 활성화 하기
   // if (isDevelopment) {
   buildSwagger(app, {
     title: 'Diary Server',
