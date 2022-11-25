@@ -3,17 +3,17 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/diary-server
+    destination: /home/ec2-user/diary-server
 permissions:
-  - object: /home/ubuntu/
-    pattern: '**'
-    owner: ubuntu
-    group: ubuntu
+  - object: /home/ec2-user
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
 
 hooks:
 #  BeforeInstall:
 #    - location: scripts/before_deploy.sh
-#      runas: ubuntu
+#      runas: root
   AfterInstall:
     - location: scripts/after_deploy.sh
-      runas: ubuntu
+      runas: root
