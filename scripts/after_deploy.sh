@@ -5,6 +5,6 @@ cd $REPOSITORY
 
 sudo npm run prisma:generate
 
-pm2 reload $REPOSITORY/ecosystem.config.js
+sudo npm run pm2:start:prod
 
 echo "success!!"
