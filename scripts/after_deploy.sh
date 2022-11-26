@@ -3,7 +3,7 @@ REPOSITORY=/home/ec2-user/diary-server
 
 cd $REPOSITORY
 
-sudo npm install -g pm2
+#sudo npm install -g pm2
 
 sudo npm run prisma:generate
 
