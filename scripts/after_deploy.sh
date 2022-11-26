@@ -5,6 +5,6 @@ cd $REPOSITORY
 
 sudo npm run prisma:generate
 
-sudo npm run pm2:start:prod
+sudo npm run pm2:restart
 
 echo "success!!"
