@@ -5,17 +5,11 @@ import { UsersService } from './users.service';
 import { UsersRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import { UserEntity } from '../entity';
+import { GetUserProfileResponseDto } from '../dto';
 
 @Injectable()
 export class UsersServiceImpl implements UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
-
-  private async validateIsExistEmail(email: string): Promise<void> {
-    const user = await this.usersRepository.findByEmail(email);
-    if (user) {
-      throw new DuplicateEmailException();
-    }
-  }
 
   async createUser({
     email,
@@ -33,6 +27,13 @@ export class UsersServiceImpl implements UsersService {
     }
   }
 
+  private async validateIsExistEmail(email: string): Promise<void> {
+    const user = await this.usersRepository.findByEmail(email);
+    if (user) {
+      throw new DuplicateEmailException();
+    }
+  }
+
   async findUserByEmail(email: string): Promise<UserEntity> {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
@@ -40,5 +41,24 @@ export class UsersServiceImpl implements UsersService {
     }
 
     return user;
+  }
+
+  async findUserWithProfile(
+    userId: number,
+  ): Promise<GetUserProfileResponseDto> {
+    const userWithProfile = await this.usersRepository.findWithProfile(userId);
+
+    if (!userWithProfile || !userWithProfile.status) {
+      throw new NotFoundUserException();
+    }
+
+    const { createdAt, userProfile } = userWithProfile;
+
+    return new GetUserProfileResponseDto({
+      signUpDate: createdAt,
+      nickName: userProfile ? userProfile.nickName : null,
+      profileUrl: userProfile ? userProfile.profileUrl : null,
+      introduce: userProfile ? userProfile.introduce : null,
+    });
   }
 }

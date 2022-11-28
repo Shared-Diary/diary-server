@@ -6,6 +6,7 @@ import { UsersService, UsersServiceImpl } from '../service';
 import { UsersController } from '../controller';
 import { UsersRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
+import ThrottlerModule from '../../configs/modules/throttler.module';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -18,6 +19,7 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule],
       controllers: [UsersController],
       providers: [
         {
