@@ -20,4 +20,15 @@ export class UsersRepository {
       },
     });
   }
+
+  findWithProfile(id: number) {
+    return this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        userProfile: true,
+      },
+    });
+  }
 }

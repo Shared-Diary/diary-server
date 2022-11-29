@@ -1,7 +1,7 @@
 #!/bin/bash
 REPOSITORY=/home/ec2-user
 
-cd $REPOSITORY
+cd $REPOSITORY || exit
 
 sudo pm2 delete all
 

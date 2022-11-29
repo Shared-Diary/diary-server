@@ -5,6 +5,7 @@ import { PrismaModule } from '@app/prisma';
 import { UsersController } from '../controller';
 import { UsersService } from '../service';
 import { UsersRepository } from '../repository';
+import ThrottlerModule from '../../configs/modules/throttler.module';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -15,7 +16,7 @@ describe('UsersController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule],
+      imports: [PrismaModule, ThrottlerModule],
       controllers: [UsersController],
       providers: [
         {
