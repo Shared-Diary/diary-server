@@ -1,3 +1,3 @@
 import { User, UserProfile } from '@prisma/client';
 
-export type UserWithProfile = User & { userProfile: UserProfile };
+export type UserWithProfile = User & { userProfile: UserProfile | null };
