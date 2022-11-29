@@ -46,19 +46,12 @@ export class UsersServiceImpl implements UsersService {
   async findUserWithProfile(
     userId: number,
   ): Promise<GetUserProfileResponseDto> {
-    const userWithProfile = await this.usersRepository.findWithProfile(userId);
+    const user = await this.usersRepository.findWithProfile(userId);
 
-    if (!userWithProfile || !userWithProfile.status) {
+    if (!user || !user.status) {
       throw new NotFoundUserException();
     }
 
-    const { createdAt, userProfile } = userWithProfile;
-
-    return new GetUserProfileResponseDto({
-      signUpDate: createdAt,
-      nickName: userProfile ? userProfile.nickName : null,
-      profileUrl: userProfile ? userProfile.profileUrl : null,
-      introduce: userProfile ? userProfile.introduce : null,
-    });
+    return new GetUserProfileResponseDto(user);
   }
 }

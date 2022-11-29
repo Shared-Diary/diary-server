@@ -15,6 +15,7 @@ describe('UsersService', () => {
   const mockUsersRepository = () => ({
     create: jest.fn(),
     findByEmail: jest.fn(),
+    findWithProfile: jest.fn(),
   });
 
   beforeEach(async () => {
@@ -66,5 +67,9 @@ describe('UsersService', () => {
         await usersService.findUserByEmail('email@email.com');
       }).rejects.toThrow(new NotFoundUserException());
     });
+  });
+
+  describe('findUserProfile', () => {
+    it('유저 프로필 조회 성공', async () => {});
   });
 });

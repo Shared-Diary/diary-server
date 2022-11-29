@@ -1,3 +1,5 @@
+import { UserWithProfile } from '../type';
+
 export class GetUserProfileResponseDto {
   readonly signUpDate: string;
 
@@ -7,20 +9,12 @@ export class GetUserProfileResponseDto {
 
   readonly introduce: string | null;
 
-  constructor({
-    signUpDate,
-    profileUrl,
-    nickName,
-    introduce,
-  }: {
-    signUpDate: Date;
-    profileUrl: string | null;
-    nickName: string | null;
-    introduce: string | null;
-  }) {
-    this.signUpDate = signUpDate.toISOString();
-    this.profileImageUrl = profileUrl;
-    this.nickName = nickName;
-    this.introduce = introduce;
+  constructor(userWithProfile: UserWithProfile) {
+    const { createdAt, userProfile } = userWithProfile;
+
+    this.signUpDate = createdAt.toISOString();
+    this.profileImageUrl = userProfile ? userProfile.profileUrl : null;
+    this.nickName = userProfile ? userProfile.nickName : null;
+    this.introduce = userProfile ? userProfile.introduce : null;
   }
 }
