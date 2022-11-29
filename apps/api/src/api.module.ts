@@ -16,7 +16,6 @@ import { DiaryModule } from './diary/diary.module';
 import configs from './configs/modules';
 
 const configModules = [JwtModule, PrismaModule, ...configs];
-
 const apiModules = [AuthenticationModule, UsersModule];
 
 @Module({
