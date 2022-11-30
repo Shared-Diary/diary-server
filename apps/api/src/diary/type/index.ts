@@ -1,6 +1,12 @@
-import { Diary, DiaryImage, DiaryLike } from '@prisma/client';
+import { DiaryEntity, DiaryImageEntity, DiaryLikeEntity } from '../entity';
 
-export type GetDiaryIncludeImageAndLikeType = Diary & {
-  diaryImage: DiaryImage[];
-  diaryLike: DiaryLike[];
+export type DiaryIncludeImageAndLikeType = DiaryEntity & {
+  diaryImage: DiaryImageEntity[];
+  diaryLike: DiaryLikeEntity[];
 };
+
+export interface GetMyDiaryOptions {
+  userId: number;
+  page: number;
+  pageSize: number;
+}

@@ -38,3 +38,12 @@ export const GetDiary = () =>
       summary: '일기장 상세 조회 API',
     }),
   );
+
+export const GetMyDiary = () =>
+  applyDecorators(
+    Get('/me'),
+    JwtAuth(),
+    ApiOperation({
+      summary: '내 일기장 리스트 조회 API',
+    }),
+  );
