@@ -21,10 +21,10 @@ import { DiaryService } from '../service';
 import {
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
-  GetDiaryListResponseDto,
   GetDiaryParamRequestDto,
-  GetDiaryResponseDto,
-} from '../dto';
+} from '../dto/requests';
+import { GetDiaryListResponseDto, GetDiaryResponseDto } from '../dto/responses';
+import { GetMyDiaryListRequestDto } from '../dto/requests/get-my-diary-list-request.dto';
 
 @Controller()
 export class DiaryController {
@@ -75,7 +75,16 @@ export class DiaryController {
   }
 
   @GetMyDiary()
-  async getMyDiary() {
-    return 1;
+  async getMyDiary(
+    @User() { userId }: UserRequestDto,
+    @Query() { page, pageSize }: GetMyDiaryListRequestDto,
+  ) {
+    const diaries = await this.diaryService.getMyDiaryList({
+      userId,
+      page,
+      pageSize,
+    });
+
+    return diaries;
   }
 }

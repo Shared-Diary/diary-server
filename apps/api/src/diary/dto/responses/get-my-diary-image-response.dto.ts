@@ -1,4 +1,4 @@
-import { DiaryImageEntity } from '../entity';
+import { DiaryImageEntity } from '../../entity';
 
 export class GetMyDiaryImageResponseDto {
   readonly id: number;

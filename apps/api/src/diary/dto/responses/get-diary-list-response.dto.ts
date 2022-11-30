@@ -1,4 +1,4 @@
-import { DiaryEntity, DiaryImageEntity } from '../entity';
+import { DiaryEntity, DiaryImageEntity } from '../../entity';
 
 export class DiaryIncludeImagesAndLikeCount extends DiaryEntity {
   image: DiaryImageEntity[];

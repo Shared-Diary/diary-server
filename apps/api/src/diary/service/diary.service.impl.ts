@@ -11,18 +11,21 @@ import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 import { DiaryService } from './diary.service';
 import {
   CreateDiaryRequestDto,
-  DiaryIncludeImagesAndLikeCount,
   GetDiaryListQueryRequestDto,
-  GetDiaryListResponseDto,
   GetDiaryParamRequestDto,
+} from '../dto/requests';
+import {
   GetDiaryResponseDto,
-} from '../dto';
+  GetDiaryListResponseDto,
+  DiaryIncludeImagesAndLikeCount,
+  GetMyDiaryListResponseDto,
+} from '../dto/responses';
 import { DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
 } from '../exception';
-import { DiaryIncludeImageAndLikeType } from '../type';
+import { DiaryIncludeImageAndLikeType, GetMyDiaryOptions } from '../type';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -142,5 +145,20 @@ export class DiaryServiceImpl implements DiaryService {
     if (!diary || !diary.status || !diary.isOpen) {
       throw new NotFoundDiaryException();
     }
+  }
+
+  async getMyDiaryList({
+    userId,
+    page,
+    pageSize,
+  }: GetMyDiaryOptions): Promise<GetMyDiaryListResponseDto> {
+    const [diariesIncludeLikeAndImage, total] =
+      await this.diaryRepository.getMyIncludeLikeAndImage({
+        userId,
+        page,
+        pageSize,
+      });
+
+    return new GetMyDiaryListResponseDto(diariesIncludeLikeAndImage, total);
   }
 }

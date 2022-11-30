@@ -1,10 +1,14 @@
 import {
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
-  GetDiaryListResponseDto,
   GetDiaryParamRequestDto,
+} from '../dto/requests';
+import {
   GetDiaryResponseDto,
-} from '../dto';
+  GetDiaryListResponseDto,
+  GetMyDiaryListResponseDto,
+} from '../dto/responses';
+import { GetMyDiaryOptions } from '../type';
 
 export abstract class DiaryService {
   abstract createDiary(
@@ -20,4 +24,8 @@ export abstract class DiaryService {
   abstract getDiary(
     paramRequestDto: GetDiaryParamRequestDto,
   ): Promise<GetDiaryResponseDto>;
+
+  abstract getMyDiaryList(
+    options: GetMyDiaryOptions,
+  ): Promise<GetMyDiaryListResponseDto>;
 }

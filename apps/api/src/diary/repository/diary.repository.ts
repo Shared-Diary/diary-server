@@ -52,7 +52,7 @@ export class DiaryRepository {
     page: number;
     pageSize: number;
   }): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
-    const where = {
+    const where: Prisma.DiaryWhereInput = {
       status: true,
       isOpen: true,
     };
@@ -86,5 +86,38 @@ export class DiaryRepository {
         diaryLike: true,
       },
     });
+  }
+
+  getMyIncludeLikeAndImage({
+    userId,
+    page,
+    pageSize,
+  }: {
+    userId: number;
+    page: number;
+    pageSize: number;
+  }): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
+    const where: Prisma.DiaryWhereInput = {
+      status: true,
+      userId,
+    };
+
+    return this.prismaService.$transaction([
+      this.prismaService.diary.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        where,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          diaryImage: true,
+          diaryLike: true,
+        },
+      }),
+      this.prismaService.diary.count({
+        where,
+      }),
+    ]);
   }
 }

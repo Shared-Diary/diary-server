@@ -1,5 +1,5 @@
 import { GetMyDiaryImageResponseDto } from './get-my-diary-image-response.dto';
-import { DiaryIncludeImageAndLikeType } from '../type';
+import { DiaryIncludeImageAndLikeType } from '../../type';
 
 export class GetMyDiaryResponseDto {
   readonly id: number;
@@ -16,9 +16,9 @@ export class GetMyDiaryResponseDto {
 
   readonly likeCount: number;
 
-  constructor(diaryIncludeImageAndLikeType: DiaryIncludeImageAndLikeType) {
+  constructor(diaryIncludeImageAndLike: DiaryIncludeImageAndLikeType) {
     const { id, createdAt, updatedAt, title, isOpen, diaryImage, diaryLike } =
-      diaryIncludeImageAndLikeType;
+      diaryIncludeImageAndLike;
 
     this.id = id;
     this.createdAt = createdAt.toISOString();
