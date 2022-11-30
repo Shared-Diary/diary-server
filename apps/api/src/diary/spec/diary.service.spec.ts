@@ -31,6 +31,7 @@ describe('DiaryService', () => {
             create: jest.fn(),
             getListIncludeLikeAndImage: jest.fn(),
             getIncludeLikeAndImage: jest.fn(),
+            getMyIncludeLikeAndImage: jest.fn(),
           }),
         },
         {
