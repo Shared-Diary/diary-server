@@ -10,7 +10,7 @@ import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
 } from '../exception';
-import { GetDiaryIncludeImageAndLikeType } from '../type';
+import { DiaryIncludeImageAndLikeType } from '../type';
 
 describe('DiaryService', () => {
   let diaryService: DiaryService;
@@ -96,7 +96,7 @@ describe('DiaryService', () => {
 
   describe('get diary list', () => {
     it('다이어리 리스트 조회 성공', async () => {
-      const mockData: WithTotal<GetDiaryIncludeImageAndLikeType[]> = [
+      const mockData: WithTotal<DiaryIncludeImageAndLikeType[]> = [
         [
           {
             id: 1,
@@ -140,7 +140,7 @@ describe('DiaryService', () => {
 
   describe('get diary', () => {
     it('다이어리 상세 조회 성공', async () => {
-      const mockData: GetDiaryIncludeImageAndLikeType = {
+      const mockData: DiaryIncludeImageAndLikeType = {
         id: 1,
         createdAt: new Date(),
         updatedAt: new Date(),

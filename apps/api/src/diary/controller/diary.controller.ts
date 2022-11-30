@@ -15,6 +15,7 @@ import {
   CreateDiary,
   GetDiaryList,
   GetDiary,
+  GetMyDiary,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
@@ -71,5 +72,10 @@ export class DiaryController {
       likeCount,
       images,
     });
+  }
+
+  @GetMyDiary()
+  async getMyDiary() {
+    return 1;
   }
 }

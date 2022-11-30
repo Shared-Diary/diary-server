@@ -22,7 +22,7 @@ import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
 } from '../exception';
-import { GetDiaryIncludeImageAndLikeType } from '../type';
+import { DiaryIncludeImageAndLikeType } from '../type';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -108,9 +108,9 @@ export class DiaryServiceImpl implements DiaryService {
   }
 
   private parseGetListImageResponse(
-    diaries: GetDiaryIncludeImageAndLikeType[],
+    diaries: DiaryIncludeImageAndLikeType[],
   ): DiaryIncludeImagesAndLikeCount[] {
-    return diaries.map((diary: GetDiaryIncludeImageAndLikeType) => {
+    return diaries.map((diary: DiaryIncludeImageAndLikeType) => {
       const { diaryImage, diaryLike, ...rest } = diary;
 
       return {
@@ -138,7 +138,7 @@ export class DiaryServiceImpl implements DiaryService {
     };
   }
 
-  private validateIsOpenedDiary(diary: GetDiaryIncludeImageAndLikeType) {
+  private validateIsOpenedDiary(diary: DiaryIncludeImageAndLikeType) {
     if (!diary || !diary.status || !diary.isOpen) {
       throw new NotFoundDiaryException();
     }
