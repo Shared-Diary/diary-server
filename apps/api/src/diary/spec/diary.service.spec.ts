@@ -11,6 +11,7 @@ import {
   NotFoundDiaryException,
 } from '../exception';
 import { DiaryIncludeImageAndLikeType } from '../type';
+import { GetMyDiaryListResponseDto } from '../dto/responses';
 
 describe('DiaryService', () => {
   let diaryService: DiaryService;
@@ -139,7 +140,7 @@ describe('DiaryService', () => {
     });
   });
 
-  describe('get diary', () => {
+  describe('getDiary', () => {
     it('다이어리 상세 조회 성공', async () => {
       const mockData: DiaryIncludeImageAndLikeType = {
         id: 1,
@@ -203,6 +204,48 @@ describe('DiaryService', () => {
           diaryId: 1,
         });
       }).rejects.toThrow(new NotFoundDiaryException());
+    });
+  });
+
+  describe('getMyDiaryList', () => {
+    it('내 다이어리 리스트 조회 성공', async () => {
+      const mockData: WithTotal<DiaryIncludeImageAndLikeType[]> = [
+        [
+          {
+            id: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            status: true,
+            isOpen: true,
+            userId: 1,
+            title: 'title',
+            content: 'content',
+            diaryImage: [
+              {
+                id: 1,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                diaryId: 1,
+                imageUrl: 'url',
+              },
+            ],
+            diaryLike: [],
+          },
+        ],
+        1,
+      ];
+      await diaryRepository.getMyIncludeLikeAndImage.mockResolvedValue(
+        mockData,
+      );
+
+      const result = await diaryService.getMyDiaryList({
+        userId: 1,
+        page: 1,
+        pageSize: 10,
+      });
+
+      expect(result).toBeInstanceOf(GetMyDiaryListResponseDto);
+      expect(result.total).toBe(1);
     });
   });
 });
