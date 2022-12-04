@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { UsersController } from './controller';
 import { UserService, UserServiceImpl } from './service';
-import { UserRepository } from './repository';
+import { UserProfileRepository, UserRepository } from './repository';
 
 @Module({
   controllers: [UsersController],
@@ -12,6 +12,7 @@ import { UserRepository } from './repository';
       useClass: UserServiceImpl,
     },
     UserRepository,
+    UserProfileRepository,
   ],
   exports: [UserService],
 })

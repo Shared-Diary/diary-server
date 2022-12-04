@@ -4,7 +4,7 @@ import { Mock } from '@app/shared/type';
 
 import { UserService, UserServiceImpl } from '../service';
 import { UsersController } from '../controller';
-import { UserRepository } from '../repository';
+import { UserProfileRepository, UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
@@ -13,12 +13,15 @@ import { GetUserProfileResponseDto } from '../dto';
 describe('UserService', () => {
   let userService: UserService;
   let userRepository: Mock<UserRepository>;
+  let userProfileRepository: Mock<UserProfileRepository>;
 
   const mockUserRepository = () => ({
     create: jest.fn(),
     findByEmail: jest.fn(),
     findWithProfile: jest.fn(),
   });
+
+  const mockUserProfileRepository = () => ({});
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -33,11 +36,16 @@ describe('UserService', () => {
           provide: UserRepository,
           useFactory: mockUserRepository,
         },
+        {
+          provide: UserProfileRepository,
+          useFactory: mockUserProfileRepository,
+        },
       ],
     }).compile();
 
     userService = await module.get<UserService>(UserService);
     userRepository = await module.get(UserRepository);
+    userProfileRepository = await module.get(UserProfileRepository);
   });
 
   describe('createUser', () => {

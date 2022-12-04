@@ -2,14 +2,17 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { UserService } from './user.service';
-import { UserRepository } from '../repository';
+import { UserProfileRepository, UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import { UserEntity } from '../entity';
 import { GetUserProfileResponseDto } from '../dto';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userProfileRepository: UserProfileRepository,
+  ) {}
 
   async createUser({
     email,
