@@ -8,7 +8,7 @@ import { UserProfileRepository, UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -21,7 +21,9 @@ describe('UserService', () => {
     findWithProfile: jest.fn(),
   });
 
-  const mockUserProfileRepository = () => ({});
+  const mockUserProfileRepository = () => ({
+    create: jest.fn(),
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

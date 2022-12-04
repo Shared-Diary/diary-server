@@ -1,4 +1,7 @@
-import { Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Param, ParseIntPipe } from '@nestjs/common';
+
+import { User } from '@app/utils/decorators';
+import { UserRequestDto } from '@api/shared/dto';
 
 import {
   UsersController as Controller,
@@ -6,7 +9,8 @@ import {
   CreateUserProfile,
 } from './users.controller.decorator';
 import { UserService } from '../service';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
+import { CreateUserProfileRequestDto } from '../dto/requests';
 
 @Controller()
 export class UsersController {
@@ -22,7 +26,10 @@ export class UsersController {
   }
 
   @CreateUserProfile()
-  async createUserProfile(): Promise<null> {
+  async createUserProfile(
+    @User() { userId }: UserRequestDto,
+    @Body() createUserProfileRequestDto: CreateUserProfileRequestDto,
+  ): Promise<null> {
     return null;
   }
 }

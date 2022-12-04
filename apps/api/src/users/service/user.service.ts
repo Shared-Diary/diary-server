@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 import { UserEntity } from '../entity';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 export abstract class UserService {
   abstract createUser(user: Prisma.UserUncheckedCreateInput): Promise<void>;

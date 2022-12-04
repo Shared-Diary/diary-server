@@ -8,7 +8,7 @@ import {
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
 
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 export const UsersController = () =>
   applyDecorators(Controller('/users'), ApiTags('Users'));
@@ -27,7 +27,7 @@ export const GetUserProfile = () =>
 
 export const CreateUserProfile = () =>
   applyDecorators(
-    Post(),
+    Post('/profile'),
     JwtAuth(),
     ApiOperation({
       summary: '유저 프로필 등록 API',

@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { UserProfileRepository, UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import { UserEntity } from '../entity';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 @Injectable()
 export class UserServiceImpl implements UserService {

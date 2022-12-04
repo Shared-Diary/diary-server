@@ -1,4 +1,4 @@
-import { UserWithProfile } from '../type';
+import { UserWithProfile } from '../../type';
 
 export class GetUserProfileResponseDto {
   readonly signUpDate: string;
