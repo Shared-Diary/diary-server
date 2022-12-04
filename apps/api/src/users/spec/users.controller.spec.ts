@@ -3,14 +3,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaModule } from '@app/prisma';
 
 import { UsersController } from '../controller';
-import { UsersService } from '../service';
-import { UsersRepository } from '../repository';
+import { UserService } from '../service';
+import { UserRepository } from '../repository';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 
 describe('UsersController', () => {
   let controller: UsersController;
 
-  const mockUsersService = () => ({
+  const mockUserService = () => ({
     createUser: jest.fn(),
   });
 
@@ -20,10 +20,10 @@ describe('UsersController', () => {
       controllers: [UsersController],
       providers: [
         {
-          provide: UsersService,
-          useFactory: mockUsersService,
+          provide: UserService,
+          useFactory: mockUserService,
         },
-        UsersRepository,
+        UserRepository,
       ],
     }).compile();
 
