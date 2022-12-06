@@ -2,32 +2,32 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PrismaModule } from '@app/prisma';
 
-import { UserController } from '../controller';
-import { UserService } from '../service';
-import { UserRepository } from '../repository';
+import { UsersController } from '../controller';
+import { UsersService } from '../service';
+import { UsersRepository } from '../repository';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 
 describe('UsersController', () => {
-  let controller: UserController;
+  let controller: UsersController;
 
-  const mockUserService = () => ({
+  const mockUsersService = () => ({
     createUser: jest.fn(),
   });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule, ThrottlerModule],
-      controllers: [UserController],
+      controllers: [UsersController],
       providers: [
         {
-          provide: UserService,
-          useFactory: mockUserService,
+          provide: UsersService,
+          useFactory: mockUsersService,
         },
-        UserRepository,
+        UsersRepository,
       ],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
+    controller = module.get<UsersController>(UsersController);
   });
 
   it('should be defined', () => {

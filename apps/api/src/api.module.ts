@@ -11,12 +11,12 @@ import { AllExceptionsFilter } from '@app/utils/filters';
 
 import { ApiController } from './api.controller';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { UserModule } from './users/user.module';
+import { UsersModule } from './users/users.module';
 import { DiaryModule } from './diary/diary.module';
 import configs from './configs/modules';
 
 const configModules = [JwtModule, PrismaModule, ...configs];
-const apiModules = [AuthenticationModule, UserModule];
+const apiModules = [AuthenticationModule, UsersModule];
 
 @Module({
   imports: [...configModules, ...apiModules, DiaryModule],

@@ -4,12 +4,12 @@ import { PasswordEncoderModule } from '@app/password-encoder';
 
 import { AuthController } from './controller';
 import { AuthService, AuthServiceImpl } from './service';
-import { UserModule } from '../../users/user.module';
+import { UsersModule } from '../../users/users.module';
 import { TokenModule } from '../token/token.module';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  imports: [UserModule, PasswordEncoderModule, TokenModule],
+  imports: [UsersModule, PasswordEncoderModule, TokenModule],
   controllers: [AuthController],
   providers: [
     JwtStrategy,

@@ -1,2 +1,2 @@
-export * from './user.service';
-export * from './user.service.impl';
+export * from './users.service';
+export * from './users.service.impl';

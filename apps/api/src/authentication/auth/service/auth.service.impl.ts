@@ -8,20 +8,20 @@ import {
   LoginUserResponseDto,
   RegisterRequestDto,
 } from '../dto';
-import { UserService } from '../../../users/service';
+import { UsersService } from '../../../users/service';
 import { PasswordMismatchException } from '../exception';
 import { AccessTokenService } from '../../token/service';
 
 @Injectable()
 export class AuthServiceImpl implements AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly usersService: UsersService,
     private readonly passwordEncoderService: PasswordEncoderService,
     private readonly accessTokenService: AccessTokenService,
   ) {}
 
   async register({ email, password }: RegisterRequestDto): Promise<void> {
-    await this.userService.createUser({
+    await this.usersService.createUser({
       email,
       password: await this.passwordEncoderService.encode(password),
     });
@@ -45,7 +45,7 @@ export class AuthServiceImpl implements AuthService {
     password,
   }: LoginUserRequestDto): Promise<LoginUserResponseDto> {
     const { id: userId, password: hashedPassword } =
-      await this.userService.findUserByEmail(email);
+      await this.usersService.findUserByEmail(email);
 
     await this.validatePasswordMatch(password, hashedPassword);
 
