@@ -2,69 +2,59 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Mock } from '@app/shared/type';
 
-import { UserService, UserServiceImpl } from '../service';
-import { UserController } from '../controller';
-import { UserProfileRepository, UserRepository } from '../repository';
+import { UsersService, UsersServiceImpl } from '../service';
+import { UsersController } from '../controller';
+import { UsersRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
-import { GetUserProfileResponseDto } from '../dto/responses';
+import { GetUserProfileResponseDto } from '../dto';
 
-describe('UserService', () => {
-  let userService: UserService;
-  let userRepository: Mock<UserRepository>;
-  let userProfileRepository: Mock<UserProfileRepository>;
+describe('UsersService', () => {
+  let usersService: UsersService;
+  let usersRepository: Mock<UsersRepository>;
 
-  const mockUserRepository = () => ({
+  const mockUsersRepository = () => ({
     create: jest.fn(),
     findByEmail: jest.fn(),
     findWithProfile: jest.fn(),
   });
 
-  const mockUserProfileRepository = () => ({
-    create: jest.fn(),
-  });
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ThrottlerModule],
-      controllers: [UserController],
+      controllers: [UsersController],
       providers: [
         {
-          provide: UserService,
-          useClass: UserServiceImpl,
+          provide: UsersService,
+          useClass: UsersServiceImpl,
         },
         {
-          provide: UserRepository,
-          useFactory: mockUserRepository,
-        },
-        {
-          provide: UserProfileRepository,
-          useFactory: mockUserProfileRepository,
+          provide: UsersRepository,
+          useFactory: mockUsersRepository,
         },
       ],
     }).compile();
 
-    userService = await module.get<UserService>(UserService);
-    userRepository = await module.get(UserRepository);
-    userProfileRepository = await module.get(UserProfileRepository);
+    usersService = await module.get<UsersService>(UsersService);
+    usersRepository = await module.get(UsersRepository);
   });
 
   describe('createUser', () => {
     it('유저 생성 성공', async () => {
-      const result = await userService.createUser({
+      const result = await usersService.createUser({
         email: 'test@test.com',
         password: 'testPassword',
       });
 
-      expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
       expect(result).toBeUndefined();
     });
 
     it('이메일이 존재한다면 Conflict Exception 을 전송한다', async () => {
-      userRepository.findByEmail.mockResolvedValue('data');
+      usersRepository.findByEmail.mockResolvedValue('data');
       await expect(async () => {
-        await userService.createUser({
+        await usersService.createUser({
           email: 'test@data.com',
           password: 'testpassword',
         });
@@ -74,9 +64,9 @@ describe('UserService', () => {
 
   describe('findUserByEmail', () => {
     it('유저가 존재하지 않는다면 Not Found Exception 을 전송한다', async () => {
-      userRepository.findByEmail.mockResolvedValue(null);
+      usersRepository.findByEmail.mockResolvedValue(null);
       await expect(async () => {
-        await userService.findUserByEmail('email@email.com');
+        await usersService.findUserByEmail('email@email.com');
       }).rejects.toThrow(new NotFoundUserException());
     });
   });
@@ -100,11 +90,11 @@ describe('UserService', () => {
           introduce: 'introduce',
         },
       };
-      userRepository.findWithProfile.mockResolvedValue(mockValue);
+      usersRepository.findWithProfile.mockResolvedValue(mockValue);
 
-      const result = await userService.findUserWithProfile(1);
+      const result = await usersService.findUserWithProfile(1);
 
-      expect(userRepository.findWithProfile).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findWithProfile).toHaveBeenCalledTimes(1);
       expect(result instanceof GetUserProfileResponseDto).toBeTruthy();
     });
 
@@ -118,9 +108,9 @@ describe('UserService', () => {
         password: 'password',
         userProfile: null,
       };
-      userRepository.findWithProfile.mockResolvedValue(mockValue);
+      usersRepository.findWithProfile.mockResolvedValue(mockValue);
 
-      const result = await userService.findUserWithProfile(1);
+      const result = await usersService.findUserWithProfile(1);
 
       expect(result.introduce).toBeNull();
       expect(result.nickName).toBeNull();
@@ -128,18 +118,18 @@ describe('UserService', () => {
     });
 
     it('user 정보가 없을 경우 NotFoundUserException 반환한다', async () => {
-      userRepository.findWithProfile.mockResolvedValue(null);
+      usersRepository.findWithProfile.mockResolvedValue(null);
 
       await expect(async () => {
-        await userService.findUserWithProfile(1);
+        await usersService.findUserWithProfile(1);
       }).rejects.toThrow(new NotFoundUserException());
     });
 
     it('user 의 status 값이 false 인 경우 NotFoundUserException 반환한다', async () => {
-      userRepository.findWithProfile.mockResolvedValue({ status: false });
+      usersRepository.findWithProfile.mockResolvedValue({ status: false });
 
       await expect(async () => {
-        await userService.findUserWithProfile(1);
+        await usersService.findUserWithProfile(1);
       }).rejects.toThrow(new NotFoundUserException());
     });
   });
