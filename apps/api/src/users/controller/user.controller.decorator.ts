@@ -10,7 +10,7 @@ import { JwtAuth, Throttler } from '@app/utils/guards';
 
 import { GetUserProfileResponseDto } from '../dto/responses';
 
-export const UsersController = () =>
+export const UserController = () =>
   applyDecorators(Controller('/users'), ApiTags('Users'));
 
 export const GetUserProfile = () =>

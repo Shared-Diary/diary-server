@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Mock } from '@app/shared/type';
 
 import { UserService, UserServiceImpl } from '../service';
-import { UsersController } from '../controller';
+import { UserController } from '../controller';
 import { UserProfileRepository, UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
@@ -28,7 +28,7 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ThrottlerModule],
-      controllers: [UsersController],
+      controllers: [UserController],
       providers: [
         {
           provide: UserService,

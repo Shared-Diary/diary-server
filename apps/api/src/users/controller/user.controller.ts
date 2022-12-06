@@ -4,16 +4,16 @@ import { User } from '@app/utils/decorators';
 import { UserRequestDto } from '@api/shared/dto';
 
 import {
-  UsersController as Controller,
+  UserController as Controller,
   GetUserProfile,
   CreateUserProfile,
-} from './users.controller.decorator';
+} from './user.controller.decorator';
 import { UserService } from '../service';
 import { GetUserProfileResponseDto } from '../dto/responses';
 import { CreateUserProfileRequestDto } from '../dto/requests';
 
 @Controller()
-export class UsersController {
+export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @GetUserProfile()
