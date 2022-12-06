@@ -15,7 +15,7 @@ export const UsersController = () =>
 
 export const GetUserProfile = () =>
   applyDecorators(
-    Get('/profile'),
+    Get('/:userId/profile'),
     Throttler(),
     ApiOperation({
       summary: '유저 프로필 조회 API',
