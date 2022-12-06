@@ -30,6 +30,11 @@ export class UsersController {
     @User() { userId }: UserRequestDto,
     @Body() createUserProfileRequestDto: CreateUserProfileRequestDto,
   ): Promise<null> {
+    await this.userService.createUserProfile(
+      userId,
+      createUserProfileRequestDto,
+    );
+
     return null;
   }
 }

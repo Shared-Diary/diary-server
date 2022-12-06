@@ -3,9 +3,14 @@ import { Prisma } from '@prisma/client';
 
 import { UserService } from './user.service';
 import { UserProfileRepository, UserRepository } from '../repository';
-import { DuplicateEmailException, NotFoundUserException } from '../exception';
+import {
+  CanNotCreatedUserProfileException,
+  DuplicateEmailException,
+  NotFoundUserException,
+} from '../exception';
 import { UserEntity } from '../entity';
 import { GetUserProfileResponseDto } from '../dto/responses';
+import { CreateUserProfileRequestDto } from '../dto/requests';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
@@ -58,7 +63,25 @@ export class UserServiceImpl implements UserService {
     return new GetUserProfileResponseDto(user);
   }
 
-  async createUserProfile(userId: number): Promise<void> {
-    // TODO: user profile 생성 로직
+  async createUserProfile(
+    userId: number,
+    dto: CreateUserProfileRequestDto,
+  ): Promise<void> {
+    await this.validateIsCreated(userId);
+
+    const { nickName, introduce } = dto;
+
+    await this.userProfileRepository.create({
+      userId,
+      nickName,
+      introduce,
+    });
+  }
+
+  private async validateIsCreated(userId: number) {
+    const userProfile = await this.userProfileRepository.getByUser(userId);
+    if (userProfile) {
+      throw new CanNotCreatedUserProfileException();
+    }
   }
 }
