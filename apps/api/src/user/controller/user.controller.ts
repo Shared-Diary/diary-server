@@ -1,15 +1,15 @@
 import { Param, ParseIntPipe } from '@nestjs/common';
 
 import {
-  UsersController as Controller,
+  UserController as Controller,
   GetUserProfile,
-} from './users.controller.decorator';
-import { UsersService } from '../service';
+} from './user.controller.decorator';
+import { UserService } from '../service';
 import { GetUserProfileResponseDto } from '../dto';
 
 @Controller()
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly usersService: UserService) {}
 
   @GetUserProfile()
   async getUserProfile(

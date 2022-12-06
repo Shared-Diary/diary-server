@@ -1,15 +1,15 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { UsersService } from './users.service';
-import { UsersRepository } from '../repository';
+import { UserService } from './user.service';
+import { UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import { UserEntity } from '../entity';
 import { GetUserProfileResponseDto } from '../dto';
 
 @Injectable()
-export class UsersServiceImpl implements UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+export class UserServiceImpl implements UserService {
+  constructor(private readonly userRepository: UserRepository) {}
 
   async createUser({
     email,
@@ -18,7 +18,7 @@ export class UsersServiceImpl implements UsersService {
     await this.validateIsExistEmail(email);
 
     try {
-      await this.usersRepository.create({
+      await this.userRepository.create({
         email,
         password,
       });
@@ -28,14 +28,14 @@ export class UsersServiceImpl implements UsersService {
   }
 
   private async validateIsExistEmail(email: string): Promise<void> {
-    const user = await this.usersRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
     if (user) {
       throw new DuplicateEmailException();
     }
   }
 
   async findUserByEmail(email: string): Promise<UserEntity> {
-    const user = await this.usersRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new NotFoundUserException();
     }
@@ -46,7 +46,7 @@ export class UsersServiceImpl implements UsersService {
   async findUserWithProfile(
     userId: number,
   ): Promise<GetUserProfileResponseDto> {
-    const user = await this.usersRepository.findWithProfile(userId);
+    const user = await this.userRepository.findWithProfile(userId);
 
     if (!user || !user.status) {
       throw new NotFoundUserException();

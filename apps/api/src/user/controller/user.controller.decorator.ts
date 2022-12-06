@@ -5,8 +5,8 @@ import { Throttler } from '@app/utils/guards';
 
 import { GetUserProfileResponseDto } from '../dto';
 
-export const UsersController = () =>
-  applyDecorators(Controller('/users'), ApiTags('Users'));
+export const UserController = () =>
+  applyDecorators(Controller('/user'), ApiTags('Users'));
 
 export const GetUserProfile = () =>
   applyDecorators(
