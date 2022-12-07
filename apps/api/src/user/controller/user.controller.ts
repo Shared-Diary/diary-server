@@ -3,6 +3,7 @@ import { Param, ParseIntPipe } from '@nestjs/common';
 import {
   UserController as Controller,
   GetUserProfile,
+  CreateUserProfile,
 } from './user.controller.decorator';
 import { UserService } from '../service';
 import { GetUserProfileResponseDto } from '../dto';
@@ -18,5 +19,10 @@ export class UserController {
     const userProfile = await this.usersService.findUserWithProfile(userId);
 
     return userProfile;
+  }
+
+  @CreateUserProfile()
+  async createUserProfile(): Promise<null> {
+    return null;
   }
 }
