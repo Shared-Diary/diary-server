@@ -15,7 +15,7 @@ import { UploadFileService } from './upload-file.service';
 export class AwsS3UploadFileService implements UploadFileService {
   constructor(private readonly s3Provider: AwsS3ConfigProvider) {}
 
-  getUploadedImageList(files: Express.Multer.File[]): Promise<string[]> {
+  getUploadedImageUrlList(files: Express.Multer.File[]): Promise<string[]> {
     return Promise.all(
       files.map(async (file) => {
         const { Location: imageUrl } = await this.uploadFile(file);
@@ -25,7 +25,7 @@ export class AwsS3UploadFileService implements UploadFileService {
     );
   }
 
-  async getUploadedImage(file: Express.Multer.File): Promise<string> {
+  async getUploadedImageUrl(file: Express.Multer.File): Promise<string> {
     const { Location: imageUrl } = await this.uploadFile(file);
 
     return imageUrl;

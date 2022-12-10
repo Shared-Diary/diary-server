@@ -88,7 +88,7 @@ export class DiaryServiceImpl implements DiaryService {
   }
 
   private getImageUrls(diaryImageFiles: Express.Multer.File[]) {
-    return this.uploadFileService.getUploadedImageList(diaryImageFiles);
+    return this.uploadFileService.getUploadedImageUrlList(diaryImageFiles);
   }
 
   async getDiaryList(

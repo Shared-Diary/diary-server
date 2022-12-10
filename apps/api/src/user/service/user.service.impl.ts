@@ -1,6 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
+import { UploadFileService } from '@app/upload-file';
+
 import { UserService } from './user.service';
 import { UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
@@ -10,7 +12,10 @@ import { GetUserProfileResponseDto } from '../dto/responses';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly uploadFileService: UploadFileService,
+  ) {}
 
   async createUser({
     email,
@@ -59,5 +64,9 @@ export class UserServiceImpl implements UserService {
   async createUserProfile(
     dto: CreateUserProfileDto,
     profileImageFile: Express.Multer.File,
-  ): Promise<void> {}
+  ): Promise<void> {
+    const profileImageUrl = await this.uploadFileService.getUploadedImageUrl(
+      profileImageFile,
+    );
+  }
 }

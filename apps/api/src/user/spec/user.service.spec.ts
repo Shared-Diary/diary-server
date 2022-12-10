@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Mock } from '@app/shared/type';
+import { UploadFileService } from '@app/upload-file';
 
 import { UserService, UserServiceImpl } from '../service';
 import { UserController } from '../controller';
@@ -13,12 +14,7 @@ import { GetUserProfileResponseDto } from '../dto/responses';
 describe('UsersService', () => {
   let userService: UserService;
   let userRepository: Mock<UserRepository>;
-
-  const mockUsersRepository = () => ({
-    create: jest.fn(),
-    findByEmail: jest.fn(),
-    findWithProfile: jest.fn(),
-  });
+  let uploadFileService: Mock<UploadFileService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,13 +27,24 @@ describe('UsersService', () => {
         },
         {
           provide: UserRepository,
-          useFactory: mockUsersRepository,
+          useFactory: () => ({
+            create: jest.fn(),
+            findByEmail: jest.fn(),
+            findWithProfile: jest.fn(),
+          }),
+        },
+        {
+          provide: UploadFileService,
+          useFactory: () => ({
+            getUploadedImageUrl: jest.fn(),
+          }),
         },
       ],
     }).compile();
 
     userService = await module.get<UserService>(UserService);
     userRepository = await module.get(UserRepository);
+    uploadFileService = module.get(UploadFileService);
   });
 
   describe('createUser', () => {
