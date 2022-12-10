@@ -1,15 +1,26 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
+import { UploadFileService } from '@app/upload-file';
+
 import { UserService } from './user.service';
-import { UserRepository } from '../repository';
-import { DuplicateEmailException, NotFoundUserException } from '../exception';
+import { UserProfileRepository, UserRepository } from '../repository';
+import {
+  AlreadyCreatedProfileException,
+  DuplicateEmailException,
+  NotFoundUserException,
+} from '../exception';
 import { UserEntity } from '../entity';
-import { GetUserProfileResponseDto } from '../dto';
+import { CreateUserProfileDto } from '../dto/requests';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userProfileRepository: UserProfileRepository,
+    private readonly uploadFileService: UploadFileService,
+  ) {}
 
   async createUser({
     email,
@@ -53,5 +64,31 @@ export class UserServiceImpl implements UserService {
     }
 
     return new GetUserProfileResponseDto(user);
+  }
+
+  async createUserProfile(
+    { nickName, introduce }: CreateUserProfileDto,
+    userId: number,
+    profileImageFile?: Express.Multer.File,
+  ): Promise<void> {
+    const profileImageUrl = profileImageFile
+      ? await this.uploadFileService.getUploadedImageUrl(profileImageFile)
+      : null;
+
+    await this.validateUserCreatedProfile(userId);
+
+    await this.userProfileRepository.create({
+      nickName,
+      introduce,
+      profileUrl: profileImageUrl,
+      userId,
+    });
+  }
+
+  private async validateUserCreatedProfile(userId: number) {
+    const userProfile = await this.userProfileRepository.getByUserId(userId);
+    if (userProfile) {
+      throw new AlreadyCreatedProfileException();
+    }
   }
 }

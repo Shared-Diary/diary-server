@@ -10,6 +10,7 @@
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "build": "nest build",
     "start:local": "NODE_ENV=local nest start --watch",
+    "start:local:aws": "NODE_ENV=dev nest start --watch",
     "start:dev": "nest build && NODE_ENV=dev node dist/apps/api/main",
     "start:prod": "nest build && NODE_ENV=prod node dist/apps/api/main",
     "pm2:start:prod": "pm2 start ecosystem.config.js",

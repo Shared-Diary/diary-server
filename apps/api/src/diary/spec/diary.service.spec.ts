@@ -38,7 +38,7 @@ describe('DiaryService', () => {
         {
           provide: UploadFileService,
           useFactory: () => ({
-            getUploadedImageList: jest.fn(),
+            getUploadedImageUrlList: jest.fn(),
           }),
         },
       ],
@@ -75,11 +75,13 @@ describe('DiaryService', () => {
         1,
       );
 
-      expect(uploadFileService.getUploadedImageList).toHaveBeenCalledTimes(0);
+      expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
+        0,
+      );
     });
 
     it('다이어리 생성 성공', async () => {
-      uploadFileService.getUploadedImageList.mockResolvedValue(['imageUrl']);
+      uploadFileService.getUploadedImageUrlList.mockResolvedValue(['imageUrl']);
 
       const result = await diaryService.createDiary(
         { title: 'test', content: 'test', isOpen: true },
@@ -92,7 +94,9 @@ describe('DiaryService', () => {
         1,
       );
       expect(diaryRepository.create).toHaveBeenCalledTimes(1);
-      expect(uploadFileService.getUploadedImageList).toHaveBeenCalledTimes(1);
+      expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
+        1,
+      );
     });
   });
 

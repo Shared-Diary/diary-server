@@ -7,3 +7,9 @@ export const MAX_CONTENT_LENGTH = 500;
 export const MIN_PAGE = 1;
 export const MIN_PAGE_SIZE = 1;
 export const MIN_ID = 1;
+
+export const MIN_PROFILE_NICKNAME_LENGTH = 1;
+export const MAX_PROFILE_NICKNAME_LENGTH = 20;
+
+export const MIN_PROFILE_INTRODUCE_LENGTH = 1;
+export const MAX_PROFILE_INTRODUCE_LENGTH = 200;
