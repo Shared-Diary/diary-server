@@ -8,7 +8,7 @@ import { UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 describe('UsersService', () => {
   let userService: UserService;

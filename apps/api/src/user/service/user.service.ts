@@ -1,7 +1,8 @@
 import { Prisma } from '@prisma/client';
 
 import { UserEntity } from '../entity';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
+import { CreateUserProfileDto } from '../dto/requests';
 
 export abstract class UserService {
   abstract createUser(user: Prisma.UserUncheckedCreateInput): Promise<void>;
@@ -11,4 +12,9 @@ export abstract class UserService {
   abstract findUserWithProfile(
     userId: number,
   ): Promise<GetUserProfileResponseDto>;
+
+  abstract createUserProfile(
+    dto: CreateUserProfileDto,
+    profileImageFile: Express.Multer.File,
+  ): Promise<void>;
 }

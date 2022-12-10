@@ -5,7 +5,8 @@ import { UserService } from './user.service';
 import { UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import { UserEntity } from '../entity';
-import { GetUserProfileResponseDto } from '../dto';
+import { CreateUserProfileDto } from '../dto/requests';
+import { GetUserProfileResponseDto } from '../dto/responses';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
@@ -54,4 +55,9 @@ export class UserServiceImpl implements UserService {
 
     return new GetUserProfileResponseDto(user);
   }
+
+  async createUserProfile(
+    dto: CreateUserProfileDto,
+    profileImageFile: Express.Multer.File,
+  ): Promise<void> {}
 }

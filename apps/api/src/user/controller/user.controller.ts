@@ -1,4 +1,11 @@
-import { Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Param,
+  ParseIntPipe,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   UserController as Controller,
@@ -6,7 +13,8 @@ import {
   CreateUserProfile,
 } from './user.controller.decorator';
 import { UserService } from '../service';
-import { GetUserProfileResponseDto } from '../dto';
+import { GetUserProfileResponseDto } from '../dto/responses';
+import { CreateUserProfileDto } from '../dto/requests';
 
 @Controller()
 export class UserController {
@@ -22,7 +30,13 @@ export class UserController {
   }
 
   @CreateUserProfile()
-  async createUserProfile(): Promise<null> {
+  @UseInterceptors(FileInterceptor('profileImageFile'))
+  async createUserProfile(
+    @Body() dto: CreateUserProfileDto,
+    @UploadedFile() profileImageFile: Express.Multer.File,
+  ): Promise<null> {
+    await this.usersService.createUserProfile(dto, profileImageFile);
+
     return null;
   }
 }
