@@ -5,7 +5,7 @@ import { UploadFileService } from '@app/upload-file';
 
 import { UserService, UserServiceImpl } from '../service';
 import { UserController } from '../controller';
-import { UserRepository } from '../repository';
+import { UserProfileRepository, UserRepository } from '../repository';
 import { DuplicateEmailException, NotFoundUserException } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
@@ -14,6 +14,7 @@ import { GetUserProfileResponseDto } from '../dto/responses';
 describe('UsersService', () => {
   let userService: UserService;
   let userRepository: Mock<UserRepository>;
+  let userProfileRepository: Mock<UserProfileRepository>;
   let uploadFileService: Mock<UploadFileService>;
 
   beforeEach(async () => {
@@ -32,6 +33,10 @@ describe('UsersService', () => {
             findByEmail: jest.fn(),
             findWithProfile: jest.fn(),
           }),
+        },
+        {
+          provide: UserProfileRepository,
+          useFactory: () => ({}),
         },
         {
           provide: UploadFileService,

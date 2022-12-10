@@ -15,6 +15,7 @@ export abstract class UserService {
 
   abstract createUserProfile(
     dto: CreateUserProfileDto,
-    profileImageFile: Express.Multer.File,
+    userId: number,
+    profileImageFile?: Express.Multer.File,
   ): Promise<void>;
 }

@@ -1,11 +1,5 @@
 import { applyDecorators, Controller, Get, Post } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
 
@@ -31,7 +25,6 @@ export const CreateUserProfile = () =>
   applyDecorators(
     Post('/'),
     JwtAuth(),
-    ApiConsumes('multipart/form-data'),
     ApiOperation({
       summary: '유저 프로필 생성 API',
     }),
