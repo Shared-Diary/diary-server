@@ -71,11 +71,11 @@ export class UserServiceImpl implements UserService {
     userId: number,
     profileImageFile?: Express.Multer.File,
   ): Promise<void> {
+    await this.validateUserCreatedProfile(userId);
+
     const profileImageUrl = profileImageFile
       ? await this.uploadFileService.getUploadedImageUrl(profileImageFile)
       : null;
-
-    await this.validateUserCreatedProfile(userId);
 
     await this.userProfileRepository.create({
       nickName,
