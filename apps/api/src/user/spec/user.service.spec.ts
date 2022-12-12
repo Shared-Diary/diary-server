@@ -36,7 +36,10 @@ describe('UsersService', () => {
         },
         {
           provide: UserProfileRepository,
-          useFactory: () => ({}),
+          useFactory: () => ({
+            getByUserId: jest.fn(),
+            create: jest.fn(),
+          }),
         },
         {
           provide: UploadFileService,
@@ -48,8 +51,9 @@ describe('UsersService', () => {
     }).compile();
 
     userService = await module.get<UserService>(UserService);
-    userRepository = await module.get(UserRepository);
     uploadFileService = module.get(UploadFileService);
+    userRepository = await module.get(UserRepository);
+    userProfileRepository = await module.get(UserProfileRepository);
   });
 
   describe('createUser', () => {
@@ -143,6 +147,27 @@ describe('UsersService', () => {
       await expect(async () => {
         await userService.findUserWithProfile(1);
       }).rejects.toThrow(new NotFoundUserException());
+    });
+  });
+
+  describe('Create User Profile', () => {
+    it('유저 프로필 생성 성공', async () => {
+      userProfileRepository.getByUserId.mockResolvedValue(null);
+      uploadFileService.getUploadedImageUrl.mockResolvedValue('imageUrl');
+
+      const result = await userService.createUserProfile(
+        {
+          nickName: '',
+          introduce: '',
+        },
+        1,
+        {} as Express.Multer.File,
+      );
+
+      expect(result).toBeUndefined();
+      expect(uploadFileService.getUploadedImageUrl).toHaveBeenCalledTimes(1);
+      expect(userProfileRepository.getByUserId).toHaveBeenCalledTimes(1);
+      expect(userProfileRepository.create).toHaveBeenCalledTimes(1);
     });
   });
 });
