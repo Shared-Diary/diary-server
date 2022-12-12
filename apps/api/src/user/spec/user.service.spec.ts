@@ -6,7 +6,11 @@ import { UploadFileService } from '@app/upload-file';
 import { UserService, UserServiceImpl } from '../service';
 import { UserController } from '../controller';
 import { UserProfileRepository, UserRepository } from '../repository';
-import { DuplicateEmailException, NotFoundUserException } from '../exception';
+import {
+  AlreadyCreatedProfileException,
+  DuplicateEmailException,
+  NotFoundUserException,
+} from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
 import { GetUserProfileResponseDto } from '../dto/responses';
@@ -141,7 +145,7 @@ describe('UsersService', () => {
       }).rejects.toThrow(new NotFoundUserException());
     });
 
-    it('user 의 status 값이 false 인 경우 NotFoundUserException 반환한다', async () => {
+    it('user 의 status 값이 false 인 경우 NotFoundUserException 을 반환한다', async () => {
       userRepository.findWithProfile.mockResolvedValue({ status: false });
 
       await expect(async () => {
@@ -157,8 +161,8 @@ describe('UsersService', () => {
 
       const result = await userService.createUserProfile(
         {
-          nickName: '',
-          introduce: '',
+          nickName: 'nickName',
+          introduce: 'introduce',
         },
         1,
         {} as Express.Multer.File,
@@ -168,6 +172,21 @@ describe('UsersService', () => {
       expect(uploadFileService.getUploadedImageUrl).toHaveBeenCalledTimes(1);
       expect(userProfileRepository.getByUserId).toHaveBeenCalledTimes(1);
       expect(userProfileRepository.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('이미 프로필이 생성되었다면 AlreadyCreatedProfileException 을 반환한다', async () => {
+      userProfileRepository.getByUserId.mockResolvedValue('data');
+
+      await expect(async () => {
+        await userService.createUserProfile(
+          {
+            nickName: 'nickName',
+            introduce: 'introduce',
+          },
+          1,
+          {} as Express.Multer.File,
+        );
+      }).rejects.toThrow(new AlreadyCreatedProfileException());
     });
   });
 });
