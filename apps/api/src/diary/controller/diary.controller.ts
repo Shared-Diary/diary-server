@@ -1,13 +1,6 @@
-import {
-  Body,
-  Param,
-  Query,
-  UploadedFiles,
-  UseInterceptors,
-} from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { Body, Param, Query, UploadedFiles } from '@nestjs/common';
 
-import { User } from '@app/utils/decorators';
+import { FilesRequest, User } from '@app/utils/decorators';
 import { UserRequestDto } from '@api/shared/dto';
 
 import {
@@ -31,9 +24,7 @@ export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
   @CreateDiary()
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'diaryImageFile', maxCount: 5 }]),
-  )
+  @FilesRequest([{ name: 'diaryImageFile', maxCount: 5 }])
   async createDiary(
     @User() { userId }: UserRequestDto,
     @Body() createDiaryRequestDto: CreateDiaryRequestDto,

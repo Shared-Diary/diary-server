@@ -1,6 +1,6 @@
 import { Body, Param, ParseIntPipe, UploadedFile } from '@nestjs/common';
 
-import { File, User } from '@app/utils/decorators';
+import { FileRequest, User } from '@app/utils/decorators';
 import { UserRequestDto } from '@api/shared/dto';
 
 import {
@@ -26,7 +26,7 @@ export class UserController {
   }
 
   @CreateUserProfile()
-  @File('profileImageFile')
+  @FileRequest('profileImageFile')
   async createUserProfile(
     @User() { userId }: UserRequestDto,
     @Body() dto: CreateUserProfileDto,
