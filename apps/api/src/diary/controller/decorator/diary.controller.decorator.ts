@@ -1,4 +1,4 @@
-import { applyDecorators, Controller, Get, Post } from '@nestjs/common';
+import { applyDecorators, Controller, Get, Post, Put } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
@@ -45,5 +45,14 @@ export const GetMyDiary = () =>
     JwtAuth(),
     ApiOperation({
       summary: '내 일기장 리스트 조회 API',
+    }),
+  );
+
+export const UpdateDiary = () =>
+  applyDecorators(
+    Put('/:diaryId'),
+    JwtAuth(),
+    ApiOperation({
+      summary: '일기장 수정 API',
     }),
   );
