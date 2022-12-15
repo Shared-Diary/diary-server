@@ -9,6 +9,7 @@ import {
   GetDiaryList,
   GetDiary,
   GetMyDiary,
+  UpdateDiary,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
@@ -77,5 +78,10 @@ export class DiaryController {
     });
 
     return diaries;
+  }
+
+  @UpdateDiary()
+  async updateDiary(): Promise<null> {
+    return null;
   }
 }
