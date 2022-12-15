@@ -23,3 +23,8 @@ export class CreateDiaryRequestDto {
   @IsBoolean()
   readonly isOpen: boolean;
 }
+
+export class CreateDiaryRequestDtoForSwagger extends CreateDiaryRequestDto {
+  @ApiProperty({ type: 'file', isArray: true })
+  diaryImageFile?: Express.Multer.File[];
+}

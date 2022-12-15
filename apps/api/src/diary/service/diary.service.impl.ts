@@ -176,6 +176,8 @@ export class DiaryServiceImpl implements DiaryService {
     const { title, content, isOpen } = bodyDto;
 
     await this.validateUserDiary(userId, diaryId);
+
+    await this.diaryRepository.update(diaryId, { title, content, isOpen });
   }
 
   private async validateUserDiary(userId: number, diaryId: number) {

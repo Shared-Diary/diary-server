@@ -1,7 +1,13 @@
 import { applyDecorators, Controller, Get, Post, Put } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
+import { CreateDiaryRequestDtoForSwagger } from '../../dto/requests';
 
 export const DiaryController = () =>
   applyDecorators(
@@ -15,6 +21,9 @@ export const CreateDiary = () =>
     JwtAuth(),
     ApiOperation({
       summary: '일기장 생성 API',
+    }),
+    ApiBody({
+      type: CreateDiaryRequestDtoForSwagger,
     }),
     ApiCreatedResponse({
       schema: {},
