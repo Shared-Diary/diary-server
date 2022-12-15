@@ -88,6 +88,8 @@ export class DiaryController {
     @Param() paramDto: UpdateDiaryParamRequestDto,
     @Body() bodyDto: UpdateDiaryRequestDto,
   ): Promise<null> {
+    await this.diaryService.updateDiary({ userId, paramDto, bodyDto });
+
     return null;
   }
 }

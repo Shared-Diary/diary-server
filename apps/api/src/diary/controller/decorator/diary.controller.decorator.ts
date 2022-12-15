@@ -2,6 +2,9 @@ import { applyDecorators, Controller, Get, Post, Put } from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -28,6 +31,9 @@ export const CreateDiary = () =>
     ApiCreatedResponse({
       schema: {},
     }),
+    ApiForbiddenResponse({
+      description: '하루 일기장 생성 개수를 초과한 경우',
+    }),
   );
 
 export const GetDiaryList = () =>
@@ -46,6 +52,9 @@ export const GetDiary = () =>
     ApiOperation({
       summary: '일기장 상세 조회 API',
     }),
+    ApiNotFoundResponse({
+      description: '존재하지 않는 일기장이거나 공개된 일기장이 아닌 경우',
+    }),
   );
 
 export const GetMyDiary = () =>
@@ -63,5 +72,14 @@ export const UpdateDiary = () =>
     JwtAuth(),
     ApiOperation({
       summary: '일기장 수정 API',
+    }),
+    ApiOkResponse({
+      schema: {},
+    }),
+    ApiNotFoundResponse({
+      description: '존재하지 않는 일기장인 경우',
+    }),
+    ApiForbiddenResponse({
+      description: '유저 본인의 일기장이 아닌 경우',
     }),
   );
