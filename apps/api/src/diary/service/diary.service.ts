@@ -8,7 +8,7 @@ import {
   GetDiaryListResponseDto,
   GetMyDiaryListResponseDto,
 } from '../dto/responses';
-import { GetMyDiaryOptions } from '../type';
+import { GetMyDiaryOptions, UpdateDiaryOptions } from '../type';
 
 export abstract class DiaryService {
   abstract createDiary(
@@ -28,4 +28,6 @@ export abstract class DiaryService {
   abstract getMyDiaryList(
     options: GetMyDiaryOptions,
   ): Promise<GetMyDiaryListResponseDto>;
+
+  abstract updateDiary(options: UpdateDiaryOptions): Promise<void>;
 }

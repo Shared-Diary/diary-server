@@ -16,9 +16,11 @@ import {
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
   GetDiaryParamRequestDto,
+  UpdateDiaryParamRequestDto,
+  UpdateDiaryRequestDto,
+  GetMyDiaryListRequestDto,
 } from '../dto/requests';
 import { GetDiaryListResponseDto, GetDiaryResponseDto } from '../dto/responses';
-import { GetMyDiaryListRequestDto } from '../dto/requests/get-my-diary-list-request.dto';
 
 @Controller()
 export class DiaryController {
@@ -81,7 +83,11 @@ export class DiaryController {
   }
 
   @UpdateDiary()
-  async updateDiary(): Promise<null> {
+  async updateDiary(
+    @Jwt() { userId }: JwtRequestDto,
+    @Param() paramDto: UpdateDiaryParamRequestDto,
+    @Body() bodyDto: UpdateDiaryRequestDto,
+  ): Promise<null> {
     return null;
   }
 }
