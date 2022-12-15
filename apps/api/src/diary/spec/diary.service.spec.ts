@@ -28,11 +28,11 @@ describe('DiaryService', () => {
         {
           provide: DiaryRepository,
           useFactory: () => ({
-            getCountBetweenDatesByUser: jest.fn(),
+            findCountBetweenDatesByUser: jest.fn(),
             create: jest.fn(),
-            getListIncludeLikeAndImage: jest.fn(),
-            getIncludeLikeAndImage: jest.fn(),
-            getMyIncludeLikeAndImage: jest.fn(),
+            findListIncludeLikeAndImage: jest.fn(),
+            findIncludeLikeAndImage: jest.fn(),
+            findByUserIncludeLikeAndImage: jest.fn(),
           }),
         },
         {
@@ -55,7 +55,7 @@ describe('DiaryService', () => {
 
   describe('create diary', () => {
     it('하루 최대 개수를 초과했을 경우 403 exception 을 반환한다', async () => {
-      diaryRepository.getCountBetweenDatesByUser.mockResolvedValue(
+      diaryRepository.findCountBetweenDatesByUser.mockResolvedValue(
         DAILY_MAX_CREATE_COUNT,
       );
 
@@ -90,7 +90,7 @@ describe('DiaryService', () => {
       );
 
       expect(result).toBe(undefined);
-      expect(diaryRepository.getCountBetweenDatesByUser).toHaveBeenCalledTimes(
+      expect(diaryRepository.findCountBetweenDatesByUser).toHaveBeenCalledTimes(
         1,
       );
       expect(diaryRepository.create).toHaveBeenCalledTimes(1);
@@ -119,14 +119,14 @@ describe('DiaryService', () => {
         ],
         1,
       ];
-      diaryRepository.getListIncludeLikeAndImage.mockResolvedValue(mockData);
+      diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(mockData);
 
       const { diaries, total } = await diaryService.getDiaryList({
         page: 1,
         pageSize: 10,
       });
       expect(Array.isArray(diaries)).toBe(true);
-      expect(diaryRepository.getListIncludeLikeAndImage).toHaveBeenCalledTimes(
+      expect(diaryRepository.findListIncludeLikeAndImage).toHaveBeenCalledTimes(
         1,
       );
       expect(diaries[0].likeCount).toBe(0);
@@ -134,7 +134,7 @@ describe('DiaryService', () => {
     });
 
     it('리스트가 빈 배열일 경우 null 을 return 한다', async () => {
-      diaryRepository.getListIncludeLikeAndImage.mockResolvedValue([]);
+      diaryRepository.findListIncludeLikeAndImage.mockResolvedValue([]);
 
       const { diaries } = await diaryService.getDiaryList({
         page: 1,
@@ -158,13 +158,13 @@ describe('DiaryService', () => {
         diaryImage: [],
         diaryLike: [],
       };
-      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(mockData);
+      diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockData);
 
       const { diary, images, likeCount } = await diaryService.getDiary({
         diaryId: 1,
       });
 
-      expect(diaryRepository.getIncludeLikeAndImage).toHaveBeenCalledTimes(1);
+      expect(diaryRepository.findIncludeLikeAndImage).toHaveBeenCalledTimes(1);
       expect(diary.status).toBe(true);
       expect(diary.isOpen).toBe(true);
       expect(likeCount).toBe(0);
@@ -177,7 +177,7 @@ describe('DiaryService', () => {
         isOpen: false,
       };
 
-      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(mockData);
+      diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockData);
 
       await expect(async () => {
         await diaryService.getDiary({
@@ -191,7 +191,7 @@ describe('DiaryService', () => {
         status: false,
         isOpen: true,
       };
-      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(mockData);
+      diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockData);
 
       await expect(async () => {
         await diaryService.getDiary({
@@ -201,7 +201,7 @@ describe('DiaryService', () => {
     });
 
     it('존재하지 않는 일기장일 경우 NotFoundDiaryException 을 반환한다', async () => {
-      diaryRepository.getIncludeLikeAndImage.mockResolvedValue(null);
+      diaryRepository.findIncludeLikeAndImage.mockResolvedValue(null);
 
       await expect(async () => {
         await diaryService.getDiary({
@@ -238,7 +238,7 @@ describe('DiaryService', () => {
         ],
         1,
       ];
-      await diaryRepository.getMyIncludeLikeAndImage.mockResolvedValue(
+      await diaryRepository.findByUserIncludeLikeAndImage.mockResolvedValue(
         mockData,
       );
 

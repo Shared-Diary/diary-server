@@ -24,8 +24,13 @@ import { DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
+  NotUserDiaryException,
 } from '../exception';
-import { DiaryIncludeImageAndLikeType, GetMyDiaryOptions } from '../type';
+import {
+  DiaryIncludeImageAndLikeType,
+  GetMyDiaryOptions,
+  UpdateDiaryOptions,
+} from '../type';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -68,7 +73,7 @@ export class DiaryServiceImpl implements DiaryService {
   private async validateExceedMaxCountOfDailyCreate(userId: number) {
     const { startAt, endAt } = getDiaryStartAndEndAt();
     const dailyDiaryCount =
-      await this.diaryRepository.getCountBetweenDatesByUser({
+      await this.diaryRepository.findCountBetweenDatesByUser({
         userId,
         startDate: startAt,
         endDate: endAt,
@@ -97,7 +102,7 @@ export class DiaryServiceImpl implements DiaryService {
     const { page, pageSize } = queryDto;
 
     const [diariesIncludeLikeAndImage, total] =
-      await this.diaryRepository.getListIncludeLikeAndImage({
+      await this.diaryRepository.findListIncludeLikeAndImage({
         page,
         pageSize,
       });
@@ -128,7 +133,7 @@ export class DiaryServiceImpl implements DiaryService {
     diaryId,
   }: GetDiaryParamRequestDto): Promise<GetDiaryResponseDto> {
     const diaryIncludeLikeAndImage =
-      await this.diaryRepository.getIncludeLikeAndImage(diaryId);
+      await this.diaryRepository.findIncludeLikeAndImage(diaryId);
 
     this.validateIsOpenedDiary(diaryIncludeLikeAndImage);
 
@@ -153,12 +158,36 @@ export class DiaryServiceImpl implements DiaryService {
     pageSize,
   }: GetMyDiaryOptions): Promise<GetMyDiaryListResponseDto> {
     const [diariesIncludeLikeAndImage, total] =
-      await this.diaryRepository.getMyIncludeLikeAndImage({
+      await this.diaryRepository.findByUserIncludeLikeAndImage({
         userId,
         page,
         pageSize,
       });
 
     return new GetMyDiaryListResponseDto(diariesIncludeLikeAndImage, total);
+  }
+
+  async updateDiary({
+    userId,
+    paramDto,
+    bodyDto,
+  }: UpdateDiaryOptions): Promise<void> {
+    const { diaryId } = paramDto;
+    const { title, content, isOpen } = bodyDto;
+
+    await this.validateUserDiary(userId, diaryId);
+
+    await this.diaryRepository.update(diaryId, { title, content, isOpen });
+  }
+
+  private async validateUserDiary(userId: number, diaryId: number) {
+    const diary = await this.diaryRepository.findById(diaryId);
+
+    if (!diary) {
+      throw new NotFoundDiaryException();
+    }
+    if (userId !== diary.userId) {
+      throw new NotUserDiaryException();
+    }
   }
 }

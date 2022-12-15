@@ -24,7 +24,22 @@ export class DiaryRepository {
     });
   }
 
-  getCountBetweenDatesByUser({
+  update(
+    id: number,
+    diary: PrismaCreateAndUpdateType<Prisma.DiaryUncheckedUpdateInput>,
+  ) {
+    return this.prismaService.diary.update({
+      where: {
+        id,
+      },
+      data: {
+        updatedAt: getKSTDate(),
+        ...diary,
+      },
+    });
+  }
+
+  findCountBetweenDatesByUser({
     userId,
     startDate,
     endDate,
@@ -45,7 +60,7 @@ export class DiaryRepository {
     });
   }
 
-  getListIncludeLikeAndImage({
+  findListIncludeLikeAndImage({
     page,
     pageSize,
   }: {
@@ -76,7 +91,15 @@ export class DiaryRepository {
     ]);
   }
 
-  getIncludeLikeAndImage(id: number) {
+  findById(id: number) {
+    return this.prismaService.diary.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  findIncludeLikeAndImage(id: number) {
     return this.prismaService.diary.findUnique({
       where: {
         id,
@@ -88,7 +111,7 @@ export class DiaryRepository {
     });
   }
 
-  getMyIncludeLikeAndImage({
+  findByUserIncludeLikeAndImage({
     userId,
     page,
     pageSize,

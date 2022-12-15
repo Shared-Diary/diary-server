@@ -1,7 +1,16 @@
-import { applyDecorators, Controller, Get, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { applyDecorators, Controller, Get, Post, Put } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
+import { CreateDiaryRequestDtoForSwagger } from '../../dto/requests';
 
 export const DiaryController = () =>
   applyDecorators(
@@ -16,8 +25,14 @@ export const CreateDiary = () =>
     ApiOperation({
       summary: '일기장 생성 API',
     }),
+    ApiBody({
+      type: CreateDiaryRequestDtoForSwagger,
+    }),
     ApiCreatedResponse({
       schema: {},
+    }),
+    ApiForbiddenResponse({
+      description: '하루 일기장 생성 개수를 초과한 경우',
     }),
   );
 
@@ -37,6 +52,9 @@ export const GetDiary = () =>
     ApiOperation({
       summary: '일기장 상세 조회 API',
     }),
+    ApiNotFoundResponse({
+      description: '존재하지 않는 일기장이거나 공개된 일기장이 아닌 경우',
+    }),
   );
 
 export const GetMyDiary = () =>
@@ -45,5 +63,23 @@ export const GetMyDiary = () =>
     JwtAuth(),
     ApiOperation({
       summary: '내 일기장 리스트 조회 API',
+    }),
+  );
+
+export const UpdateDiary = () =>
+  applyDecorators(
+    Put('/:diaryId'),
+    JwtAuth(),
+    ApiOperation({
+      summary: '일기장 수정 API',
+    }),
+    ApiOkResponse({
+      schema: {},
+    }),
+    ApiNotFoundResponse({
+      description: '존재하지 않는 일기장인 경우',
+    }),
+    ApiForbiddenResponse({
+      description: '유저 본인의 일기장이 아닌 경우',
     }),
   );

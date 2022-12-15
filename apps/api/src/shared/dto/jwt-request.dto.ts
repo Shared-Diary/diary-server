@@ -1,4 +1,4 @@
-export class UserRequestDto {
+export class JwtRequestDto {
   readonly userId: number;
 
   readonly iat: number;

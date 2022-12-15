@@ -1,12 +1,22 @@
 import { DiaryEntity, DiaryImageEntity, DiaryLikeEntity } from '../entity';
+import {
+  UpdateDiaryParamRequestDto,
+  UpdateDiaryRequestDto,
+} from '../dto/requests';
 
 export type DiaryIncludeImageAndLikeType = DiaryEntity & {
   diaryImage: DiaryImageEntity[];
   diaryLike: DiaryLikeEntity[];
 };
 
-export interface GetMyDiaryOptions {
+export type GetMyDiaryOptions = {
   userId: number;
   page: number;
   pageSize: number;
-}
+};
+
+export type UpdateDiaryOptions = {
+  userId: number;
+  paramDto: UpdateDiaryParamRequestDto;
+  bodyDto: UpdateDiaryRequestDto;
+};

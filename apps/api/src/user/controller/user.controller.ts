@@ -1,7 +1,7 @@
 import { Body, Param, ParseIntPipe, UploadedFile } from '@nestjs/common';
 
-import { FileRequest, User } from '@app/utils/decorators';
-import { UserRequestDto } from '@api/shared/dto';
+import { FileRequest, Jwt } from '@app/utils/decorators';
+import { JwtRequestDto } from '@api/shared/dto';
 
 import {
   UserController as Controller,
@@ -28,7 +28,7 @@ export class UserController {
   @CreateUserProfile()
   @FileRequest('profileImageFile')
   async createUserProfile(
-    @User() { userId }: UserRequestDto,
+    @Jwt() { userId }: JwtRequestDto,
     @Body() dto: CreateUserProfileDto,
     @UploadedFile() profileImageFile?: Express.Multer.File,
   ): Promise<null> {
