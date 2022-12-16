@@ -9,9 +9,11 @@ import { DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
+  NotUserDiaryException,
 } from '../exception';
 import { DiaryIncludeImageAndLikeType } from '../type';
 import { GetMyDiaryListResponseDto } from '../dto/responses';
+import { DiaryEntity } from '../entity';
 
 describe('DiaryService', () => {
   let diaryService: DiaryService;
@@ -33,6 +35,8 @@ describe('DiaryService', () => {
             findListIncludeLikeAndImage: jest.fn(),
             findIncludeLikeAndImage: jest.fn(),
             findByUserIncludeLikeAndImage: jest.fn(),
+            update: jest.fn(),
+            findById: jest.fn(),
           }),
         },
         {
@@ -80,7 +84,7 @@ describe('DiaryService', () => {
       );
     });
 
-    it('다이어리 생성 성공', async () => {
+    it('일기 생성 성공', async () => {
       uploadFileService.getUploadedImageUrlList.mockResolvedValue(['imageUrl']);
 
       const result = await diaryService.createDiary(
@@ -145,7 +149,7 @@ describe('DiaryService', () => {
   });
 
   describe('getDiary', () => {
-    it('다이어리 상세 조회 성공', async () => {
+    it('일기 상세 조회 성공', async () => {
       const mockData: DiaryIncludeImageAndLikeType = {
         id: 1,
         createdAt: new Date(),
@@ -212,7 +216,7 @@ describe('DiaryService', () => {
   });
 
   describe('getMyDiaryList', () => {
-    it('내 다이어리 리스트 조회 성공', async () => {
+    it('내 일기장 리스트 조회 성공', async () => {
       const mockData: WithTotal<DiaryIncludeImageAndLikeType[]> = [
         [
           {
@@ -250,6 +254,111 @@ describe('DiaryService', () => {
 
       expect(result).toBeInstanceOf(GetMyDiaryListResponseDto);
       expect(result.total).toBe(1);
+    });
+  });
+
+  describe('updateDiary', () => {
+    it('일기장 업데이트 성공', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      const result = await diaryService.updateDiary({
+        userId: 1,
+        bodyDto: {
+          title: 'new title',
+          content: 'new content',
+          isOpen: false,
+        },
+        paramDto: {
+          diaryId: 1,
+        },
+      });
+
+      expect(result).toBeUndefined();
+      expect(diaryRepository.update).toBeCalledTimes(1);
+    });
+
+    it('존재하는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
+      diaryRepository.findById.mockResolvedValue(null);
+
+      await expect(async () => {
+        await diaryService.updateDiary({
+          userId: 1,
+          bodyDto: {
+            title: 'new title',
+            content: 'new content',
+            isOpen: false,
+          },
+          paramDto: {
+            diaryId: 2,
+          },
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('일기장 status 가 false 인 경우 NotFoundDiaryException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: false,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      await expect(async () => {
+        await diaryService.updateDiary({
+          userId: 1,
+          bodyDto: {
+            title: 'new title',
+            content: 'new content',
+            isOpen: false,
+          },
+          paramDto: {
+            diaryId: 2,
+          },
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('유저의 일기장이 아닐 경우 NotUserDiaryException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 2,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      await expect(async () => {
+        await diaryService.updateDiary({
+          userId: 1,
+          bodyDto: {
+            title: 'new title',
+            content: 'new content',
+            isOpen: false,
+          },
+          paramDto: {
+            diaryId: 2,
+          },
+        });
+      }).rejects.toThrow(new NotUserDiaryException());
     });
   });
 });
