@@ -183,7 +183,7 @@ export class DiaryServiceImpl implements DiaryService {
   private async validateUserDiary(userId: number, diaryId: number) {
     const diary = await this.diaryRepository.findById(diaryId);
 
-    if (!diary) {
+    if (!diary || !diary.status) {
       throw new NotFoundDiaryException();
     }
     if (userId !== diary.userId) {
