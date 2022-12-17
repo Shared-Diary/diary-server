@@ -1,7 +1,14 @@
-import { Body, Param, Query, UploadedFiles } from '@nestjs/common';
+import {
+  Body,
+  Param,
+  Query,
+  UploadedFile,
+  UploadedFiles,
+} from '@nestjs/common';
 
-import { FilesRequest, Jwt } from '@app/utils/decorators';
+import { FileListRequest, FileRequest, Jwt } from '@app/utils/decorators';
 import { JwtRequestDto } from '@api/shared/dto';
+import { FileRequiredException } from '@app/shared/exception';
 
 import {
   DiaryController as Controller,
@@ -10,6 +17,7 @@ import {
   GetDiary,
   GetMyDiary,
   UpdateDiary,
+  CreateDiaryImage,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
@@ -19,6 +27,7 @@ import {
   UpdateDiaryParamRequestDto,
   UpdateDiaryRequestDto,
   GetMyDiaryListRequestDto,
+  CreateDiaryImageRequestDto,
 } from '../dto/requests';
 import { GetDiaryListResponseDto, GetDiaryResponseDto } from '../dto/responses';
 
@@ -27,7 +36,7 @@ export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
   @CreateDiary()
-  @FilesRequest([{ name: 'diaryImageFile', maxCount: 5 }])
+  @FileListRequest([{ name: 'diaryImageFile', maxCount: 5 }])
   async createDiary(
     @Jwt() { userId }: JwtRequestDto,
     @Body() createDiaryRequestDto: CreateDiaryRequestDto,
@@ -89,6 +98,21 @@ export class DiaryController {
     @Body() bodyDto: UpdateDiaryRequestDto,
   ): Promise<null> {
     await this.diaryService.updateDiary({ userId, paramDto, bodyDto });
+
+    return null;
+  }
+
+  @CreateDiaryImage()
+  @FileRequest('diaryImageFile')
+  async createDiaryImage(
+    @Jwt() { userId }: JwtRequestDto,
+    @Body() dto: CreateDiaryImageRequestDto,
+    @UploadedFile() diaryImageFile?: Express.Multer.File,
+  ): Promise<null> {
+    if (!diaryImageFile) {
+      throw new FileRequiredException('diaryImageFile');
+    }
+    await this.diaryService.createDiaryImage(dto, diaryImageFile, userId);
 
     return null;
   }

@@ -9,13 +9,13 @@ import {
   MulterOptions,
 } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
-export const FileRequest = (fileName: string, localOptions?: MulterOptions) =>
+export const FileRequest = (fieldName: string, localOptions?: MulterOptions) =>
   applyDecorators(
-    UseInterceptors(FileInterceptor(fileName, localOptions)),
+    UseInterceptors(FileInterceptor(fieldName, localOptions)),
     ApiConsumes('multipart/form-data'),
   );
 
-export const FilesRequest = (
+export const FileListRequest = (
   uploadFields: MulterField[],
   localOptions?: MulterOptions,
 ) =>
