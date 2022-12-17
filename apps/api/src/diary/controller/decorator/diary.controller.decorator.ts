@@ -1,6 +1,7 @@
 import { applyDecorators, Controller, Get, Post, Put } from '@nestjs/common';
 import {
   ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -81,5 +82,24 @@ export const UpdateDiary = () =>
     }),
     ApiForbiddenResponse({
       description: '유저 본인의 일기장이 아닌 경우',
+    }),
+  );
+
+export const CreateDiaryImage = () =>
+  applyDecorators(
+    Post('/image'),
+    JwtAuth(),
+    ApiOperation({
+      summary: '일기장 이미지 추가 API',
+    }),
+    ApiBody({
+      schema: {
+        type: 'object',
+        properties: {
+          diaryImageFile: {
+            type: 'file',
+          },
+        },
+      },
     }),
   );

@@ -1,6 +1,12 @@
-import { Body, Param, Query, UploadedFiles } from '@nestjs/common';
+import {
+  Body,
+  Param,
+  Query,
+  UploadedFile,
+  UploadedFiles,
+} from '@nestjs/common';
 
-import { FilesRequest, Jwt } from '@app/utils/decorators';
+import { FileListRequest, FileRequest, Jwt } from '@app/utils/decorators';
 import { JwtRequestDto } from '@api/shared/dto';
 
 import {
@@ -10,6 +16,7 @@ import {
   GetDiary,
   GetMyDiary,
   UpdateDiary,
+  CreateDiaryImage,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
@@ -27,7 +34,7 @@ export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
   @CreateDiary()
-  @FilesRequest([{ name: 'diaryImageFile', maxCount: 5 }])
+  @FileListRequest([{ name: 'diaryImageFile', maxCount: 5 }])
   async createDiary(
     @Jwt() { userId }: JwtRequestDto,
     @Body() createDiaryRequestDto: CreateDiaryRequestDto,
@@ -90,6 +97,15 @@ export class DiaryController {
   ): Promise<null> {
     await this.diaryService.updateDiary({ userId, paramDto, bodyDto });
 
+    return null;
+  }
+
+  @CreateDiaryImage()
+  @FileRequest('diaryImageFile')
+  async createDiaryImage(
+    @UploadedFile() diaryImageFile?: Express.Multer.File,
+  ): Promise<null> {
+    console.log(diaryImageFile);
     return null;
   }
 }
