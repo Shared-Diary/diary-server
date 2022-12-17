@@ -8,6 +8,7 @@ import {
 
 import { FileListRequest, FileRequest, Jwt } from '@app/utils/decorators';
 import { JwtRequestDto } from '@api/shared/dto';
+import { FileRequiredException } from '@app/shared/exception';
 
 import {
   DiaryController as Controller,
@@ -105,7 +106,10 @@ export class DiaryController {
   async createDiaryImage(
     @UploadedFile() diaryImageFile?: Express.Multer.File,
   ): Promise<null> {
-    console.log(diaryImageFile);
+    if (!diaryImageFile) {
+      throw new FileRequiredException('diaryImageFile');
+    }
+
     return null;
   }
 }
