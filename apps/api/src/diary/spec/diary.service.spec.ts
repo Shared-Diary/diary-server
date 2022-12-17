@@ -42,12 +42,15 @@ describe('DiaryService', () => {
         },
         {
           provide: DiaryImageRepository,
-          useFactory: () => ({}),
+          useFactory: () => ({
+            create: jest.fn(),
+          }),
         },
         {
           provide: UploadFileService,
           useFactory: () => ({
             getUploadedImageUrlList: jest.fn(),
+            getUploadedImageUrl: jest.fn(),
           }),
         },
       ],
@@ -290,10 +293,10 @@ describe('DiaryService', () => {
       });
 
       expect(result).toBeUndefined();
-      expect(diaryRepository.update).toBeCalledTimes(1);
+      expect(diaryRepository.update).toHaveBeenCalledTimes(1);
     });
 
-    it('존재하는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
+    it('없는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
       diaryRepository.findById.mockResolvedValue(null);
 
       await expect(async () => {
@@ -364,6 +367,88 @@ describe('DiaryService', () => {
             diaryId: 2,
           },
         });
+      }).rejects.toThrow(new NotUserDiaryException());
+    });
+  });
+
+  describe('createDiaryImage', () => {
+    it('일기장 이미지 생성 성공', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      const result = await diaryService.createDiaryImage(
+        { diaryId: 1 },
+        {} as Express.Multer.File,
+        1,
+      );
+
+      expect(result).toBeUndefined();
+      expect(uploadFileService.getUploadedImageUrl).toHaveBeenCalledTimes(1);
+      expect(diaryImageRepository.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('없는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
+      diaryRepository.findById.mockResolvedValue(null);
+
+      await expect(async () => {
+        await diaryService.createDiaryImage(
+          { diaryId: 1 },
+          {} as Express.Multer.File,
+          1,
+        );
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('일기장 status 가 false 인 경우 NotFoundDiaryException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: false,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      await expect(async () => {
+        await diaryService.createDiaryImage(
+          { diaryId: 1 },
+          {} as Express.Multer.File,
+          1,
+        );
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('유저의 일기장이 아닐 경우 NotUserDiaryException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 2,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      await expect(async () => {
+        await diaryService.createDiaryImage(
+          { diaryId: 1 },
+          {} as Express.Multer.File,
+          1,
+        );
       }).rejects.toThrow(new NotUserDiaryException());
     });
   });
