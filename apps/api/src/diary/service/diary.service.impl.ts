@@ -10,6 +10,7 @@ import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService } from './diary.service';
 import {
+  CreateDiaryImageRequestDto,
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
   GetDiaryParamRequestDto,
@@ -20,7 +21,7 @@ import {
   DiaryIncludeImagesAndLikeCount,
   GetMyDiaryListResponseDto,
 } from '../dto/responses';
-import { DiaryRepository } from '../repository';
+import { DiaryImageRepository, DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
@@ -36,6 +37,7 @@ import {
 export class DiaryServiceImpl implements DiaryService {
   constructor(
     private readonly diaryRepository: DiaryRepository,
+    private readonly diaryImageRepository: DiaryImageRepository,
     private readonly uploadFileService: UploadFileService,
   ) {}
 
@@ -178,6 +180,21 @@ export class DiaryServiceImpl implements DiaryService {
     await this.validateUserDiary(userId, diaryId);
 
     await this.diaryRepository.update(diaryId, { title, content, isOpen });
+  }
+
+  async createDiaryImage(
+    { diaryId }: CreateDiaryImageRequestDto,
+    file: Express.Multer.File,
+    userId: number,
+  ): Promise<void> {
+    await this.validateUserDiary(userId, diaryId);
+
+    const imageUrl = await this.uploadFileService.getUploadedImageUrl(file);
+
+    await this.diaryImageRepository.create({
+      diaryId,
+      imageUrl,
+    });
   }
 
   private async validateUserDiary(userId: number, diaryId: number) {

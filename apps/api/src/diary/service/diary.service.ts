@@ -1,4 +1,5 @@
 import {
+  CreateDiaryImageRequestDto,
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
   GetDiaryParamRequestDto,
@@ -30,4 +31,10 @@ export abstract class DiaryService {
   ): Promise<GetMyDiaryListResponseDto>;
 
   abstract updateDiary(options: UpdateDiaryOptions): Promise<void>;
+
+  abstract createDiaryImage(
+    dto: CreateDiaryImageRequestDto,
+    file: Express.Multer.File,
+    userId: number,
+  ): Promise<void>;
 }

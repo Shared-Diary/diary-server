@@ -5,7 +5,7 @@ import { Mock, WithTotal } from '@app/shared/type';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService, DiaryServiceImpl } from '../service';
-import { DiaryRepository } from '../repository';
+import { DiaryImageRepository, DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
   NotFoundDiaryException,
@@ -18,6 +18,7 @@ import { DiaryEntity } from '../entity';
 describe('DiaryService', () => {
   let diaryService: DiaryService;
   let diaryRepository: Mock<DiaryRepository>;
+  let diaryImageRepository: Mock<DiaryImageRepository>;
   let uploadFileService: Mock<UploadFileService>;
 
   beforeEach(async () => {
@@ -40,6 +41,10 @@ describe('DiaryService', () => {
           }),
         },
         {
+          provide: DiaryImageRepository,
+          useFactory: () => ({}),
+        },
+        {
           provide: UploadFileService,
           useFactory: () => ({
             getUploadedImageUrlList: jest.fn(),
@@ -50,6 +55,7 @@ describe('DiaryService', () => {
 
     diaryService = module.get<DiaryService>(DiaryService);
     diaryRepository = module.get(DiaryRepository);
+    diaryImageRepository = module.get(DiaryImageRepository);
     uploadFileService = module.get(UploadFileService);
   });
 

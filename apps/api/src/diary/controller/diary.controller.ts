@@ -27,6 +27,7 @@ import {
   UpdateDiaryParamRequestDto,
   UpdateDiaryRequestDto,
   GetMyDiaryListRequestDto,
+  CreateDiaryImageRequestDto,
 } from '../dto/requests';
 import { GetDiaryListResponseDto, GetDiaryResponseDto } from '../dto/responses';
 
@@ -104,11 +105,14 @@ export class DiaryController {
   @CreateDiaryImage()
   @FileRequest('diaryImageFile')
   async createDiaryImage(
+    @Jwt() { userId }: JwtRequestDto,
+    @Body() dto: CreateDiaryImageRequestDto,
     @UploadedFile() diaryImageFile?: Express.Multer.File,
   ): Promise<null> {
     if (!diaryImageFile) {
       throw new FileRequiredException('diaryImageFile');
     }
+    await this.diaryService.createDiaryImage(dto, diaryImageFile, userId);
 
     return null;
   }

@@ -11,7 +11,10 @@ import {
 } from '@nestjs/swagger';
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
-import { CreateDiaryRequestDtoForSwagger } from '../../dto/requests';
+import {
+  CreateDiaryImageRequestDtoForSwagger,
+  CreateDiaryRequestDtoForSwagger,
+} from '../../dto/requests';
 
 export const DiaryController = () =>
   applyDecorators(
@@ -93,13 +96,6 @@ export const CreateDiaryImage = () =>
       summary: '일기장 이미지 추가 API',
     }),
     ApiBody({
-      schema: {
-        type: 'object',
-        properties: {
-          diaryImageFile: {
-            type: 'file',
-          },
-        },
-      },
+      type: CreateDiaryImageRequestDtoForSwagger,
     }),
   );
