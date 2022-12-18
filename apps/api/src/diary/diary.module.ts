@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 
 import { UploadFileModule } from '@app/upload-file';
 
-import { DiaryController } from './controller';
+import { DiaryController, DiaryLikeController } from './controller';
 import { DiaryServiceImpl, DiaryService } from './service';
 import { DiaryRepository, DiaryImageRepository } from './repository';
 
 @Module({
   imports: [UploadFileModule],
-  controllers: [DiaryController],
+  controllers: [DiaryController, DiaryLikeController],
   providers: [
     {
       provide: DiaryService,
