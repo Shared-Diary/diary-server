@@ -9,7 +9,11 @@ import {
   DiaryLikeService,
   DiaryLikeServiceImpl,
 } from './service';
-import { DiaryRepository, DiaryImageRepository } from './repository';
+import {
+  DiaryRepository,
+  DiaryImageRepository,
+  DiaryLikeRepository,
+} from './repository';
 
 @Module({
   imports: [UploadFileModule],
@@ -25,6 +29,7 @@ import { DiaryRepository, DiaryImageRepository } from './repository';
     },
     DiaryRepository,
     DiaryImageRepository,
+    DiaryLikeRepository,
   ],
 })
 export class DiaryModule {}

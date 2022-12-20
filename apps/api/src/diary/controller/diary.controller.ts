@@ -18,8 +18,9 @@ import {
   GetMyDiary,
   UpdateDiary,
   CreateDiaryImage,
+  GenerateDiaryLike,
 } from './decorator/diary.controller.decorator';
-import { DiaryService } from '../service';
+import { DiaryLikeService, DiaryService } from '../service';
 import {
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
@@ -28,12 +29,16 @@ import {
   UpdateDiaryRequestDto,
   GetMyDiaryListRequestDto,
   CreateDiaryImageRequestDto,
+  GenerateDiaryLikeRequestDto,
 } from '../dto/requests';
 import { GetDiaryListResponseDto, GetDiaryResponseDto } from '../dto/responses';
 
 @Controller()
 export class DiaryController {
-  constructor(private readonly diaryService: DiaryService) {}
+  constructor(
+    private readonly diaryService: DiaryService,
+    private readonly diaryLikeService: DiaryLikeService,
+  ) {}
 
   @CreateDiary()
   @FileListRequest([{ name: 'diaryImageFile', maxCount: 5 }])
@@ -113,6 +118,16 @@ export class DiaryController {
       throw new FileRequiredException('diaryImageFile');
     }
     await this.diaryService.createDiaryImage(dto, diaryImageFile, userId);
+
+    return null;
+  }
+
+  @GenerateDiaryLike()
+  async generateDiaryLike(
+    @Jwt() { userId }: JwtRequestDto,
+    @Body() dto: GenerateDiaryLikeRequestDto,
+  ): Promise<null> {
+    await this.diaryLikeService.generateDiaryLikes(dto, userId);
 
     return null;
   }

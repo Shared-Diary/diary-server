@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DiaryController } from '../controller';
-import { DiaryService } from '../service';
+import { DiaryLikeService, DiaryService } from '../service';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 
 describe('DiaryController', () => {
@@ -14,6 +14,10 @@ describe('DiaryController', () => {
       providers: [
         {
           provide: DiaryService,
+          useFactory: () => ({}),
+        },
+        {
+          provide: DiaryLikeService,
           useFactory: () => ({}),
         },
       ],
