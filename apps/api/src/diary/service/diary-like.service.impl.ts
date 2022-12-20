@@ -13,9 +13,9 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
   ) {}
 
   async generateDiaryLikes(
-    dto: GenerateDiaryLikeRequestDto,
+    { diaryId }: GenerateDiaryLikeRequestDto,
     userId: number,
   ): Promise<void> {
-    return Promise.resolve(undefined);
+    await this.diaryService.validateOpenDiary(diaryId);
   }
 }

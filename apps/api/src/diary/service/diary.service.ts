@@ -37,4 +37,6 @@ export abstract class DiaryService {
     file: Express.Multer.File,
     userId: number,
   ): Promise<void>;
+
+  abstract validateOpenDiary(diaryId: number): Promise<void>;
 }
