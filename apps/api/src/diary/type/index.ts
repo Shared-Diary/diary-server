@@ -20,3 +20,9 @@ export type UpdateDiaryOptions = {
   paramDto: UpdateDiaryParamRequestDto;
   bodyDto: UpdateDiaryRequestDto;
 };
+
+export type CreateDiaryLikeIfNotExistParam = {
+  diaryId: number;
+  userId: number;
+  isDiaryLikeExist: boolean;
+};

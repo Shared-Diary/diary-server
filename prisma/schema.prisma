@@ -65,7 +65,7 @@ model DiaryImage {
 model DiaryLike {
     id                          Int                         @default(autoincrement()) @id
     createdAt                   DateTime                    @default(now())
-    status                      Boolean                     @default(false)
+    status                      Boolean                     @default(true)
     userId                      Int
     diaryId                     Int
 

@@ -127,7 +127,7 @@ export class DiaryController {
     @Jwt() { userId }: JwtRequestDto,
     @Body() dto: GenerateDiaryLikeRequestDto,
   ): Promise<null> {
-    await this.diaryLikeService.generateDiaryLikes(dto, userId);
+    await this.diaryLikeService.createOrUpdateDiaryLikes(dto, userId);
 
     return null;
   }
