@@ -5,6 +5,8 @@ export class DiaryLikeEntity implements DiaryLike {
 
   createdAt: Date;
 
+  status: boolean;
+
   userId: number;
 
   diaryId: number;
