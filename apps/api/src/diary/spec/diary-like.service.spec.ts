@@ -49,7 +49,7 @@ describe('DiaryLikeService', () => {
   });
 
   describe('createOrUpdateDiaryLikes', () => {
-    it('첫 일기장 좋아요', async () => {
+    it('일기장 좋아요가 없다면 생성한다', async () => {
       diaryService.validateOpenDiary.mockResolvedValue(undefined);
       diaryLikeRepository.findUserLike.mockResolvedValue(null);
 
@@ -62,6 +62,21 @@ describe('DiaryLikeService', () => {
       expect(diaryService.validateOpenDiary).toHaveBeenCalledTimes(1);
       expect(diaryLikeRepository.create).toHaveBeenCalledTimes(1);
       expect(diaryLikeRepository.update).toHaveBeenCalledTimes(0);
+    });
+
+    it('일기장 좋아요가 이미 있다면 업데이트한다', async () => {
+      diaryService.validateOpenDiary.mockResolvedValue(undefined);
+      diaryLikeRepository.findUserLike.mockResolvedValue('diaryLike');
+
+      const result = await diaryLikeService.createOrUpdateDiaryLikes(
+        { diaryId: 1 },
+        1,
+      );
+
+      expect(result).toBeUndefined();
+      expect(diaryService.validateOpenDiary).toHaveBeenCalledTimes(1);
+      expect(diaryLikeRepository.create).toHaveBeenCalledTimes(0);
+      expect(diaryLikeRepository.update).toHaveBeenCalledTimes(1);
     });
   });
 });
