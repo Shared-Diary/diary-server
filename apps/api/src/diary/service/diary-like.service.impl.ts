@@ -5,7 +5,6 @@ import { GenerateDiaryLikeRequestDto } from '../dto/requests';
 import { DiaryLikeRepository } from '../repository';
 import { DiaryService } from './diary.service';
 import { DiaryLikeEntity } from '../entity';
-import { CreateDiaryLikeIfNotExistParam } from '../type';
 
 @Injectable()
 export class DiaryLikeServiceImpl implements DiaryLikeService {
@@ -26,26 +25,21 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
     );
 
     const isDiaryLikeExist = !!diaryLike;
-    await this.createDiaryLikeIfNotExist({
-      diaryId,
-      userId,
-      isDiaryLikeExist,
-    });
-
-    await this.updateDiaryLikeStatusReversal(diaryLike);
+    if (isDiaryLikeExist) {
+      await this.updateDiaryLikeStatusReversal(diaryLike);
+    } else {
+      await this.createDiaryLike(diaryId, userId);
+    }
   }
 
-  private async createDiaryLikeIfNotExist({
-    diaryId,
-    userId,
-    isDiaryLikeExist,
-  }: CreateDiaryLikeIfNotExistParam): Promise<void> {
-    if (!isDiaryLikeExist) {
-      await this.diaryLikeRepository.create({
-        diaryId,
-        userId,
-      });
-    }
+  private async createDiaryLike(
+    diaryId: number,
+    userId: number,
+  ): Promise<void> {
+    await this.diaryLikeRepository.create({
+      diaryId,
+      userId,
+    });
   }
 
   private async updateDiaryLikeStatusReversal(
