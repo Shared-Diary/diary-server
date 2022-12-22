@@ -23,7 +23,7 @@ export const GetUserProfile = () =>
 
 export const CreateUserProfile = () =>
   applyDecorators(
-    Post('/'),
+    Post('/profile'),
     JwtAuth(),
     ApiOperation({
       summary: '유저 프로필 생성 API',

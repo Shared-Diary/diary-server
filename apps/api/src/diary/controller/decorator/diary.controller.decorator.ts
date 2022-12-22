@@ -99,12 +99,3 @@ export const CreateDiaryImage = () =>
       type: CreateDiaryImageRequestDtoForSwagger,
     }),
   );
-
-export const GenerateDiaryLike = () =>
-  applyDecorators(
-    Post('/like'),
-    JwtAuth(),
-    ApiOperation({
-      summary: '일기장 좋아요 API',
-    }),
-  );
