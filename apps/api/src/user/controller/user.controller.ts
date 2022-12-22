@@ -7,7 +7,7 @@ import {
   UserController as Controller,
   GetUserProfile,
   CreateUserProfile,
-} from './user.controller.decorator';
+} from './decorator/user.controller.decorator';
 import { UserService } from '../service';
 import { GetUserProfileResponseDto } from '../dto/responses';
 import { CreateUserProfileDto } from '../dto/requests';
