@@ -3,8 +3,8 @@ import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuth, Throttler } from '@app/utils/guards';
 
-import { GetUserProfileResponseDto } from '../dto/responses';
-import { CreateUserProfileDtoForSwagger } from '../dto/requests';
+import { GetUserProfileResponseDto } from '../../dto/responses';
+import { CreateUserProfileDtoForSwagger } from '../../dto/requests';
 
 export const UserController = () =>
   applyDecorators(Controller('/user'), ApiTags('Users'));
@@ -23,7 +23,7 @@ export const GetUserProfile = () =>
 
 export const CreateUserProfile = () =>
   applyDecorators(
-    Post('/'),
+    Post('/profile'),
     JwtAuth(),
     ApiOperation({
       summary: '유저 프로필 생성 API',

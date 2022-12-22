@@ -32,6 +32,7 @@ import {
   GetMyDiaryOptions,
   UpdateDiaryOptions,
 } from '../type';
+import { DiaryEntity } from '../entity';
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -131,6 +132,12 @@ export class DiaryServiceImpl implements DiaryService {
     });
   }
 
+  async validateOpenDiary(diaryId: number): Promise<void> {
+    const diary = await this.diaryRepository.findById(diaryId);
+
+    this.validateIsOpenedDiary(diary);
+  }
+
   async getDiary({
     diaryId,
   }: GetDiaryParamRequestDto): Promise<GetDiaryResponseDto> {
@@ -148,7 +155,7 @@ export class DiaryServiceImpl implements DiaryService {
     };
   }
 
-  private validateIsOpenedDiary(diary: DiaryIncludeImageAndLikeType) {
+  private validateIsOpenedDiary(diary: DiaryEntity | null) {
     if (!diary || !diary.status || !diary.isOpen) {
       throw new NotFoundDiaryException();
     }

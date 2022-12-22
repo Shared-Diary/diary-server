@@ -100,9 +100,14 @@ export class DiaryRepository {
   }
 
   findIncludeLikeAndImage(id: number) {
-    return this.prismaService.diary.findUnique({
+    return this.prismaService.diary.findFirst({
       where: {
         id,
+        diaryLike: {
+          some: {
+            status: true,
+          },
+        },
       },
       include: {
         diaryImage: true,
@@ -123,6 +128,11 @@ export class DiaryRepository {
     const where: Prisma.DiaryWhereInput = {
       status: true,
       userId,
+      diaryLike: {
+        every: {
+          status: true,
+        },
+      },
     };
 
     return this.prismaService.$transaction([
