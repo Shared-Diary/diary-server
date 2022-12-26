@@ -29,6 +29,7 @@ import {
   UpdateDiaryRequestDto,
   GetMyDiaryListRequestDto,
   CreateDiaryImageRequestDto,
+  DeleteDiaryImageParamRequestDto,
 } from '../dto/requests';
 import {
   GetDiaryListResponseDto,
@@ -114,7 +115,12 @@ export class DiaryController {
   }
 
   @DeleteDiaryImage()
-  async deleteDiaryImage(): Promise<null> {
+  async deleteDiaryImage(
+    @Jwt() { userId }: JwtRequestDto,
+    @Param() { diaryId, diaryImageId }: DeleteDiaryImageParamRequestDto,
+  ): Promise<null> {
+    await this.diaryService.deleteDiaryImage({ userId, diaryId, diaryImageId });
+
     return null;
   }
 }
