@@ -309,14 +309,16 @@ describe('DiaryService', () => {
         mockData,
       );
 
-      const result = await diaryService.getMyDiaryList({
+      const [diaries, total] = await diaryService.getMyDiaryList({
         userId: 1,
         page: 1,
         pageSize: 10,
       });
 
-      expect(result).toBeInstanceOf(GetMyDiaryListResponseDto);
-      expect(result.total).toBe(1);
+      expect(total).toBe(1);
+      expect(
+        diaryRepository.findByUserIncludeLikeAndImage,
+      ).toHaveBeenCalledTimes(1);
     });
   });
 

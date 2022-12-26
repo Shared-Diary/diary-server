@@ -29,7 +29,11 @@ import {
   GetMyDiaryListRequestDto,
   CreateDiaryImageRequestDto,
 } from '../dto/requests';
-import { GetDiaryListResponseDto, GetDiaryResponseDto } from '../dto/responses';
+import {
+  GetDiaryListResponseDto,
+  GetDiaryResponseDto,
+  GetMyDiaryListResponseDto,
+} from '../dto/responses';
 
 @Controller()
 export class DiaryController {
@@ -82,13 +86,13 @@ export class DiaryController {
     @Jwt() { userId }: JwtRequestDto,
     @Query() { page, pageSize }: GetMyDiaryListRequestDto,
   ) {
-    const diaries = await this.diaryService.getMyDiaryList({
+    const [diaries, total] = await this.diaryService.getMyDiaryList({
       userId,
       page,
       pageSize,
     });
 
-    return diaries;
+    return new GetMyDiaryListResponseDto(diaries, total);
   }
 
   @UpdateDiary()

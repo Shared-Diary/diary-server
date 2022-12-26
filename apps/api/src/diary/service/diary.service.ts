@@ -1,15 +1,17 @@
+import { WithTotal } from '@app/shared/type';
+
 import {
   CreateDiaryImageRequestDto,
   CreateDiaryRequestDto,
   GetDiaryListQueryRequestDto,
   GetDiaryParamRequestDto,
 } from '../dto/requests';
+import { GetDiaryResponseDto, GetDiaryListResponseDto } from '../dto/responses';
 import {
-  GetDiaryResponseDto,
-  GetDiaryListResponseDto,
-  GetMyDiaryListResponseDto,
-} from '../dto/responses';
-import { GetMyDiaryOptions, UpdateDiaryOptions } from '../type';
+  DiaryIncludeImageAndLikeType,
+  GetMyDiaryOptions,
+  UpdateDiaryOptions,
+} from '../type';
 
 export abstract class DiaryService {
   abstract createDiary(
@@ -28,7 +30,7 @@ export abstract class DiaryService {
 
   abstract getMyDiaryList(
     options: GetMyDiaryOptions,
-  ): Promise<GetMyDiaryListResponseDto>;
+  ): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>>;
 
   abstract updateDiary(options: UpdateDiaryOptions): Promise<void>;
 

@@ -33,6 +33,7 @@ import {
   UpdateDiaryOptions,
 } from '../type';
 import { DiaryEntity } from '../entity';
+import { WithTotal } from "@app/shared/type";
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -165,15 +166,12 @@ export class DiaryServiceImpl implements DiaryService {
     userId,
     page,
     pageSize,
-  }: GetMyDiaryOptions): Promise<GetMyDiaryListResponseDto> {
-    const [diariesIncludeLikeAndImage, total] =
-      await this.diaryRepository.findByUserIncludeLikeAndImage({
-        userId,
-        page,
-        pageSize,
-      });
-
-    return new GetMyDiaryListResponseDto(diariesIncludeLikeAndImage, total);
+  }: GetMyDiaryOptions): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
+    return this.diaryRepository.findByUserIncludeLikeAndImage({
+      userId,
+      page,
+      pageSize,
+    });
   }
 
   async updateDiary({
