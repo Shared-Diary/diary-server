@@ -500,6 +500,38 @@ describe('DiaryService', () => {
   });
 
   describe('deleteDiaryImage', () => {
+    it('일기장 이미지 삭제 성공', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      const mockDiaryImage: DiaryImageEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        diaryId: 1,
+        imageUrl: 'imageUrl',
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+      diaryImageRepository.findById.mockResolvedValue(mockDiaryImage);
+
+      const result = await diaryService.deleteDiaryImage({
+        diaryId: 1,
+        diaryImageId: 1,
+        userId: 1,
+      });
+
+      expect(result).toBeUndefined();
+      expect(diaryRepository.findById).toHaveBeenCalledTimes(1);
+      expect(diaryImageRepository.findById).toHaveBeenCalledTimes(1);
+    });
+
     it('없는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
       diaryRepository.findById.mockResolvedValue(null);
 
