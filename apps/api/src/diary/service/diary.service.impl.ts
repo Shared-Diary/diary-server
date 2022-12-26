@@ -194,7 +194,7 @@ export class DiaryServiceImpl implements DiaryService {
   }
 
   private async validateDiaryImage(diaryId: number, diaryImageId: number) {
-    const diaryImage = await this.diaryImageRepository.getById(diaryImageId);
+    const diaryImage = await this.diaryImageRepository.findById(diaryImageId);
     if (!diaryImage) {
       throw new NotFoundDiaryImageException();
     }

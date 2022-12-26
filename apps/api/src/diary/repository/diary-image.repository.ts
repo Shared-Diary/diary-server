@@ -29,7 +29,7 @@ export class DiaryImageRepository {
     });
   }
 
-  getById(id: number): Promise<DiaryImageEntity | null> {
+  findById(id: number): Promise<DiaryImageEntity | null> {
     return this.prismaService.diaryImage.findUnique({
       where: {
         id,
