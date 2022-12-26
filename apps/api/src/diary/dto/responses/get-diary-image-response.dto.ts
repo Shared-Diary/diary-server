@@ -1,6 +1,6 @@
 import { DiaryImageEntity } from '../../entity';
 
-export class GetMyDiaryImageResponseDto {
+export class GetDiaryImageResponseDto {
   readonly id: number;
 
   readonly imageUrl: string;

@@ -61,7 +61,7 @@ export const GetDiary = () =>
     }),
   );
 
-export const GetMyDiary = () =>
+export const GetMyDiaryList = () =>
   applyDecorators(
     Get('/me'),
     JwtAuth(),

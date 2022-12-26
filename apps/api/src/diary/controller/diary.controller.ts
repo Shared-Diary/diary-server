@@ -15,7 +15,7 @@ import {
   CreateDiary,
   GetDiaryList,
   GetDiary,
-  GetMyDiary,
+  GetMyDiaryList,
   UpdateDiary,
   CreateDiaryImage,
 } from './decorator/diary.controller.decorator';
@@ -58,31 +58,22 @@ export class DiaryController {
 
   @GetDiaryList()
   async getDiaryList(@Query() queryRequestDto: GetDiaryListQueryRequestDto) {
-    const { diaries, total } = await this.diaryService.getDiaryList(
+    const [diaries, total] = await this.diaryService.getDiaryList(
       queryRequestDto,
     );
 
-    return new GetDiaryListResponseDto({
-      diaries,
-      total,
-    });
+    return new GetDiaryListResponseDto(diaries, total);
   }
 
   @GetDiary()
   async getDiary(@Param() paramRequestDto: GetDiaryParamRequestDto) {
-    const { diary, likeCount, images } = await this.diaryService.getDiary(
-      paramRequestDto,
-    );
+    const diary = await this.diaryService.getDiary(paramRequestDto);
 
-    return new GetDiaryResponseDto({
-      diary,
-      likeCount,
-      images,
-    });
+    return new GetDiaryResponseDto(diary);
   }
 
-  @GetMyDiary()
-  async getMyDiary(
+  @GetMyDiaryList()
+  async getMyDiaryList(
     @Jwt() { userId }: JwtRequestDto,
     @Query() { page, pageSize }: GetMyDiaryListRequestDto,
   ) {

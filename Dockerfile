@@ -4,16 +4,16 @@ WORKDIR /app
 
 COPY package.json /app
 
-RUN yarn --frozen-lockfile
+RUN npm install
 
 COPY . /app
 
-RUN yarn prisma generate
+RUN npm run prisma generate
 
-RUN yarn build
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["yarn", "start:prod"]
+CMD ["npm", "run", "start:prod"]
 # --platform linux/amd64
 # docker run -p 3000:3000 -d --rm ImageID

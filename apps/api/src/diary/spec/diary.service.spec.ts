@@ -134,7 +134,7 @@ describe('DiaryService', () => {
       ];
       diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(mockData);
 
-      const { diaries, total } = await diaryService.getDiaryList({
+      const [diaries, total] = await diaryService.getDiaryList({
         page: 1,
         pageSize: 10,
       });
@@ -142,18 +142,7 @@ describe('DiaryService', () => {
       expect(diaryRepository.findListIncludeLikeAndImage).toHaveBeenCalledTimes(
         1,
       );
-      expect(diaries[0].likeCount).toBe(0);
       expect(total).toBe(1);
-    });
-
-    it('리스트가 빈 배열일 경우 null 을 return 한다', async () => {
-      diaryRepository.findListIncludeLikeAndImage.mockResolvedValue([]);
-
-      const { diaries } = await diaryService.getDiaryList({
-        page: 1,
-        pageSize: 10,
-      });
-      expect(diaries).toBe(null);
     });
   });
 
@@ -227,15 +216,13 @@ describe('DiaryService', () => {
       };
       diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockDiary);
 
-      const { diary, images, likeCount } = await diaryService.getDiary({
+      const { diaryLike, diaryImage, ...diary } = await diaryService.getDiary({
         diaryId: 1,
       });
 
       expect(diaryRepository.findIncludeLikeAndImage).toHaveBeenCalledTimes(1);
       expect(diary.status).toBe(true);
       expect(diary.isOpen).toBe(true);
-      expect(likeCount).toBe(0);
-      expect(images).toStrictEqual([]);
     });
 
     it('공개된 일기장이 아닐 경우 NotFoundDiaryException 을 반환한다', async () => {
