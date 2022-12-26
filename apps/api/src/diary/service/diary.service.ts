@@ -7,6 +7,7 @@ import {
   GetDiaryParamRequestDto,
 } from '../dto/requests';
 import {
+  DeleteDiaryImageOptions,
   DiaryIncludeImageAndLikeType,
   GetMyDiaryOptions,
   UpdateDiaryOptions,
@@ -40,4 +41,6 @@ export abstract class DiaryService {
   ): Promise<void>;
 
   abstract validateOpenDiary(diaryId: number): Promise<void>;
+
+  abstract deleteDiaryImage(options: DeleteDiaryImageOptions): Promise<void>;
 }

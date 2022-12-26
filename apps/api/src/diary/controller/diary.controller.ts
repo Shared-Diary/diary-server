@@ -18,6 +18,7 @@ import {
   GetMyDiaryList,
   UpdateDiary,
   CreateDiaryImage,
+  DeleteDiaryImage,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
@@ -109,6 +110,11 @@ export class DiaryController {
     }
     await this.diaryService.createDiaryImage(dto, diaryImageFile, userId);
 
+    return null;
+  }
+
+  @DeleteDiaryImage()
+  async deleteDiaryImage(): Promise<null> {
     return null;
   }
 }

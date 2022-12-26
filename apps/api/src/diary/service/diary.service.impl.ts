@@ -1,6 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import * as _ from 'radash';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
@@ -19,10 +18,13 @@ import {
 import { DiaryImageRepository, DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
+  NotDiaryImageException,
   NotFoundDiaryException,
+  NotFoundDiaryImageException,
   NotUserDiaryException,
 } from '../exception';
 import {
+  DeleteDiaryImageOptions,
   DiaryIncludeImageAndLikeType,
   GetMyDiaryOptions,
   UpdateDiaryOptions,
@@ -168,6 +170,18 @@ export class DiaryServiceImpl implements DiaryService {
     });
   }
 
+  async deleteDiaryImage({
+    userId,
+    diaryImageId,
+    diaryId,
+  }: DeleteDiaryImageOptions): Promise<void> {
+    await this.validateUserDiary(userId, diaryId);
+
+    await this.validateDiaryImage(diaryId, diaryImageId);
+
+    await this.diaryImageRepository.delete({ id: diaryImageId });
+  }
+
   private async validateUserDiary(userId: number, diaryId: number) {
     const diary = await this.diaryRepository.findById(diaryId);
 
@@ -176,6 +190,16 @@ export class DiaryServiceImpl implements DiaryService {
     }
     if (userId !== diary.userId) {
       throw new NotUserDiaryException();
+    }
+  }
+
+  private async validateDiaryImage(diaryId: number, diaryImageId: number) {
+    const diaryImage = await this.diaryImageRepository.getById(diaryImageId);
+    if (!diaryImage) {
+      throw new NotFoundDiaryImageException();
+    }
+    if (diaryId !== diaryImage.diaryId) {
+      throw new NotDiaryImageException();
     }
   }
 }
