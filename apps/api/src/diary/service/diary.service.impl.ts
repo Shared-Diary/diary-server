@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import * as _ from 'radash';
 
 import { PrismaService } from '@app/prisma';
 import { UploadFileService } from '@app/upload-file';
 import { PrismaErrorException } from '@app/prisma/exception';
 import { getDiaryStartAndEndAt } from '@app/utils';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
+import { WithTotal } from '@app/shared/type';
 
 import { DiaryService } from './diary.service';
 import {
@@ -15,25 +15,21 @@ import {
   GetDiaryListQueryRequestDto,
   GetDiaryParamRequestDto,
 } from '../dto/requests';
-import {
-  GetDiaryResponseDto,
-  GetDiaryListResponseDto,
-  DiaryIncludeImagesAndLikeCount,
-  GetMyDiaryListResponseDto,
-} from '../dto/responses';
 import { DiaryImageRepository, DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
+  NotDiaryImageException,
   NotFoundDiaryException,
+  NotFoundDiaryImageException,
   NotUserDiaryException,
 } from '../exception';
 import {
+  DeleteDiaryImageOptions,
   DiaryIncludeImageAndLikeType,
   GetMyDiaryOptions,
   UpdateDiaryOptions,
 } from '../type';
 import { DiaryEntity } from '../entity';
-import { WithTotal } from "@app/shared/type";
 
 @Injectable()
 export class DiaryServiceImpl implements DiaryService {
@@ -100,36 +96,14 @@ export class DiaryServiceImpl implements DiaryService {
     return this.uploadFileService.getUploadedImageUrlList(diaryImageFiles);
   }
 
-  async getDiaryList(
+  getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<GetDiaryListResponseDto> {
+  ): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
     const { page, pageSize } = queryDto;
 
-    const [diariesIncludeLikeAndImage, total] =
-      await this.diaryRepository.findListIncludeLikeAndImage({
-        page,
-        pageSize,
-      });
-
-    return {
-      diaries: _.isEmpty(diariesIncludeLikeAndImage)
-        ? null
-        : this.parseGetListImageResponse(diariesIncludeLikeAndImage),
-      total,
-    };
-  }
-
-  private parseGetListImageResponse(
-    diaries: DiaryIncludeImageAndLikeType[],
-  ): DiaryIncludeImagesAndLikeCount[] {
-    return diaries.map((diary: DiaryIncludeImageAndLikeType) => {
-      const { diaryImage, diaryLike, ...rest } = diary;
-
-      return {
-        ...rest,
-        image: diaryImage,
-        likeCount: diaryLike.length,
-      };
+    return this.diaryRepository.findListIncludeLikeAndImage({
+      page,
+      pageSize,
     });
   }
 
@@ -141,19 +115,13 @@ export class DiaryServiceImpl implements DiaryService {
 
   async getDiary({
     diaryId,
-  }: GetDiaryParamRequestDto): Promise<GetDiaryResponseDto> {
+  }: GetDiaryParamRequestDto): Promise<DiaryIncludeImageAndLikeType> {
     const diaryIncludeLikeAndImage =
       await this.diaryRepository.findIncludeLikeAndImage(diaryId);
 
     this.validateIsOpenedDiary(diaryIncludeLikeAndImage);
 
-    const { diaryImage, diaryLike, ...diary } = diaryIncludeLikeAndImage;
-
-    return {
-      diary,
-      images: diaryImage,
-      likeCount: diaryLike.length,
-    };
+    return diaryIncludeLikeAndImage;
   }
 
   private validateIsOpenedDiary(diary: DiaryEntity | null) {
@@ -202,6 +170,18 @@ export class DiaryServiceImpl implements DiaryService {
     });
   }
 
+  async deleteDiaryImage({
+    userId,
+    diaryImageId,
+    diaryId,
+  }: DeleteDiaryImageOptions): Promise<void> {
+    await this.validateUserDiary(userId, diaryId);
+
+    await this.validateDiaryImage(diaryId, diaryImageId);
+
+    await this.diaryImageRepository.delete({ id: diaryImageId });
+  }
+
   private async validateUserDiary(userId: number, diaryId: number) {
     const diary = await this.diaryRepository.findById(diaryId);
 
@@ -210,6 +190,16 @@ export class DiaryServiceImpl implements DiaryService {
     }
     if (userId !== diary.userId) {
       throw new NotUserDiaryException();
+    }
+  }
+
+  private async validateDiaryImage(diaryId: number, diaryImageId: number) {
+    const diaryImage = await this.diaryImageRepository.findById(diaryImageId);
+    if (!diaryImage) {
+      throw new NotFoundDiaryImageException();
+    }
+    if (diaryId !== diaryImage.diaryId) {
+      throw new NotDiaryImageException();
     }
   }
 }

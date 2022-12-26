@@ -20,3 +20,9 @@ export type UpdateDiaryOptions = {
   paramDto: UpdateDiaryParamRequestDto;
   bodyDto: UpdateDiaryRequestDto;
 };
+
+export type DeleteDiaryImageOptions = {
+  userId: number;
+  diaryId: number;
+  diaryImageId: number;
+};

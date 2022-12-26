@@ -15,9 +15,10 @@ import {
   CreateDiary,
   GetDiaryList,
   GetDiary,
-  GetMyDiary,
+  GetMyDiaryList,
   UpdateDiary,
   CreateDiaryImage,
+  DeleteDiaryImage,
 } from './decorator/diary.controller.decorator';
 import { DiaryService } from '../service';
 import {
@@ -28,6 +29,7 @@ import {
   UpdateDiaryRequestDto,
   GetMyDiaryListRequestDto,
   CreateDiaryImageRequestDto,
+  DeleteDiaryImageParamRequestDto,
 } from '../dto/requests';
 import {
   GetDiaryListResponseDto,
@@ -58,31 +60,22 @@ export class DiaryController {
 
   @GetDiaryList()
   async getDiaryList(@Query() queryRequestDto: GetDiaryListQueryRequestDto) {
-    const { diaries, total } = await this.diaryService.getDiaryList(
+    const [diaries, total] = await this.diaryService.getDiaryList(
       queryRequestDto,
     );
 
-    return new GetDiaryListResponseDto({
-      diaries,
-      total,
-    });
+    return new GetDiaryListResponseDto(diaries, total);
   }
 
   @GetDiary()
   async getDiary(@Param() paramRequestDto: GetDiaryParamRequestDto) {
-    const { diary, likeCount, images } = await this.diaryService.getDiary(
-      paramRequestDto,
-    );
+    const diary = await this.diaryService.getDiary(paramRequestDto);
 
-    return new GetDiaryResponseDto({
-      diary,
-      likeCount,
-      images,
-    });
+    return new GetDiaryResponseDto(diary);
   }
 
-  @GetMyDiary()
-  async getMyDiary(
+  @GetMyDiaryList()
+  async getMyDiaryList(
     @Jwt() { userId }: JwtRequestDto,
     @Query() { page, pageSize }: GetMyDiaryListRequestDto,
   ) {
@@ -117,6 +110,16 @@ export class DiaryController {
       throw new FileRequiredException('diaryImageFile');
     }
     await this.diaryService.createDiaryImage(dto, diaryImageFile, userId);
+
+    return null;
+  }
+
+  @DeleteDiaryImage()
+  async deleteDiaryImage(
+    @Jwt() { userId }: JwtRequestDto,
+    @Param() { diaryId, diaryImageId }: DeleteDiaryImageParamRequestDto,
+  ): Promise<null> {
+    await this.diaryService.deleteDiaryImage({ userId, diaryId, diaryImageId });
 
     return null;
   }

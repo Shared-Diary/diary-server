@@ -8,12 +8,13 @@ import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryImageRepository, DiaryRepository } from '../repository';
 import {
   MaxDiaryCreateCountException,
+  NotDiaryImageException,
   NotFoundDiaryException,
+  NotFoundDiaryImageException,
   NotUserDiaryException,
 } from '../exception';
 import { DiaryIncludeImageAndLikeType } from '../type';
-import { GetMyDiaryListResponseDto } from '../dto/responses';
-import { DiaryEntity } from '../entity';
+import { DiaryEntity, DiaryImageEntity } from '../entity';
 
 describe('DiaryService', () => {
   let diaryService: DiaryService;
@@ -44,6 +45,8 @@ describe('DiaryService', () => {
           provide: DiaryImageRepository,
           useFactory: () => ({
             create: jest.fn(),
+            findById: jest.fn(),
+            delete: jest.fn(),
           }),
         },
         {
@@ -134,7 +137,7 @@ describe('DiaryService', () => {
       ];
       diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(mockData);
 
-      const { diaries, total } = await diaryService.getDiaryList({
+      const [diaries, total] = await diaryService.getDiaryList({
         page: 1,
         pageSize: 10,
       });
@@ -142,18 +145,7 @@ describe('DiaryService', () => {
       expect(diaryRepository.findListIncludeLikeAndImage).toHaveBeenCalledTimes(
         1,
       );
-      expect(diaries[0].likeCount).toBe(0);
       expect(total).toBe(1);
-    });
-
-    it('리스트가 빈 배열일 경우 null 을 return 한다', async () => {
-      diaryRepository.findListIncludeLikeAndImage.mockResolvedValue([]);
-
-      const { diaries } = await diaryService.getDiaryList({
-        page: 1,
-        pageSize: 10,
-      });
-      expect(diaries).toBe(null);
     });
   });
 
@@ -227,15 +219,13 @@ describe('DiaryService', () => {
       };
       diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockDiary);
 
-      const { diary, images, likeCount } = await diaryService.getDiary({
+      const { diaryLike, diaryImage, ...diary } = await diaryService.getDiary({
         diaryId: 1,
       });
 
       expect(diaryRepository.findIncludeLikeAndImage).toHaveBeenCalledTimes(1);
       expect(diary.status).toBe(true);
       expect(diary.isOpen).toBe(true);
-      expect(likeCount).toBe(0);
-      expect(images).toStrictEqual([]);
     });
 
     it('공개된 일기장이 아닐 경우 NotFoundDiaryException 을 반환한다', async () => {
@@ -506,6 +496,149 @@ describe('DiaryService', () => {
           1,
         );
       }).rejects.toThrow(new NotUserDiaryException());
+    });
+  });
+
+  describe('deleteDiaryImage', () => {
+    it('일기장 이미지 삭제 성공', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      const mockDiaryImage: DiaryImageEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        diaryId: 1,
+        imageUrl: 'imageUrl',
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+      diaryImageRepository.findById.mockResolvedValue(mockDiaryImage);
+
+      const result = await diaryService.deleteDiaryImage({
+        diaryId: 1,
+        diaryImageId: 1,
+        userId: 1,
+      });
+
+      expect(result).toBeUndefined();
+      expect(diaryRepository.findById).toHaveBeenCalledTimes(1);
+      expect(diaryImageRepository.findById).toHaveBeenCalledTimes(1);
+    });
+
+    it('없는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
+      diaryRepository.findById.mockResolvedValue(null);
+
+      await expect(async () => {
+        await diaryService.deleteDiaryImage({
+          diaryId: 1,
+          diaryImageId: 1,
+          userId: 1,
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('일기장 status 가 false 인 경우 NotFoundDiaryException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: false,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      await expect(async () => {
+        await diaryService.deleteDiaryImage({
+          diaryId: 1,
+          diaryImageId: 1,
+          userId: 1,
+        });
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+
+    it('유저의 일기장이 아닐 경우 NotUserDiaryException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 2,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+
+      await expect(async () => {
+        await diaryService.deleteDiaryImage({
+          diaryId: 1,
+          diaryImageId: 1,
+          userId: 1,
+        });
+      }).rejects.toThrow(new NotUserDiaryException());
+    });
+
+    it('없는 일기장 이미지일 경우 NotFoundDiaryImageException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+      diaryImageRepository.findById.mockResolvedValue(null);
+
+      await expect(async () => {
+        await diaryService.deleteDiaryImage({
+          diaryId: 1,
+          diaryImageId: 1,
+          userId: 1,
+        });
+      }).rejects.toThrow(new NotFoundDiaryImageException());
+    });
+
+    it('일기장의 id 와 일치하지 않는다면 NotDiaryImageException 을 호출한다', async () => {
+      const mockDiary: DiaryEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: true,
+        userId: 1,
+        title: 'title',
+        content: 'content',
+        isOpen: true,
+      };
+      const mockDiaryImage: DiaryImageEntity = {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        diaryId: 2,
+        imageUrl: 'imageUrl',
+      };
+      diaryRepository.findById.mockResolvedValue(mockDiary);
+      diaryImageRepository.findById.mockResolvedValue(mockDiaryImage);
+
+      await expect(async () => {
+        await diaryService.deleteDiaryImage({
+          diaryId: 1,
+          diaryImageId: 1,
+          userId: 1,
+        });
+      }).rejects.toThrow(new NotDiaryImageException());
     });
   });
 });

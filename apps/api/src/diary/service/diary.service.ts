@@ -6,8 +6,8 @@ import {
   GetDiaryListQueryRequestDto,
   GetDiaryParamRequestDto,
 } from '../dto/requests';
-import { GetDiaryResponseDto, GetDiaryListResponseDto } from '../dto/responses';
 import {
+  DeleteDiaryImageOptions,
   DiaryIncludeImageAndLikeType,
   GetMyDiaryOptions,
   UpdateDiaryOptions,
@@ -22,11 +22,11 @@ export abstract class DiaryService {
 
   abstract getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<GetDiaryListResponseDto>;
+  ): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>>;
 
   abstract getDiary(
     paramRequestDto: GetDiaryParamRequestDto,
-  ): Promise<GetDiaryResponseDto>;
+  ): Promise<DiaryIncludeImageAndLikeType>;
 
   abstract getMyDiaryList(
     options: GetMyDiaryOptions,
@@ -41,4 +41,6 @@ export abstract class DiaryService {
   ): Promise<void>;
 
   abstract validateOpenDiary(diaryId: number): Promise<void>;
+
+  abstract deleteDiaryImage(options: DeleteDiaryImageOptions): Promise<void>;
 }

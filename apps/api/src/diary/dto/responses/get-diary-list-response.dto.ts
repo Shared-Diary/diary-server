@@ -1,17 +1,18 @@
-import { DiaryEntity, DiaryImageEntity } from '../../entity';
-
-export class DiaryIncludeImagesAndLikeCount extends DiaryEntity {
-  image: DiaryImageEntity[];
-
-  likeCount: number;
-}
+import { GetMyDiaryResponseDto } from './get-my-diary-response.dto';
+import { DiaryIncludeImageAndLikeType } from '../../type';
 
 export class GetDiaryListResponseDto {
-  readonly diaries: DiaryIncludeImagesAndLikeCount[] | null;
+  readonly diaries: GetMyDiaryResponseDto[];
 
   readonly total: number;
 
-  constructor(partial: Partial<GetDiaryListResponseDto>) {
-    Object.assign(this, partial);
+  constructor(
+    diaryIncludeImageAndLike: DiaryIncludeImageAndLikeType[],
+    total: number,
+  ) {
+    this.diaries = diaryIncludeImageAndLike.map(
+      (diary) => new GetMyDiaryResponseDto(diary),
+    );
+    this.total = total;
   }
 }

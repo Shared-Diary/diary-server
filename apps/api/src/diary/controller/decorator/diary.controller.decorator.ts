@@ -1,7 +1,13 @@
-import { applyDecorators, Controller, Get, Post, Put } from '@nestjs/common';
+import {
+  applyDecorators,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   ApiBody,
-  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -61,7 +67,7 @@ export const GetDiary = () =>
     }),
   );
 
-export const GetMyDiary = () =>
+export const GetMyDiaryList = () =>
   applyDecorators(
     Get('/me'),
     JwtAuth(),
@@ -97,5 +103,14 @@ export const CreateDiaryImage = () =>
     }),
     ApiBody({
       type: CreateDiaryImageRequestDtoForSwagger,
+    }),
+  );
+
+export const DeleteDiaryImage = () =>
+  applyDecorators(
+    Delete('/:diaryId/image/:diaryImageId'),
+    JwtAuth(),
+    ApiOperation({
+      summary: '일기장 이미지 삭제 API',
     }),
   );
