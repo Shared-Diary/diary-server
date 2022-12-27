@@ -38,4 +38,19 @@ export class DiaryLikeRepository {
       },
     });
   }
+
+  findListByDiaryId(diaryId: number) {
+    return this.prismaService.diaryLike.findMany({
+      where: {
+        diaryId,
+      },
+      include: {
+        user: {
+          include: {
+            userProfile: true,
+          },
+        },
+      },
+    });
+  }
 }
