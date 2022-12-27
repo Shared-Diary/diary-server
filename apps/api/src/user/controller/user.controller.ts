@@ -20,9 +20,9 @@ export class UserController {
   async getUserProfile(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<GetUserProfileResponseDto> {
-    const userProfile = await this.usersService.findUserWithProfile(userId);
+    const userWithProfile = await this.usersService.findUserWithProfile(userId);
 
-    return userProfile;
+    return new GetUserProfileResponseDto(userWithProfile);
   }
 
   @CreateUserProfile()

@@ -115,26 +115,7 @@ describe('UsersService', () => {
       const result = await userService.findUserWithProfile(1);
 
       expect(userRepository.findWithProfile).toHaveBeenCalledTimes(1);
-      expect(result instanceof GetUserProfileResponseDto).toBeTruthy();
-    });
-
-    it('userProfile 이 없을 경우 관련 값들은 null 이어야 한다', async () => {
-      const mockValue: UserWithProfile = {
-        id: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        status: true,
-        email: 'email@email.com',
-        password: 'password',
-        userProfile: null,
-      };
-      userRepository.findWithProfile.mockResolvedValue(mockValue);
-
-      const result = await userService.findUserWithProfile(1);
-
-      expect(result.introduce).toBeNull();
-      expect(result.nickName).toBeNull();
-      expect(result.profileImageUrl).toBeNull();
+      expect(result).toBe(mockValue);
     });
 
     it('user 정보가 없을 경우 NotFoundUserException 반환한다', async () => {

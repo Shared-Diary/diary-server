@@ -11,7 +11,7 @@ export class UserProfileEntity implements UserProfile {
 
   profileUrl: string | null;
 
-  nickName: string | null;
+  nickName: string;
 
   introduce: string;
 }
