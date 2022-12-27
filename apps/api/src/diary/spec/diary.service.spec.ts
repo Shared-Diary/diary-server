@@ -13,7 +13,7 @@ import {
   NotFoundDiaryImageException,
   NotUserDiaryException,
 } from '../exception';
-import { DiaryIncludeImageAndLikeType } from '../type';
+import { DiaryIncludeImageAndLike } from '../type';
 import { DiaryEntity, DiaryImageEntity } from '../entity';
 
 describe('DiaryService', () => {
@@ -118,7 +118,7 @@ describe('DiaryService', () => {
 
   describe('get diary list', () => {
     it('다이어리 리스트 조회 성공', async () => {
-      const mockData: WithTotal<DiaryIncludeImageAndLikeType[]> = [
+      const mockData: WithTotal<DiaryIncludeImageAndLike[]> = [
         [
           {
             id: 1,
@@ -205,7 +205,7 @@ describe('DiaryService', () => {
 
   describe('getDiary', () => {
     it('일기 상세 조회 성공', async () => {
-      const mockDiary: DiaryIncludeImageAndLikeType = {
+      const mockDiary: DiaryIncludeImageAndLike = {
         id: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -270,7 +270,7 @@ describe('DiaryService', () => {
 
   describe('getMyDiaryList', () => {
     it('내 일기장 리스트 조회 성공', async () => {
-      const mockData: WithTotal<DiaryIncludeImageAndLikeType[]> = [
+      const mockData: WithTotal<DiaryIncludeImageAndLike[]> = [
         [
           {
             id: 1,

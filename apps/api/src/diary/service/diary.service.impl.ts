@@ -25,7 +25,7 @@ import {
 } from '../exception';
 import {
   DeleteDiaryImageOptions,
-  DiaryIncludeImageAndLikeType,
+  DiaryIncludeImageAndLike,
   GetMyDiaryOptions,
   UpdateDiaryOptions,
 } from '../type';
@@ -98,7 +98,7 @@ export class DiaryServiceImpl implements DiaryService {
 
   getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
+  ): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
     const { page, pageSize } = queryDto;
 
     return this.diaryRepository.findListIncludeLikeAndImage({
@@ -115,7 +115,7 @@ export class DiaryServiceImpl implements DiaryService {
 
   async getDiary({
     diaryId,
-  }: GetDiaryParamRequestDto): Promise<DiaryIncludeImageAndLikeType> {
+  }: GetDiaryParamRequestDto): Promise<DiaryIncludeImageAndLike> {
     const diaryIncludeLikeAndImage =
       await this.diaryRepository.findIncludeLikeAndImage(diaryId);
 
@@ -134,7 +134,7 @@ export class DiaryServiceImpl implements DiaryService {
     userId,
     page,
     pageSize,
-  }: GetMyDiaryOptions): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
+  }: GetMyDiaryOptions): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
     return this.diaryRepository.findByUserIncludeLikeAndImage({
       userId,
       page,

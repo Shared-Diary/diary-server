@@ -6,7 +6,7 @@ import { getKSTDate } from '@app/utils/date';
 import { PrismaService } from '@app/prisma';
 import { WithTotal } from '@app/shared/type';
 
-import { DiaryIncludeImageAndLikeType } from '../type';
+import { DiaryIncludeImageAndLike } from '../type';
 
 @Injectable()
 export class DiaryRepository {
@@ -66,7 +66,7 @@ export class DiaryRepository {
   }: {
     page: number;
     pageSize: number;
-  }): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
+  }): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
     const where: Prisma.DiaryWhereInput = {
       status: true,
       isOpen: true,
@@ -124,7 +124,7 @@ export class DiaryRepository {
     userId: number;
     page: number;
     pageSize: number;
-  }): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>> {
+  }): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
     const where: Prisma.DiaryWhereInput = {
       status: true,
       userId,

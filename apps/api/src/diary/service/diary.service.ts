@@ -8,7 +8,7 @@ import {
 } from '../dto/requests';
 import {
   DeleteDiaryImageOptions,
-  DiaryIncludeImageAndLikeType,
+  DiaryIncludeImageAndLike,
   GetMyDiaryOptions,
   UpdateDiaryOptions,
 } from '../type';
@@ -22,15 +22,15 @@ export abstract class DiaryService {
 
   abstract getDiaryList(
     queryDto: GetDiaryListQueryRequestDto,
-  ): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>>;
+  ): Promise<WithTotal<DiaryIncludeImageAndLike[]>>;
 
   abstract getDiary(
     paramRequestDto: GetDiaryParamRequestDto,
-  ): Promise<DiaryIncludeImageAndLikeType>;
+  ): Promise<DiaryIncludeImageAndLike>;
 
   abstract getMyDiaryList(
     options: GetMyDiaryOptions,
-  ): Promise<WithTotal<DiaryIncludeImageAndLikeType[]>>;
+  ): Promise<WithTotal<DiaryIncludeImageAndLike[]>>;
 
   abstract updateDiary(options: UpdateDiaryOptions): Promise<void>;
 
