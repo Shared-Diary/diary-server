@@ -7,6 +7,7 @@ import { DiaryLikeService } from '../service';
 import {
   DiaryLikeController as Controller,
   GenerateDiaryLike,
+  GetDiaryLikeUserList,
 } from './decorator/diary-like.controller.decorator';
 import { GenerateDiaryLikeRequestDto } from '../dto/requests';
 
@@ -22,5 +23,10 @@ export class DiaryLikeController {
     await this.diaryLikeService.createOrUpdateDiaryLikes(dto, userId);
 
     return null;
+  }
+
+  @GetDiaryLikeUserList()
+  async getDiaryLikeUserList() {
+    return 1;
   }
 }

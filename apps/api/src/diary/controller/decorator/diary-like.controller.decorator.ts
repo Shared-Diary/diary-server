@@ -1,7 +1,7 @@
-import { applyDecorators, Controller, Post } from '@nestjs/common';
+import { applyDecorators, Controller, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { JwtAuth } from '@app/utils/guards';
+import { JwtAuth, Throttler } from '@app/utils/guards';
 
 export const DiaryLikeController = () =>
   applyDecorators(
@@ -15,5 +15,14 @@ export const GenerateDiaryLike = () =>
     JwtAuth(),
     ApiOperation({
       summary: '일기장 좋아요 API',
+    }),
+  );
+
+export const GetDiaryLikeUserList = () =>
+  applyDecorators(
+    Get('/:diaryId/like/user'),
+    Throttler(),
+    ApiOperation({
+      summary: '일기장 좋아요 유저 리스트 조회',
     }),
   );
