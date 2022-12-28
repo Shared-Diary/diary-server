@@ -205,6 +205,7 @@ export class DiaryServiceImpl implements DiaryService {
 
   async validateExistDiary(diaryId: number): Promise<void> {
     const diary = await this.diaryRepository.findById(diaryId);
+
     if (!diary || !diary.status) {
       throw new NotFoundDiaryException();
     }

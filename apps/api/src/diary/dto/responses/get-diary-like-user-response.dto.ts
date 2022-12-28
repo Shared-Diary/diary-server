@@ -1,7 +1,7 @@
 import { DiaryLikeWithUserProfile } from '../../type';
 
 export class GetDiaryLikeUserResponseDto {
-  readonly id: number;
+  readonly diaryLikeId: number;
 
   readonly userId: number;
 
@@ -16,7 +16,7 @@ export class GetDiaryLikeUserResponseDto {
       user: { userProfile },
     } = diaryLikeWithUserProfile;
 
-    this.id = id;
+    this.diaryLikeId = id;
     this.userId = userId;
     this.profileImageUrl = userProfile ? userProfile.profileUrl : null;
     this.nickName = userProfile ? userProfile.nickName : null;
