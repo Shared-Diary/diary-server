@@ -641,4 +641,9 @@ describe('DiaryService', () => {
       }).rejects.toThrow(new NotDiaryImageException());
     });
   });
+
+  describe('validateExistDiary', () => {
+    it('diary 가 없는 경우 NotFoundDiaryException 를 호출한다', async () => {});
+    it('diary status 가 false 인 경우 NotFoundDiaryException 를 호출한다', async () => {});
+  });
 });
