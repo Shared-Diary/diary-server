@@ -1,4 +1,4 @@
-import { Body } from '@nestjs/common';
+import { Body, Param, Query } from '@nestjs/common';
 
 import { Jwt } from '@app/utils/decorators';
 import { JwtRequestDto } from '@api/shared/dto';
@@ -9,7 +9,12 @@ import {
   GenerateDiaryLike,
   GetDiaryLikeUserList,
 } from './decorator/diary-like.controller.decorator';
-import { GenerateDiaryLikeRequestDto } from '../dto/requests';
+import {
+  GenerateDiaryLikeRequestDto,
+  GetDiaryLikeUserListParamRequestDto,
+  GetDiaryLikeUserListQueryRequestDto,
+} from '../dto/requests';
+import { GetDiaryLikeUserListResponseDto } from '../dto/responses';
 
 @Controller()
 export class DiaryLikeController {
@@ -26,7 +31,17 @@ export class DiaryLikeController {
   }
 
   @GetDiaryLikeUserList()
-  async getDiaryLikeUserList() {
-    return 1;
+  async getDiaryLikeUserList(
+    @Param() { diaryId }: GetDiaryLikeUserListParamRequestDto,
+    @Query() { page, pageSize }: GetDiaryLikeUserListQueryRequestDto,
+  ) {
+    const [diaryLikeUsers, total] =
+      await this.diaryLikeService.getDiaryLikeUserList({
+        diaryId,
+        page,
+        pageSize,
+      });
+
+    return new GetDiaryLikeUserListResponseDto(diaryLikeUsers, total);
   }
 }

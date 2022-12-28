@@ -31,3 +31,9 @@ export type DeleteDiaryImageOptions = {
   diaryId: number;
   diaryImageId: number;
 };
+
+export type GetDiaryLikeUserListOptions = {
+  diaryId: number;
+  page: number;
+  pageSize: number;
+};

@@ -1,5 +1,7 @@
+import { WithTotal } from '@app/shared/type';
+
 import { GenerateDiaryLikeRequestDto } from '../dto/requests';
-import { DiaryLikeWithUserProfile } from '../type';
+import { DiaryLikeWithUserProfile, GetDiaryLikeUserListOptions } from '../type';
 
 export abstract class DiaryLikeService {
   abstract createOrUpdateDiaryLikes(
@@ -8,6 +10,6 @@ export abstract class DiaryLikeService {
   ): Promise<void>;
 
   abstract getDiaryLikeUserList(
-    diaryId: number,
-  ): Promise<DiaryLikeWithUserProfile[]>;
+    options: GetDiaryLikeUserListOptions,
+  ): Promise<WithTotal<DiaryLikeWithUserProfile[]>>;
 }
