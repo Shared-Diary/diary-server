@@ -13,6 +13,7 @@ import {
 import { UserEntity } from '../entity';
 import { CreateUserProfileDto } from '../dto/requests';
 import { GetUserProfileResponseDto } from '../dto/responses';
+import { UserWithProfile } from '../type';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
@@ -54,16 +55,14 @@ export class UserServiceImpl implements UserService {
     return user;
   }
 
-  async findUserWithProfile(
-    userId: number,
-  ): Promise<GetUserProfileResponseDto> {
+  async findUserWithProfile(userId: number): Promise<UserWithProfile> {
     const user = await this.userRepository.findWithProfile(userId);
 
     if (!user || !user.status) {
       throw new NotFoundUserException();
     }
 
-    return new GetUserProfileResponseDto(user);
+    return user;
   }
 
   async createUserProfile(

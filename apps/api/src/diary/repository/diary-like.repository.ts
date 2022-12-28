@@ -3,6 +3,9 @@ import { DiaryLike, Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
 import { PrismaCreateAndUpdateType } from '@app/prisma/type';
+import { WithTotal } from '@app/shared/type';
+
+import { DiaryLikeWithUserProfile } from '../type';
 
 @Injectable()
 export class DiaryLikeRepository {
@@ -37,5 +40,38 @@ export class DiaryLikeRepository {
         },
       },
     });
+  }
+
+  findListByDiaryId({
+    diaryId,
+    page,
+    pageSize,
+  }: {
+    diaryId: number;
+    page: number;
+    pageSize: number;
+  }): Promise<WithTotal<DiaryLikeWithUserProfile[]>> {
+    const where: Prisma.DiaryLikeWhereInput = {
+      diaryId,
+      status: true,
+    };
+
+    return this.prismaService.$transaction([
+      this.prismaService.diaryLike.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        where,
+        include: {
+          user: {
+            include: {
+              userProfile: true,
+            },
+          },
+        },
+      }),
+      this.prismaService.diaryLike.count({
+        where,
+      }),
+    ]);
   }
 }

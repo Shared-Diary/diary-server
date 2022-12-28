@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+import { WithTotal } from '@app/shared/type';
 import { DiaryLikeService } from './diary-like.service';
 import { GenerateDiaryLikeRequestDto } from '../dto/requests';
 import { DiaryLikeRepository } from '../repository';
 import { DiaryService } from './diary.service';
 import { DiaryLikeEntity } from '../entity';
+import { DiaryLikeWithUserProfile, GetDiaryLikeUserListOptions } from '../type';
 
 @Injectable()
 export class DiaryLikeServiceImpl implements DiaryLikeService {
@@ -49,5 +51,21 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
 
     const reversedStatus = !status;
     await this.diaryLikeRepository.update(id, { status: reversedStatus });
+  }
+
+  async getDiaryLikeUserList({
+    diaryId,
+    page,
+    pageSize,
+  }: GetDiaryLikeUserListOptions): Promise<
+    WithTotal<DiaryLikeWithUserProfile[]>
+  > {
+    await this.diaryService.validateExistDiary(diaryId);
+
+    return this.diaryLikeRepository.findListByDiaryId({
+      diaryId,
+      page,
+      pageSize,
+    });
   }
 }

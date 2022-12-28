@@ -3,10 +3,15 @@ import {
   UpdateDiaryParamRequestDto,
   UpdateDiaryRequestDto,
 } from '../dto/requests';
+import { UserWithProfile } from '../../user/type';
 
-export type DiaryIncludeImageAndLikeType = DiaryEntity & {
+export type DiaryIncludeImageAndLike = DiaryEntity & {
   diaryImage: DiaryImageEntity[];
   diaryLike: DiaryLikeEntity[];
+};
+
+export type DiaryLikeWithUserProfile = DiaryLikeEntity & {
+  user: UserWithProfile;
 };
 
 export type GetMyDiaryOptions = {
@@ -25,4 +30,10 @@ export type DeleteDiaryImageOptions = {
   userId: number;
   diaryId: number;
   diaryImageId: number;
+};
+
+export type GetDiaryLikeUserListOptions = {
+  diaryId: number;
+  page: number;
+  pageSize: number;
 };

@@ -1,5 +1,5 @@
 import { GetMyDiaryResponseDto } from './get-my-diary-response.dto';
-import { DiaryIncludeImageAndLikeType } from '../../type';
+import { DiaryIncludeImageAndLike } from '../../type';
 
 export class GetDiaryListResponseDto {
   readonly diaries: GetMyDiaryResponseDto[];
@@ -7,7 +7,7 @@ export class GetDiaryListResponseDto {
   readonly total: number;
 
   constructor(
-    diaryIncludeImageAndLike: DiaryIncludeImageAndLikeType[],
+    diaryIncludeImageAndLike: DiaryIncludeImageAndLike[],
     total: number,
   ) {
     this.diaries = diaryIncludeImageAndLike.map(
