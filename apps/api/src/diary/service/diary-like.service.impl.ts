@@ -5,6 +5,7 @@ import { GenerateDiaryLikeRequestDto } from '../dto/requests';
 import { DiaryLikeRepository } from '../repository';
 import { DiaryService } from './diary.service';
 import { DiaryLikeEntity } from '../entity';
+import { DiaryLikeWithUserProfile } from '../type';
 
 @Injectable()
 export class DiaryLikeServiceImpl implements DiaryLikeService {
@@ -49,5 +50,11 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
 
     const reversedStatus = !status;
     await this.diaryLikeRepository.update(id, { status: reversedStatus });
+  }
+
+  async getDiaryLikeUserList(
+    diaryId: number,
+  ): Promise<DiaryLikeWithUserProfile[]> {
+    return Promise.resolve([]);
   }
 }

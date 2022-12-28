@@ -43,6 +43,7 @@ export class DiaryLikeRepository {
     return this.prismaService.diaryLike.findMany({
       where: {
         diaryId,
+        status: true,
       },
       include: {
         user: {
