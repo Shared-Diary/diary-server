@@ -130,7 +130,7 @@ export class DiaryServiceImpl implements DiaryService {
     }
   }
 
-  async getMyDiaryList({
+  getMyDiaryList({
     userId,
     page,
     pageSize,
@@ -200,6 +200,13 @@ export class DiaryServiceImpl implements DiaryService {
     }
     if (diaryId !== diaryImage.diaryId) {
       throw new NotDiaryImageException();
+    }
+  }
+
+  async validateExistDiary(diaryId: number): Promise<void> {
+    const diary = await this.diaryRepository.findById(diaryId);
+    if (!diary || !diary.status) {
+      throw new NotFoundDiaryException();
     }
   }
 }

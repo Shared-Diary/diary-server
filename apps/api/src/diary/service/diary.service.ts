@@ -43,4 +43,6 @@ export abstract class DiaryService {
   abstract validateOpenDiary(diaryId: number): Promise<void>;
 
   abstract deleteDiaryImage(options: DeleteDiaryImageOptions): Promise<void>;
+
+  abstract validateExistDiary(diaryId: number): Promise<void>;
 }

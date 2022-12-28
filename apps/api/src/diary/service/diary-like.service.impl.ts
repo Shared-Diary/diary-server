@@ -55,6 +55,9 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
   async getDiaryLikeUserList(
     diaryId: number,
   ): Promise<DiaryLikeWithUserProfile[]> {
-    return Promise.resolve([]);
+    const diaryLikeWithUserProfiles =
+      await this.diaryLikeRepository.findListByDiaryId(diaryId);
+
+    return diaryLikeWithUserProfiles;
   }
 }
