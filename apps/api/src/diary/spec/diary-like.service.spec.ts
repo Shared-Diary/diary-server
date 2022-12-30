@@ -8,7 +8,6 @@ import {
   DiaryService,
 } from '../service';
 import { DiaryLikeRepository } from '../repository';
-import { DiaryLikeEntity } from '../entity';
 
 describe('DiaryLikeService', () => {
   let diaryLikeService: DiaryLikeService;
@@ -28,12 +27,14 @@ describe('DiaryLikeService', () => {
             findUserLike: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
+            findListByDiaryId: jest.fn(),
           }),
         },
         {
           provide: DiaryService,
           useFactory: () => ({
             validateOpenDiary: jest.fn(),
+            validateExistDiary: jest.fn(),
           }),
         },
       ],
@@ -77,6 +78,22 @@ describe('DiaryLikeService', () => {
       expect(diaryService.validateOpenDiary).toHaveBeenCalledTimes(1);
       expect(diaryLikeRepository.create).toHaveBeenCalledTimes(0);
       expect(diaryLikeRepository.update).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getDiaryLikeUserList', () => {
+    it('일기장 좋아요 리스트 조회 시 일기장 존재 여부 체크를 해야 한다', async () => {
+      const MockDiaryLikes = 'data';
+      diaryLikeRepository.findListByDiaryId.mockResolvedValue(MockDiaryLikes);
+
+      const diaryLikes = await diaryLikeService.getDiaryLikeUserList({
+        diaryId: 1,
+        page: 1,
+        pageSize: 10,
+      });
+
+      expect(diaryLikes).toBe(MockDiaryLikes);
+      expect(diaryService.validateExistDiary).toHaveBeenCalledTimes(1);
     });
   });
 });
