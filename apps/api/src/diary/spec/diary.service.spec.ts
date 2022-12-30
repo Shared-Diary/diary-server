@@ -643,7 +643,19 @@ describe('DiaryService', () => {
   });
 
   describe('validateExistDiary', () => {
-    it('diary 가 없는 경우 NotFoundDiaryException 를 호출한다', async () => {});
-    it('diary status 가 false 인 경우 NotFoundDiaryException 를 호출한다', async () => {});
+    it('diary 가 없는 경우 NotFoundDiaryException 를 호출한다', async () => {
+      diaryRepository.findById.mockResolvedValue(null);
+
+      await expect(async () => {
+        await diaryService.validateExistDiary(1);
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
+    it('diary status 가 false 인 경우 NotFoundDiaryException 를 호출한다', async () => {
+      diaryRepository.findById.mockResolvedValue({ status: false });
+
+      await expect(async () => {
+        await diaryService.validateExistDiary(1);
+      }).rejects.toThrow(new NotFoundDiaryException());
+    });
   });
 });
