@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . /app
 
-RUN npm run prisma generate
+RUN npm run prisma:generate
 
 RUN npm run build
 
