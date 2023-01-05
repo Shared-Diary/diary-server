@@ -12,7 +12,6 @@ import {
 } from '../exception';
 import { UserEntity } from '../entity';
 import { CreateUserProfileDto } from '../dto/requests';
-import { GetUserProfileResponseDto } from '../dto/responses';
 import { UserWithProfile } from '../type';
 
 @Injectable()

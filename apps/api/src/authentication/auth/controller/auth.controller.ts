@@ -5,8 +5,9 @@ import {
   Register,
   LoginUser,
 } from './auth.controller.decorator';
-import { LoginUserRequestDto, LoginUserResponseDto, RegisterRequestDto } from "../dto";
+import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
 import { AuthService } from '../service';
+import { LoginUserResponseDto } from '../dto/responses';
 
 @Controller()
 export class AuthController {
@@ -23,8 +24,8 @@ export class AuthController {
 
   @LoginUser()
   async loginUser(@Body() loginUserRequestDto: LoginUserRequestDto) {
-    const result = await this.authService.loginUser(loginUserRequestDto);
+    const userTokens = await this.authService.loginUser(loginUserRequestDto);
 
-    return new LoginUserResponseDto(result);
+    return new LoginUserResponseDto(userTokens);
   }
 }

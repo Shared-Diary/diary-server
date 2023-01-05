@@ -3,14 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { PasswordEncoderService } from '@app/password-encoder';
 
 import { AuthService } from './auth.service';
-import {
-  LoginUserRequestDto,
-  LoginUserResponseDto,
-  RegisterRequestDto,
-} from '../dto';
+import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
 import { UserService } from '../../../user/service';
 import { PasswordMismatchException } from '../exception';
 import { AccessTokenService } from '../../token/service';
+import { GetUserTokens } from '../type';
 
 @Injectable()
 export class AuthServiceImpl implements AuthService {
@@ -43,7 +40,7 @@ export class AuthServiceImpl implements AuthService {
   async loginUser({
     email,
     password,
-  }: LoginUserRequestDto): Promise<LoginUserResponseDto> {
+  }: LoginUserRequestDto): Promise<GetUserTokens> {
     const { id: userId, password: hashedPassword } =
       await this.userService.findUserByEmail(email);
 

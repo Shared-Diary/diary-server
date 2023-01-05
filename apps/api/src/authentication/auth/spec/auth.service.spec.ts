@@ -6,7 +6,7 @@ import { Mock } from '@app/shared/type';
 import { AuthService, AuthServiceImpl } from '../service';
 import { AuthController } from '../controller';
 import { UserService } from '../../../user/service';
-import { LoginUserRequestDto, RegisterRequestDto } from '../dto';
+import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
 import { AccessTokenService } from '../../token/service';
 import { PasswordMismatchException } from '../exception';
 import { JwtStrategy } from '../strategy/jwt.strategy';
@@ -105,9 +105,9 @@ describe('Auth Service', () => {
         email: 'test@test.com',
         password: 'testpassword!@',
       };
-      const result = await authService.loginUser(dto);
+      const userTokens = await authService.loginUser(dto);
 
-      expect(await result.accessToken).toBe('accessToken');
+      expect(await userTokens.accessToken).toBe('accessToken');
       expect(userService.findUserByEmail).toHaveBeenCalledTimes(1);
       expect(passwordEncoderService.isMatches).toHaveBeenCalledTimes(1);
       expect(accessTokenService.generateAccessToken).toHaveBeenCalledTimes(1);
