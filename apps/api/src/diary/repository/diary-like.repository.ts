@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DiaryLike, Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
-import { PrismaCreateAndUpdateType } from '@app/prisma/type';
+import { PrismaOmitCreateAndUpdateType } from '@app/prisma/type';
 import { WithTotal } from '@app/shared/type';
 
 import { DiaryLikeWithUserProfile } from '../type';
@@ -12,7 +12,7 @@ export class DiaryLikeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(
-    diaryLike: PrismaCreateAndUpdateType<Prisma.DiaryLikeUncheckedCreateInput>,
+    diaryLike: PrismaOmitCreateAndUpdateType<Prisma.DiaryLikeUncheckedCreateInput>,
   ) {
     return this.prismaService.diaryLike.create({
       data: diaryLike,
@@ -21,7 +21,7 @@ export class DiaryLikeRepository {
 
   update(
     id: number,
-    diaryLike: PrismaCreateAndUpdateType<Prisma.DiaryLikeUncheckedUpdateInput>,
+    diaryLike: PrismaOmitCreateAndUpdateType<Prisma.DiaryLikeUncheckedUpdateInput>,
   ) {
     return this.prismaService.diaryLike.update({
       where: {

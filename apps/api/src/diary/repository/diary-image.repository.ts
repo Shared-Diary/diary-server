@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
-import { PrismaCreateAndUpdateType } from '@app/prisma/type';
+import { PrismaOmitCreateAndUpdateType } from '@app/prisma/type';
 import { getKSTDate } from '@app/utils';
 
 import { DiaryImageEntity } from '../entity';
@@ -12,7 +12,7 @@ export class DiaryImageRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(
-    diaryImage: PrismaCreateAndUpdateType<Prisma.DiaryImageUncheckedCreateInput>,
+    diaryImage: PrismaOmitCreateAndUpdateType<Prisma.DiaryImageUncheckedCreateInput>,
   ) {
     return this.prismaService.diaryImage.create({
       data: {

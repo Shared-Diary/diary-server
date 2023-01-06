@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Diary, Prisma } from '@prisma/client';
 
-import { PrismaCreateAndUpdateType } from '@app/prisma/type';
+import { PrismaOmitCreateAndUpdateType } from '@app/prisma/type';
 import { getKSTDate } from '@app/utils/date';
 import { PrismaService } from '@app/prisma';
 import { WithTotal } from '@app/shared/type';
@@ -13,7 +13,7 @@ export class DiaryRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(
-    diary: PrismaCreateAndUpdateType<Prisma.DiaryUncheckedCreateInput>,
+    diary: PrismaOmitCreateAndUpdateType<Prisma.DiaryUncheckedCreateInput>,
   ): Promise<Diary> {
     return this.prismaService.diary.create({
       data: {
@@ -26,7 +26,7 @@ export class DiaryRepository {
 
   update(
     id: number,
-    diary: PrismaCreateAndUpdateType<Prisma.DiaryUncheckedUpdateInput>,
+    diary: PrismaOmitCreateAndUpdateType<Prisma.DiaryUncheckedUpdateInput>,
   ) {
     return this.prismaService.diary.update({
       where: {
