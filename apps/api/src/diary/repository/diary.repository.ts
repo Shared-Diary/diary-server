@@ -39,25 +39,8 @@ export class DiaryRepository {
     });
   }
 
-  findCountBetweenDatesByUser({
-    userId,
-    startDate,
-    endDate,
-  }: {
-    userId: number;
-    startDate: Date;
-    endDate: Date;
-  }) {
-    return this.prismaService.diary.count({
-      where: {
-        createdAt: {
-          lt: endDate,
-          gte: startDate,
-        },
-        userId,
-        status: true,
-      },
-    });
+  findDiaryCount(diaryCountArgs: Prisma.DiaryCountArgs) {
+    return this.prismaService.diary.count(diaryCountArgs);
   }
 
   findListIncludeLikeAndImage({

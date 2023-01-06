@@ -32,7 +32,7 @@ describe('DiaryService', () => {
         {
           provide: DiaryRepository,
           useFactory: () => ({
-            findCountBetweenDatesByUser: jest.fn(),
+            findDiaryCount: jest.fn(),
             create: jest.fn(),
             findListIncludeLikeAndImage: jest.fn(),
             findIncludeLikeAndImage: jest.fn(),
@@ -71,9 +71,7 @@ describe('DiaryService', () => {
 
   describe('create diary', () => {
     it('하루 최대 개수를 초과했을 경우 403 exception 을 반환한다', async () => {
-      diaryRepository.findCountBetweenDatesByUser.mockResolvedValue(
-        DAILY_MAX_CREATE_COUNT,
-      );
+      diaryRepository.findDiaryCount.mockResolvedValue(DAILY_MAX_CREATE_COUNT);
 
       await expect(async () => {
         await diaryService.createDiary(
@@ -106,9 +104,7 @@ describe('DiaryService', () => {
       );
 
       expect(result).toBe(undefined);
-      expect(diaryRepository.findCountBetweenDatesByUser).toHaveBeenCalledTimes(
-        1,
-      );
+      expect(diaryRepository.findDiaryCount).toHaveBeenCalledTimes(1);
       expect(diaryRepository.create).toHaveBeenCalledTimes(1);
       expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
         1,
@@ -333,9 +329,7 @@ describe('DiaryService', () => {
           content: 'new content',
           isOpen: false,
         },
-        paramDto: {
-          diaryId: 1,
-        },
+        diaryId: 1,
       });
 
       expect(result).toBeUndefined();
@@ -353,9 +347,7 @@ describe('DiaryService', () => {
             content: 'new content',
             isOpen: false,
           },
-          paramDto: {
-            diaryId: 2,
-          },
+          diaryId: 2,
         });
       }).rejects.toThrow(new NotFoundDiaryException());
     });
@@ -381,9 +373,7 @@ describe('DiaryService', () => {
             content: 'new content',
             isOpen: false,
           },
-          paramDto: {
-            diaryId: 2,
-          },
+          diaryId: 2,
         });
       }).rejects.toThrow(new NotFoundDiaryException());
     });
@@ -409,9 +399,7 @@ describe('DiaryService', () => {
             content: 'new content',
             isOpen: false,
           },
-          paramDto: {
-            diaryId: 2,
-          },
+          diaryId: 2,
         });
       }).rejects.toThrow(new NotUserDiaryException());
     });

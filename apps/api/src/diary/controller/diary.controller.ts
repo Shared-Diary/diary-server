@@ -91,10 +91,10 @@ export class DiaryController {
   @UpdateDiary()
   async updateDiary(
     @Jwt() { userId }: JwtRequestDto,
-    @Param() paramDto: UpdateDiaryParamRequestDto,
+    @Param() { diaryId }: UpdateDiaryParamRequestDto,
     @Body() bodyDto: UpdateDiaryRequestDto,
   ): Promise<null> {
-    await this.diaryService.updateDiary({ userId, paramDto, bodyDto });
+    await this.diaryService.updateDiary({ userId, diaryId, bodyDto });
 
     return null;
   }

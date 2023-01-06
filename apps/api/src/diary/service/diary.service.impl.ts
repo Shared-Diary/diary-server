@@ -72,12 +72,16 @@ export class DiaryServiceImpl implements DiaryService {
 
   private async validateExceedMaxCountOfDailyCreate(userId: number) {
     const { startAt, endAt } = getDiaryStartAndEndAt();
-    const dailyDiaryCount =
-      await this.diaryRepository.findCountBetweenDatesByUser({
+    const dailyDiaryCount = await this.diaryRepository.findDiaryCount({
+      where: {
+        createdAt: {
+          lt: startAt,
+          gte: endAt,
+        },
         userId,
-        startDate: startAt,
-        endDate: endAt,
-      });
+        status: true,
+      },
+    });
 
     if (dailyDiaryCount >= DAILY_MAX_CREATE_COUNT) {
       throw new MaxDiaryCreateCountException(DAILY_MAX_CREATE_COUNT);
@@ -144,10 +148,9 @@ export class DiaryServiceImpl implements DiaryService {
 
   async updateDiary({
     userId,
-    paramDto,
+    diaryId,
     bodyDto,
   }: UpdateDiaryOptions): Promise<void> {
-    const { diaryId } = paramDto;
     const { title, content, isOpen } = bodyDto;
 
     await this.validateUserDiary(userId, diaryId);
