@@ -39,22 +39,25 @@ export class DiaryRepository {
     });
   }
 
-  findDiaryCount(diaryCountArgs: Prisma.DiaryCountArgs) {
+  findByUnique(diaryWhereUniqueInput: Prisma.DiaryWhereUniqueInput) {
+    return this.prismaService.diary.findUnique({
+      where: diaryWhereUniqueInput,
+    });
+  }
+
+  findCount(diaryCountArgs: Prisma.DiaryCountArgs) {
     return this.prismaService.diary.count(diaryCountArgs);
   }
 
   findListIncludeLikeAndImage({
     page,
     pageSize,
+    diaryWhereInput: where,
   }: {
     page: number;
     pageSize: number;
+    diaryWhereInput: Prisma.DiaryWhereInput;
   }): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
-    const where: Prisma.DiaryWhereInput = {
-      status: true,
-      isOpen: true,
-    };
-
     return this.prismaService.$transaction([
       this.prismaService.diary.findMany({
         skip: (page - 1) * pageSize,
@@ -72,14 +75,6 @@ export class DiaryRepository {
         where,
       }),
     ]);
-  }
-
-  findById(id: number) {
-    return this.prismaService.diary.findUnique({
-      where: {
-        id,
-      },
-    });
   }
 
   findIncludeLikeAndImage(id: number) {
@@ -97,43 +92,5 @@ export class DiaryRepository {
         diaryLike: true,
       },
     });
-  }
-
-  findByUserIncludeLikeAndImage({
-    userId,
-    page,
-    pageSize,
-  }: {
-    userId: number;
-    page: number;
-    pageSize: number;
-  }): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
-    const where: Prisma.DiaryWhereInput = {
-      status: true,
-      userId,
-      diaryLike: {
-        every: {
-          status: true,
-        },
-      },
-    };
-
-    return this.prismaService.$transaction([
-      this.prismaService.diary.findMany({
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        where,
-        orderBy: {
-          createdAt: 'desc',
-        },
-        include: {
-          diaryImage: true,
-          diaryLike: true,
-        },
-      }),
-      this.prismaService.diary.count({
-        where,
-      }),
-    ]);
   }
 }

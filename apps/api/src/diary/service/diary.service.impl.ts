@@ -72,7 +72,7 @@ export class DiaryServiceImpl implements DiaryService {
 
   private async validateExceedMaxCountOfDailyCreate(userId: number) {
     const { startAt, endAt } = getDiaryStartAndEndAt();
-    const dailyDiaryCount = await this.diaryRepository.findDiaryCount({
+    const dailyDiaryCount = await this.diaryRepository.findCount({
       where: {
         createdAt: {
           lt: startAt,
@@ -108,11 +108,17 @@ export class DiaryServiceImpl implements DiaryService {
     return this.diaryRepository.findListIncludeLikeAndImage({
       page,
       pageSize,
+      diaryWhereInput: {
+        status: true,
+        isOpen: true,
+      },
     });
   }
 
   async validateOpenDiary(diaryId: number): Promise<void> {
-    const diary = await this.diaryRepository.findById(diaryId);
+    const diary = await this.diaryRepository.findByUnique({
+      id: diaryId,
+    });
 
     this.validateIsOpenedDiary(diary);
   }
@@ -139,10 +145,18 @@ export class DiaryServiceImpl implements DiaryService {
     page,
     pageSize,
   }: GetMyDiaryOptions): Promise<WithTotal<DiaryIncludeImageAndLike[]>> {
-    return this.diaryRepository.findByUserIncludeLikeAndImage({
-      userId,
+    return this.diaryRepository.findListIncludeLikeAndImage({
       page,
       pageSize,
+      diaryWhereInput: {
+        status: true,
+        userId,
+        diaryLike: {
+          every: {
+            status: true,
+          },
+        },
+      },
     });
   }
 
@@ -186,7 +200,9 @@ export class DiaryServiceImpl implements DiaryService {
   }
 
   private async validateUserDiary(userId: number, diaryId: number) {
-    const diary = await this.diaryRepository.findById(diaryId);
+    const diary = await this.diaryRepository.findByUnique({
+      id: diaryId,
+    });
 
     if (!diary || !diary.status) {
       throw new NotFoundDiaryException();
@@ -207,7 +223,9 @@ export class DiaryServiceImpl implements DiaryService {
   }
 
   async validateExistDiary(diaryId: number): Promise<void> {
-    const diary = await this.diaryRepository.findById(diaryId);
+    const diary = await this.diaryRepository.findByUnique({
+      id: diaryId,
+    });
 
     if (!diary || !diary.status) {
       throw new NotFoundDiaryException();
