@@ -16,11 +16,11 @@ export class UserProfileRepository {
     });
   }
 
-  getByUserId(userId: number): Promise<UserProfile | null> {
+  findByUnique(
+    userProfileWhereUniqueInput: Prisma.UserProfileWhereUniqueInput,
+  ): Promise<UserProfile | null> {
     return this.prismaService.userProfile.findUnique({
-      where: {
-        userId,
-      },
+      where: userProfileWhereUniqueInput,
     });
   }
 }

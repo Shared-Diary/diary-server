@@ -84,7 +84,9 @@ export class UserServiceImpl implements UserService {
   }
 
   private async validateUserCreatedProfile(userId: number) {
-    const userProfile = await this.userProfileRepository.getByUserId(userId);
+    const userProfile = await this.userProfileRepository.findByUnique({
+      userId,
+    });
     if (userProfile) {
       throw new AlreadyCreatedProfileException();
     }

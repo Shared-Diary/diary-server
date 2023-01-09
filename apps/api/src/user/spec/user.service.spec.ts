@@ -13,7 +13,6 @@ import {
 } from '../exception';
 import ThrottlerModule from '../../configs/modules/throttler.module';
 import { UserWithProfile } from '../type';
-import { GetUserProfileResponseDto } from '../dto/responses';
 
 describe('UsersService', () => {
   let userService: UserService;
@@ -41,7 +40,7 @@ describe('UsersService', () => {
         {
           provide: UserProfileRepository,
           useFactory: () => ({
-            getByUserId: jest.fn(),
+            findByUnique: jest.fn(),
             create: jest.fn(),
           }),
         },
@@ -137,7 +136,7 @@ describe('UsersService', () => {
 
   describe('Create User Profile', () => {
     it('유저 프로필 생성 성공', async () => {
-      userProfileRepository.getByUserId.mockResolvedValue(null);
+      userProfileRepository.findByUnique.mockResolvedValue(null);
       uploadFileService.getUploadedImageUrl.mockResolvedValue('imageUrl');
 
       const result = await userService.createUserProfile(
@@ -151,12 +150,12 @@ describe('UsersService', () => {
 
       expect(result).toBeUndefined();
       expect(uploadFileService.getUploadedImageUrl).toHaveBeenCalledTimes(1);
-      expect(userProfileRepository.getByUserId).toHaveBeenCalledTimes(1);
+      expect(userProfileRepository.findByUnique).toHaveBeenCalledTimes(1);
       expect(userProfileRepository.create).toHaveBeenCalledTimes(1);
     });
 
     it('이미 프로필이 생성되었다면 AlreadyCreatedProfileException 을 반환한다', async () => {
-      userProfileRepository.getByUserId.mockResolvedValue('data');
+      userProfileRepository.findByUnique.mockResolvedValue('data');
 
       await expect(async () => {
         await userService.createUserProfile(
