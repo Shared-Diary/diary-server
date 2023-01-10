@@ -29,11 +29,11 @@ export class DiaryImageRepository {
     });
   }
 
-  findById(id: number): Promise<DiaryImageEntity | null> {
+  findByUnique(
+    diaryImageWhereUniqueInput: Prisma.DiaryImageWhereUniqueInput,
+  ): Promise<DiaryImageEntity | null> {
     return this.prismaService.diaryImage.findUnique({
-      where: {
-        id,
-      },
+      where: diaryImageWhereUniqueInput,
     });
   }
 }

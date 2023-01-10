@@ -44,7 +44,7 @@ describe('DiaryService', () => {
           provide: DiaryImageRepository,
           useFactory: () => ({
             create: jest.fn(),
-            findById: jest.fn(),
+            findByUnique: jest.fn(),
             delete: jest.fn(),
           }),
         },
@@ -506,7 +506,7 @@ describe('DiaryService', () => {
         imageUrl: 'imageUrl',
       };
       diaryRepository.findByUnique.mockResolvedValue(mockDiary);
-      diaryImageRepository.findById.mockResolvedValue(mockDiaryImage);
+      diaryImageRepository.findByUnique.mockResolvedValue(mockDiaryImage);
 
       const result = await diaryService.deleteDiaryImage({
         diaryId: 1,
@@ -516,7 +516,7 @@ describe('DiaryService', () => {
 
       expect(result).toBeUndefined();
       expect(diaryRepository.findByUnique).toHaveBeenCalledTimes(1);
-      expect(diaryImageRepository.findById).toHaveBeenCalledTimes(1);
+      expect(diaryImageRepository.findByUnique).toHaveBeenCalledTimes(1);
     });
 
     it('없는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
@@ -587,7 +587,7 @@ describe('DiaryService', () => {
         isOpen: true,
       };
       diaryRepository.findByUnique.mockResolvedValue(mockDiary);
-      diaryImageRepository.findById.mockResolvedValue(null);
+      diaryImageRepository.findByUnique.mockResolvedValue(null);
 
       await expect(async () => {
         await diaryService.deleteDiaryImage({
@@ -617,7 +617,7 @@ describe('DiaryService', () => {
         imageUrl: 'imageUrl',
       };
       diaryRepository.findByUnique.mockResolvedValue(mockDiary);
-      diaryImageRepository.findById.mockResolvedValue(mockDiaryImage);
+      diaryImageRepository.findByUnique.mockResolvedValue(mockDiaryImage);
 
       await expect(async () => {
         await diaryService.deleteDiaryImage({
