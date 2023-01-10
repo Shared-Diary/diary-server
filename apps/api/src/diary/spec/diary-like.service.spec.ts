@@ -24,7 +24,7 @@ describe('DiaryLikeService', () => {
         {
           provide: DiaryLikeRepository,
           useFactory: () => ({
-            findUserLike: jest.fn(),
+            findByUnique: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
             findListByDiaryId: jest.fn(),
@@ -52,7 +52,7 @@ describe('DiaryLikeService', () => {
   describe('createOrUpdateDiaryLikes', () => {
     it('일기장 좋아요가 없다면 생성한다', async () => {
       diaryService.validateOpenDiary.mockResolvedValue(undefined);
-      diaryLikeRepository.findUserLike.mockResolvedValue(null);
+      diaryLikeRepository.findByUnique.mockResolvedValue(null);
 
       const result = await diaryLikeService.createOrUpdateDiaryLikes(
         { diaryId: 1 },
@@ -67,7 +67,7 @@ describe('DiaryLikeService', () => {
 
     it('일기장 좋아요가 이미 있다면 업데이트한다', async () => {
       diaryService.validateOpenDiary.mockResolvedValue(undefined);
-      diaryLikeRepository.findUserLike.mockResolvedValue('diaryLike');
+      diaryLikeRepository.findByUnique.mockResolvedValue('diaryLike');
 
       const result = await diaryLikeService.createOrUpdateDiaryLikes(
         { diaryId: 1 },

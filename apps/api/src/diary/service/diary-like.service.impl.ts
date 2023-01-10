@@ -21,10 +21,12 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
   ): Promise<void> {
     await this.diaryService.validateOpenDiary(diaryId);
 
-    const diaryLike = await this.diaryLikeRepository.findUserLike(
-      diaryId,
-      userId,
-    );
+    const diaryLike = await this.diaryLikeRepository.findByUnique({
+      userId_diaryId: {
+        userId,
+        diaryId,
+      },
+    });
 
     const isDiaryLikeExist = !!diaryLike;
     if (isDiaryLikeExist) {

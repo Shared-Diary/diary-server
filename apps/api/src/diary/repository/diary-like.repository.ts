@@ -31,14 +31,9 @@ export class DiaryLikeRepository {
     });
   }
 
-  findUserLike(diaryId: number, userId: number): Promise<DiaryLike | null> {
+  findByUnique(diaryLikeWhereUniqueInput: Prisma.DiaryLikeWhereUniqueInput) {
     return this.prismaService.diaryLike.findUnique({
-      where: {
-        userId_diaryId: {
-          userId,
-          diaryId,
-        },
-      },
+      where: diaryLikeWhereUniqueInput,
     });
   }
 
