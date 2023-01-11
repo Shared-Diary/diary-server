@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DiaryLike, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@app/prisma';
 import { PrismaOmitCreateAndUpdateType } from '@app/prisma/type';
@@ -37,25 +37,20 @@ export class DiaryLikeRepository {
     });
   }
 
-  findListByDiaryId({
-    diaryId,
+  findListWithTotal({
+    diaryLikeWhereInput,
     page,
     pageSize,
   }: {
-    diaryId: number;
+    diaryLikeWhereInput: Prisma.DiaryLikeWhereInput;
     page: number;
     pageSize: number;
   }): Promise<WithTotal<DiaryLikeWithUserProfile[]>> {
-    const where: Prisma.DiaryLikeWhereInput = {
-      diaryId,
-      status: true,
-    };
-
     return this.prismaService.$transaction([
       this.prismaService.diaryLike.findMany({
         skip: (page - 1) * pageSize,
         take: pageSize,
-        where,
+        where: diaryLikeWhereInput,
         include: {
           user: {
             include: {
@@ -65,7 +60,7 @@ export class DiaryLikeRepository {
         },
       }),
       this.prismaService.diaryLike.count({
-        where,
+        where: diaryLikeWhereInput,
       }),
     ]);
   }

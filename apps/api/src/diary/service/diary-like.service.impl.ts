@@ -64,8 +64,11 @@ export class DiaryLikeServiceImpl implements DiaryLikeService {
   > {
     await this.diaryService.validateExistDiary(diaryId);
 
-    return this.diaryLikeRepository.findListByDiaryId({
-      diaryId,
+    return this.diaryLikeRepository.findListWithTotal({
+      diaryLikeWhereInput: {
+        diaryId,
+        status: true,
+      },
       page,
       pageSize,
     });

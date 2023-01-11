@@ -27,7 +27,7 @@ describe('DiaryLikeService', () => {
             findByUnique: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
-            findListByDiaryId: jest.fn(),
+            findListWithTotal: jest.fn(),
           }),
         },
         {
@@ -83,8 +83,8 @@ describe('DiaryLikeService', () => {
 
   describe('getDiaryLikeUserList', () => {
     it('일기장 좋아요 리스트 조회 시 일기장 존재 여부 체크를 해야 한다', async () => {
-      const MockDiaryLikes = 'data';
-      diaryLikeRepository.findListByDiaryId.mockResolvedValue(MockDiaryLikes);
+      const mockDiaryLikes = 'data';
+      diaryLikeRepository.findListWithTotal.mockResolvedValue(mockDiaryLikes);
 
       const diaryLikes = await diaryLikeService.getDiaryLikeUserList({
         diaryId: 1,
@@ -92,7 +92,7 @@ describe('DiaryLikeService', () => {
         pageSize: 10,
       });
 
-      expect(diaryLikes).toBe(MockDiaryLikes);
+      expect(diaryLikes).toBe(mockDiaryLikes);
       expect(diaryService.validateExistDiary).toHaveBeenCalledTimes(1);
     });
   });
