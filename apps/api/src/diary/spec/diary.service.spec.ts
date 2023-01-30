@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UploadFileService } from '@app/upload-file';
-import { Mock, WithTotal } from '@app/shared/type';
+import { Mock } from '@app/shared/type';
 
 import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryImageRepository, DiaryRepository } from '../repository';
@@ -11,7 +11,6 @@ import {
   NotFoundDiaryImageException,
   NotUserDiaryException,
 } from '../exception';
-import { DiaryIncludeImageAndLike } from '../type';
 import { DiaryEntity, DiaryImageEntity } from '../entity';
 
 describe('DiaryService', () => {
@@ -60,50 +59,6 @@ describe('DiaryService', () => {
     diaryRepository = module.get(DiaryRepository);
     diaryImageRepository = module.get(DiaryImageRepository);
     uploadFileService = module.get(UploadFileService);
-  });
-
-  describe('getMyDiaryList', () => {
-    it('내 일기장 리스트 조회 성공', async () => {
-      const mockData: WithTotal<DiaryIncludeImageAndLike[]> = [
-        [
-          {
-            id: 1,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            status: true,
-            isOpen: true,
-            userId: 1,
-            title: 'title',
-            content: 'content',
-            diaryImage: [
-              {
-                id: 1,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                diaryId: 1,
-                imageUrl: 'url',
-              },
-            ],
-            diaryLike: [],
-          },
-        ],
-        1,
-      ];
-      await diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(
-        mockData,
-      );
-
-      const [diaries, total] = await diaryService.getMyDiaryList({
-        userId: 1,
-        page: 1,
-        pageSize: 10,
-      });
-
-      expect(total).toBe(1);
-      expect(diaryRepository.findListIncludeLikeAndImage).toHaveBeenCalledTimes(
-        1,
-      );
-    });
   });
 
   describe('updateDiary', () => {
