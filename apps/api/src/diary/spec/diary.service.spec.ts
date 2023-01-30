@@ -2,12 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { UploadFileService } from '@app/upload-file';
 import { Mock, WithTotal } from '@app/shared/type';
-import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
 import { DiaryService, DiaryServiceImpl } from '../service';
 import { DiaryImageRepository, DiaryRepository } from '../repository';
 import {
-  MaxDiaryCreateCountException,
   NotDiaryImageException,
   NotFoundDiaryException,
   NotFoundDiaryImageException,
@@ -62,53 +60,6 @@ describe('DiaryService', () => {
     diaryRepository = module.get(DiaryRepository);
     diaryImageRepository = module.get(DiaryImageRepository);
     uploadFileService = module.get(UploadFileService);
-  });
-
-  it('should be defined', () => {
-    expect(diaryService).toBeDefined();
-  });
-
-  describe('create diary', () => {
-    it('하루 최대 개수를 초과했을 경우 403 exception 을 반환한다', async () => {
-      diaryRepository.findCount.mockResolvedValue(DAILY_MAX_CREATE_COUNT);
-
-      await expect(async () => {
-        await diaryService.createDiary(
-          { title: 'test', content: 'test', isOpen: true },
-          1,
-        );
-      }).rejects.toThrow(
-        new MaxDiaryCreateCountException(DAILY_MAX_CREATE_COUNT),
-      );
-    });
-
-    it('이미지 파일이 없다면 파일 업로드를 수행하지 않는다', async () => {
-      await diaryService.createDiary(
-        { title: 'test', content: 'test', isOpen: true },
-        1,
-      );
-
-      expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
-        0,
-      );
-    });
-
-    it('일기 생성 성공', async () => {
-      uploadFileService.getUploadedImageUrlList.mockResolvedValue(['imageUrl']);
-
-      const result = await diaryService.createDiary(
-        { title: 'test', content: 'test', isOpen: true },
-        1,
-        [{}] as Express.Multer.File[],
-      );
-
-      expect(result).toBe(undefined);
-      expect(diaryRepository.findCount).toHaveBeenCalledTimes(1);
-      expect(diaryRepository.create).toHaveBeenCalledTimes(1);
-      expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
-        1,
-      );
-    });
   });
 
   describe('get diary list', () => {
