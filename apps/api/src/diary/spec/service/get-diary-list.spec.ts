@@ -3,9 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Mock, WithTotal } from '@app/shared/type';
 import { UploadFileService } from '@app/upload-file';
 
-import { DiaryImageRepository, DiaryRepository } from '../repository';
-import { DiaryService, DiaryServiceImpl } from '../service';
-import { DiaryIncludeImageAndLike } from '../type';
+import { DiaryImageRepository, DiaryRepository } from '../../repository';
+import { DiaryService, DiaryServiceImpl } from '../../service';
+import { DiaryIncludeImageAndLike } from '../../type';
 
 describe('다이어리 리스트 조회', () => {
   let diaryService: DiaryService;
