@@ -4,11 +4,11 @@ import { Mock } from '@app/shared/type';
 import { UploadFileService } from '@app/upload-file';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
-import { DiaryImageRepository, DiaryRepository } from '../repository';
-import { DiaryService, DiaryServiceImpl } from '../service';
-import { MaxDiaryCreateCountException } from '../exception';
+import { DiaryImageRepository, DiaryRepository } from '../../../repository';
+import { DiaryService, DiaryServiceImpl } from '../../../service';
+import { MaxDiaryCreateCountException } from '../../../exception';
 
-describe('Create Diary', () => {
+describe('다이어리 생성', () => {
   let diaryService: DiaryService;
   let diaryRepository: Mock<DiaryRepository>;
   let uploadFileService: Mock<UploadFileService>;
@@ -65,9 +65,7 @@ describe('Create Diary', () => {
       1,
     );
 
-    expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
-      0,
-    );
+    expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(0);
   });
 
   it('일기 생성 성공', async () => {
@@ -82,8 +80,6 @@ describe('Create Diary', () => {
     expect(result).toBe(undefined);
     expect(diaryRepository.findCount).toHaveBeenCalledTimes(1);
     expect(diaryRepository.create).toHaveBeenCalledTimes(1);
-    expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(uploadFileService.getUploadedImageUrlList).toHaveBeenCalledTimes(1);
   });
 });

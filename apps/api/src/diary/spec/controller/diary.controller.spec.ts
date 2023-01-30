@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { DiaryController } from '../controller';
-import { DiaryLikeService, DiaryService } from '../service';
-import ThrottlerModule from '../../configs/modules/throttler.module';
+import { DiaryController } from '../../controller';
+import { DiaryLikeService, DiaryService } from '../../service';
+import ThrottlerModule from '../../../configs/modules/throttler.module';
 
 describe('DiaryController', () => {
   let controller: DiaryController;
