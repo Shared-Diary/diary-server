@@ -4,9 +4,9 @@ import { Mock } from '@app/shared/type';
 import { UploadFileService } from '@app/upload-file';
 import { DAILY_MAX_CREATE_COUNT } from '@api/shared/constant';
 
-import { DiaryImageRepository, DiaryRepository } from '../../repository';
-import { DiaryService, DiaryServiceImpl } from '../../service';
-import { MaxDiaryCreateCountException } from '../../exception';
+import { DiaryImageRepository, DiaryRepository } from '../../../repository';
+import { DiaryService, DiaryServiceImpl } from '../../../service';
+import { MaxDiaryCreateCountException } from '../../../exception';
 
 describe('다이어리 생성', () => {
   let diaryService: DiaryService;

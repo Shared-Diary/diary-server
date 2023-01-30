@@ -3,11 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Mock, WithTotal } from '@app/shared/type';
 import { UploadFileService } from '@app/upload-file';
 
-import { DiaryImageRepository, DiaryRepository } from '../../repository';
-import { DiaryService, DiaryServiceImpl } from '../../service';
-import { DiaryIncludeImageAndLike } from '../../type';
+import { DiaryImageRepository, DiaryRepository } from '../../../repository';
+import { DiaryService, DiaryServiceImpl } from '../../../service';
+import { DiaryIncludeImageAndLike } from '../../../type';
 
-describe('내 일기장 리스트 조회', () => {
+describe('다이어리 리스트 조회', () => {
   let diaryService: DiaryService;
   let diaryRepository: Mock<DiaryRepository>;
 
@@ -39,7 +39,7 @@ describe('내 일기장 리스트 조회', () => {
     diaryRepository = module.get(DiaryRepository);
   });
 
-  it('내 일기장 리스트 조회 성공', async () => {
+  it('다이어리 리스트 조회 성공', async () => {
     const mockData: WithTotal<DiaryIncludeImageAndLike[]> = [
       [
         {
@@ -51,33 +51,22 @@ describe('내 일기장 리스트 조회', () => {
           userId: 1,
           title: 'title',
           content: 'content',
-          diaryImage: [
-            {
-              id: 1,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              diaryId: 1,
-              imageUrl: 'url',
-            },
-          ],
+          diaryImage: [],
           diaryLike: [],
         },
       ],
       1,
     ];
-    await diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(
-      mockData,
-    );
+    diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(mockData);
 
-    const [diaries, total] = await diaryService.getMyDiaryList({
-      userId: 1,
+    const [diaries, total] = await diaryService.getDiaryList({
       page: 1,
       pageSize: 10,
     });
-
-    expect(total).toBe(1);
+    expect(Array.isArray(diaries)).toBe(true);
     expect(diaryRepository.findListIncludeLikeAndImage).toHaveBeenCalledTimes(
       1,
     );
+    expect(total).toBe(1);
   });
 });

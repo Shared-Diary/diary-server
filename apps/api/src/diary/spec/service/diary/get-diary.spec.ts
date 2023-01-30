@@ -3,12 +3,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Mock } from '@app/shared/type';
 import { UploadFileService } from '@app/upload-file';
 
-import { DiaryImageRepository, DiaryRepository } from '../../repository';
-import { DiaryService, DiaryServiceImpl } from '../../service';
-import { DiaryEntity } from '../../entity';
-import { NotFoundDiaryException } from '../../exception';
+import { DiaryImageRepository, DiaryRepository } from '../../../repository';
+import { DiaryService, DiaryServiceImpl } from '../../../service';
+import { DiaryIncludeImageAndLike } from '../../../type';
+import { NotFoundDiaryException } from '../../../exception';
 
-describe('공개 일기 확인', () => {
+describe('일기 상세 조회', () => {
   let diaryService: DiaryService;
   let diaryRepository: Mock<DiaryRepository>;
 
@@ -22,7 +22,7 @@ describe('공개 일기 확인', () => {
         {
           provide: DiaryRepository,
           useFactory: () => ({
-            findByUnique: jest.fn(),
+            findIncludeLikeAndImage: jest.fn(),
           }),
         },
         {
@@ -40,8 +40,8 @@ describe('공개 일기 확인', () => {
     diaryRepository = module.get(DiaryRepository);
   });
 
-  it('공개 일기장 확인', async () => {
-    const mockDiary: DiaryEntity = {
+  it('일기 상세 조회 성공', async () => {
+    const mockDiary: DiaryIncludeImageAndLike = {
       id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -50,45 +50,56 @@ describe('공개 일기 확인', () => {
       userId: 1,
       title: 'title',
       content: 'content',
+      diaryImage: [],
+      diaryLike: [],
     };
-    diaryRepository.findByUnique.mockResolvedValue(mockDiary);
+    diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockDiary);
 
-    const result = await diaryService.validateOpenDiary(1);
+    const { diaryLike, diaryImage, ...diary } = await diaryService.getDiary({
+      diaryId: 1,
+    });
 
-    expect(diaryRepository.findByUnique).toHaveBeenCalledTimes(1);
-    expect(result).toBeUndefined();
+    expect(diaryRepository.findIncludeLikeAndImage).toHaveBeenCalledTimes(1);
+    expect(diary.status).toBe(true);
+    expect(diary.isOpen).toBe(true);
   });
 
   it('공개된 일기장이 아닐 경우 NotFoundDiaryException 을 반환한다', async () => {
-    const mockDiary = {
+    const mockData = {
       status: true,
       isOpen: false,
     };
 
-    diaryRepository.findByUnique.mockResolvedValue(mockDiary);
+    diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockData);
 
     await expect(async () => {
-      await diaryService.validateOpenDiary(1);
+      await diaryService.getDiary({
+        diaryId: 1,
+      });
     }).rejects.toThrow(new NotFoundDiaryException());
   });
 
   it('status 가 false 일 경우 NotFoundDiaryException 을 반환한다', async () => {
-    const mockDiary = {
+    const mockData = {
       status: false,
       isOpen: true,
     };
-    diaryRepository.findByUnique.mockResolvedValue(mockDiary);
+    diaryRepository.findIncludeLikeAndImage.mockResolvedValue(mockData);
 
     await expect(async () => {
-      await diaryService.validateOpenDiary(1);
+      await diaryService.getDiary({
+        diaryId: 1,
+      });
     }).rejects.toThrow(new NotFoundDiaryException());
   });
 
   it('존재하지 않는 일기장일 경우 NotFoundDiaryException 을 반환한다', async () => {
-    diaryRepository.findByUnique.mockResolvedValue(null);
+    diaryRepository.findIncludeLikeAndImage.mockResolvedValue(null);
 
     await expect(async () => {
-      await diaryService.validateOpenDiary(1);
+      await diaryService.getDiary({
+        diaryId: 1,
+      });
     }).rejects.toThrow(new NotFoundDiaryException());
   });
 });

@@ -3,14 +3,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Mock } from '@app/shared/type';
 import { UploadFileService } from '@app/upload-file';
 
-import { DiaryImageRepository, DiaryRepository } from '../../repository';
-import { DiaryService, DiaryServiceImpl } from '../../service';
-import { DiaryEntity } from '../../entity';
-import { NotFoundDiaryException, NotUserDiaryException } from '../../exception';
+import { DiaryImageRepository, DiaryRepository } from '../../../repository';
+import { DiaryService, DiaryServiceImpl } from '../../../service';
+import { DiaryEntity } from '../../../entity';
+import {
+  NotFoundDiaryException,
+  NotUserDiaryException,
+} from '../../../exception';
 
-describe('', () => {
+describe('일기 이미지 생성', () => {
   let diaryService: DiaryService;
   let diaryRepository: Mock<DiaryRepository>;
+  let diaryImageRepository: Mock<DiaryImageRepository>;
+  let uploadFileService: Mock<UploadFileService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,26 +27,31 @@ describe('', () => {
         {
           provide: DiaryRepository,
           useFactory: () => ({
-            update: jest.fn(),
             findByUnique: jest.fn(),
           }),
         },
         {
           provide: DiaryImageRepository,
-          useFactory: () => ({}),
+          useFactory: () => ({
+            create: jest.fn(),
+          }),
         },
         {
           provide: UploadFileService,
-          useFactory: () => ({}),
+          useFactory: () => ({
+            getUploadedImageUrl: jest.fn(),
+          }),
         },
       ],
     }).compile();
 
     diaryService = module.get<DiaryService>(DiaryService);
     diaryRepository = module.get(DiaryRepository);
+    diaryImageRepository = module.get(DiaryImageRepository);
+    uploadFileService = module.get(UploadFileService);
   });
 
-  it('일기장 업데이트 성공', async () => {
+  it('일기장 이미지 생성 성공', async () => {
     const mockDiary: DiaryEntity = {
       id: 1,
       createdAt: new Date(),
@@ -54,33 +64,26 @@ describe('', () => {
     };
     diaryRepository.findByUnique.mockResolvedValue(mockDiary);
 
-    const result = await diaryService.updateDiary({
-      userId: 1,
-      bodyDto: {
-        title: 'new title',
-        content: 'new content',
-        isOpen: false,
-      },
-      diaryId: 1,
-    });
+    const result = await diaryService.createDiaryImage(
+      { diaryId: 1 },
+      {} as Express.Multer.File,
+      1,
+    );
 
     expect(result).toBeUndefined();
-    expect(diaryRepository.update).toHaveBeenCalledTimes(1);
+    expect(uploadFileService.getUploadedImageUrl).toHaveBeenCalledTimes(1);
+    expect(diaryImageRepository.create).toHaveBeenCalledTimes(1);
   });
 
   it('없는 일기장일 경우 NotFoundDiaryException 을 호출한다', async () => {
     diaryRepository.findByUnique.mockResolvedValue(null);
 
     await expect(async () => {
-      await diaryService.updateDiary({
-        userId: 1,
-        bodyDto: {
-          title: 'new title',
-          content: 'new content',
-          isOpen: false,
-        },
-        diaryId: 2,
-      });
+      await diaryService.createDiaryImage(
+        { diaryId: 1 },
+        {} as Express.Multer.File,
+        1,
+      );
     }).rejects.toThrow(new NotFoundDiaryException());
   });
 
@@ -98,15 +101,11 @@ describe('', () => {
     diaryRepository.findByUnique.mockResolvedValue(mockDiary);
 
     await expect(async () => {
-      await diaryService.updateDiary({
-        userId: 1,
-        bodyDto: {
-          title: 'new title',
-          content: 'new content',
-          isOpen: false,
-        },
-        diaryId: 2,
-      });
+      await diaryService.createDiaryImage(
+        { diaryId: 1 },
+        {} as Express.Multer.File,
+        1,
+      );
     }).rejects.toThrow(new NotFoundDiaryException());
   });
 
@@ -124,15 +123,11 @@ describe('', () => {
     diaryRepository.findByUnique.mockResolvedValue(mockDiary);
 
     await expect(async () => {
-      await diaryService.updateDiary({
-        userId: 1,
-        bodyDto: {
-          title: 'new title',
-          content: 'new content',
-          isOpen: false,
-        },
-        diaryId: 2,
-      });
+      await diaryService.createDiaryImage(
+        { diaryId: 1 },
+        {} as Express.Multer.File,
+        1,
+      );
     }).rejects.toThrow(new NotUserDiaryException());
   });
 });
