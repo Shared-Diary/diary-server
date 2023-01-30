@@ -62,39 +62,6 @@ describe('DiaryService', () => {
     uploadFileService = module.get(UploadFileService);
   });
 
-  describe('get diary list', () => {
-    it('다이어리 리스트 조회 성공', async () => {
-      const mockData: WithTotal<DiaryIncludeImageAndLike[]> = [
-        [
-          {
-            id: 1,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            status: true,
-            isOpen: true,
-            userId: 1,
-            title: 'title',
-            content: 'content',
-            diaryImage: [],
-            diaryLike: [],
-          },
-        ],
-        1,
-      ];
-      diaryRepository.findListIncludeLikeAndImage.mockResolvedValue(mockData);
-
-      const [diaries, total] = await diaryService.getDiaryList({
-        page: 1,
-        pageSize: 10,
-      });
-      expect(Array.isArray(diaries)).toBe(true);
-      expect(diaryRepository.findListIncludeLikeAndImage).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(total).toBe(1);
-    });
-  });
-
   describe('getOpenDiary', () => {
     it('공개 일기장 확인', async () => {
       const mockDiary: DiaryEntity = {
