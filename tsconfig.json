@@ -69,6 +69,12 @@
       ],
       "@app/upload-file/*": [
         "libs/upload-file/src/*"
+      ],
+      "@app/sms": [
+        "libs/sms/src"
+      ],
+      "@app/sms/*": [
+        "libs/sms/src/*"
       ]
     }
   }
