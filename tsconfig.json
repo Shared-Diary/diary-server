@@ -75,6 +75,12 @@
       ],
       "@app/sms/*": [
         "libs/sms/src/*"
+      ],
+      "@app/twillo": [
+        "libs/twillo/src"
+      ],
+      "@app/twillo/*": [
+        "libs/twillo/src/*"
       ]
     }
   }

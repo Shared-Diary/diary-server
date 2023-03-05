@@ -57,6 +57,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "twilio": "^4.8.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -119,7 +120,8 @@
       "^@app/aws(|/.*)$": "<rootDir>/libs/aws/src/$1",
       "^@app/upload-image(|/.*)$": "<rootDir>/libs/upload-image/src/$1",
       "^@app/upload-file(|/.*)$": "<rootDir>/libs/upload-file/src/$1",
-      "^@app/sms(|/.*)$": "<rootDir>/libs/sms/src/$1"
+      "^@app/sms(|/.*)$": "<rootDir>/libs/sms/src/$1",
+      "^@app/twillo(|/.*)$": "<rootDir>/libs/twillo/src/$1"
     }
   }
 }

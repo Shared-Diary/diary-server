@@ -92,6 +92,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/sms/tsconfig.lib.json"
       }
+    },
+    "twillo": {
+      "type": "library",
+      "root": "libs/twillo",
+      "entryFile": "index",
+      "sourceRoot": "libs/twillo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/twillo/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {

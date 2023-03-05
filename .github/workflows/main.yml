@@ -3,17 +3,17 @@ name: prod
 on:
   push:
     branches: [ main ]
-  
+
   workflow_dispatch:
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [16.x]
-    
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -44,6 +44,7 @@ jobs:
           touch .prod.env
           cat << EOF >> .prod.env
           ${{ secrets.ENV }}
+          EOF
 
       - name: zip application
         run: tar -cpvzf ./diary-server.tar.gz *
