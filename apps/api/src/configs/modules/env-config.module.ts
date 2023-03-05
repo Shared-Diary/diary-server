@@ -9,6 +9,8 @@ const validationSchema = Joi.object({
   AWS_ACCESS_KEY_ID: Joi.string().required(),
   AWS_SECRET_ACCESS_KEY: Joi.string().required(),
   AWS_REGION: Joi.string().required(),
+  ACCOUNT_SID: Joi.string().required(),
+  AUTH_TOKEN: Joi.string().required(),
 });
 
 export default ConfigModule.forRoot({

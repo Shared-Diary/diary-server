@@ -3,4 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { SmsService } from '@app/sms';
 
 @Injectable()
-export class SmsServiceImpl implements SmsService {}
+export class SmsServiceImpl implements SmsService {
+  async sendMessage(to: string, message: string): Promise<void> {
+    console.log('send message');
+  }
+}
