@@ -7,6 +7,8 @@ import { ConfigService } from '@nestjs/config';
 export class TwilloConfigProvider {
   private readonly client: TwilioClient;
 
+  private readonly fromPhoneNumber = '+15673688414';
+
   constructor(private readonly configService: ConfigService) {
     this.client = new Twilio(
       this.configService.get<string>('ACCOUNT_SID'),
@@ -16,5 +18,9 @@ export class TwilloConfigProvider {
 
   getClient(): TwilioClient {
     return this.client;
+  }
+
+  getFromNumber() {
+    return this.fromPhoneNumber;
   }
 }
