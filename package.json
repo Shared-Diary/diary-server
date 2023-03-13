@@ -122,7 +122,8 @@
       "^@app/upload-image(|/.*)$": "<rootDir>/libs/upload-image/src/$1",
       "^@app/upload-file(|/.*)$": "<rootDir>/libs/upload-file/src/$1",
       "^@app/sms(|/.*)$": "<rootDir>/libs/sms/src/$1",
-      "^@app/twillo(|/.*)$": "<rootDir>/libs/twillo/src/$1"
+      "^@app/twillo(|/.*)$": "<rootDir>/libs/twillo/src/$1",
+      "^@app/cache(|/.*)$": "<rootDir>/libs/cache/src/$1"
     }
   }
 }
