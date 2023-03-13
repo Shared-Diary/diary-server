@@ -7,8 +7,6 @@ import { FailedToSendMessageException } from '../exception';
 
 @Injectable()
 export class SmsServiceImpl implements SmsService {
-  private readonly fromPhoneNumber = '+15673688414';
-
   constructor(private readonly twilloConfigProvider: TwilloConfigProvider) {}
 
   async sendMessage(to: string, message: string): Promise<void> {
@@ -17,7 +15,7 @@ export class SmsServiceImpl implements SmsService {
 
       await client.messages.create({
         body: message,
-        from: this.fromPhoneNumber,
+        from: this.twilloConfigProvider.getFromNumber(),
         to,
       });
     } catch (error) {

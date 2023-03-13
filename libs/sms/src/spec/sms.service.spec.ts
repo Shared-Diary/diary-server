@@ -18,6 +18,7 @@ describe('SmsService', () => {
         {
           provide: TwilloConfigProvider,
           useFactory: () => ({
+            getFromNumber: jest.fn().mockResolvedValue('+12561582490'),
             getClient: jest.fn(),
           }),
         },
@@ -44,6 +45,7 @@ describe('SmsService', () => {
 
       expect(result).toBeUndefined();
       expect(twilloConfigProvider.getClient).toHaveBeenCalledTimes(1);
+      expect(twilloConfigProvider.getFromNumber).toHaveBeenCalledTimes(1);
     });
   });
 });
