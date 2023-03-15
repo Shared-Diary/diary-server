@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { PasswordEncoderModule } from '@app/password-encoder';
 
 import { SmsModule } from '@app/sms';
+import { CacheModule } from '@app/cache';
 
 import { AuthController } from './controller';
 import { AuthService, AuthServiceImpl } from './service';
@@ -11,7 +12,13 @@ import { TokenModule } from '../token/token.module';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  imports: [UserModule, PasswordEncoderModule, TokenModule, SmsModule],
+  imports: [
+    UserModule,
+    PasswordEncoderModule,
+    TokenModule,
+    SmsModule,
+    CacheModule,
+  ],
   controllers: [AuthController],
   providers: [
     JwtStrategy,

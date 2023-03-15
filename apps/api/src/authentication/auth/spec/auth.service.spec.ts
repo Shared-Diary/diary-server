@@ -4,6 +4,7 @@ import { PasswordEncoderService } from '@app/password-encoder';
 import { Mock } from '@app/shared/type';
 
 import { SmsService } from '@app/sms';
+import { CacheService } from '@app/cache';
 import { AuthService, AuthServiceImpl } from '../service';
 import { AuthController } from '../controller';
 import { UserService } from '../../../user/service';
@@ -37,6 +38,8 @@ describe('Auth Service', () => {
 
   const mockSmsService = () => ({});
 
+  const mockCacheService = () => ({});
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ThrottlerModule],
@@ -65,6 +68,10 @@ describe('Auth Service', () => {
         {
           provide: SmsService,
           useFactory: mockSmsService,
+        },
+        {
+          provide: CacheService,
+          useFactory: mockCacheService,
         },
       ],
     }).compile();

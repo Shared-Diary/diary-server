@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PasswordEncoderService } from '@app/password-encoder';
 
 import { SmsService } from '@app/sms';
+import { CacheService } from '@app/cache';
 
 import { AuthService } from './auth.service';
 import {
@@ -22,6 +23,7 @@ export class AuthServiceImpl implements AuthService {
     private readonly passwordEncoderService: PasswordEncoderService,
     private readonly accessTokenService: AccessTokenService,
     private readonly smsService: SmsService,
+    private readonly cacheService: CacheService,
   ) {}
 
   async register({ email, password }: RegisterRequestDto): Promise<void> {
@@ -66,6 +68,12 @@ export class AuthServiceImpl implements AuthService {
     await this.smsService.sendMessage(
       recipientNo,
       `[${randomCode}] Diary Service 에서 전송한 인증번호입니다`,
+    );
+
+    await this.cacheService.set<number>(
+      `sms:auth:${recipientNo}`,
+      randomCode,
+      300,
     );
   }
 
