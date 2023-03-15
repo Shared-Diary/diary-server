@@ -19,6 +19,8 @@ describe('Auth Service', () => {
   let userService: Mock<UserService>;
   let passwordEncoderService: Mock<PasswordEncoderService>;
   let accessTokenService: Mock<AccessTokenService>;
+  let smsService: Mock<SmsService>;
+  let cacheService: Mock<CacheService>;
 
   const mockUserService = () => ({
     createUser: jest.fn(),
@@ -36,9 +38,13 @@ describe('Auth Service', () => {
 
   const mockJwtStrategy = () => ({});
 
-  const mockSmsService = () => ({});
+  const mockSmsService = () => ({
+    sendMessage: jest.fn(),
+  });
 
-  const mockCacheService = () => ({});
+  const mockCacheService = () => ({
+    set: jest.fn(),
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -80,6 +86,8 @@ describe('Auth Service', () => {
     userService = await module.get(UserService);
     passwordEncoderService = await module.get(PasswordEncoderService);
     accessTokenService = await module.get(AccessTokenService);
+    smsService = await module.get(SmsService);
+    cacheService = await module.get(CacheService);
   });
 
   describe('register', () => {
@@ -128,5 +136,15 @@ describe('Auth Service', () => {
     });
   });
 
-  describe('sendAuthSms', () => {});
+  describe('sendAuthSms', () => {
+    it('Sms 인증 메시지 전송 성공', async () => {
+      const result = await authService.sendAuthSms({
+        recipientNo: '+821012345678',
+      });
+
+      expect(result).toBeUndefined();
+      expect(smsService.sendMessage).toHaveBeenCalledTimes(1);
+      expect(cacheService.set).toHaveBeenCalledTimes(1);
+    });
+  });
 });
