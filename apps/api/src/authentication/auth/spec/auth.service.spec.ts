@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordEncoderService } from '@app/password-encoder';
 import { Mock } from '@app/shared/type';
 
+import { SmsService } from '@app/sms';
 import { AuthService, AuthServiceImpl } from '../service';
 import { AuthController } from '../controller';
 import { UserService } from '../../../user/service';
@@ -34,6 +35,8 @@ describe('Auth Service', () => {
 
   const mockJwtStrategy = () => ({});
 
+  const mockSmsService = () => ({});
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ThrottlerModule],
@@ -58,6 +61,10 @@ describe('Auth Service', () => {
         {
           provide: JwtStrategy,
           useFactory: mockJwtStrategy,
+        },
+        {
+          provide: SmsService,
+          useFactory: mockSmsService,
         },
       ],
     }).compile();
@@ -113,4 +120,6 @@ describe('Auth Service', () => {
       expect(accessTokenService.generateAccessToken).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('sendAuthSms', () => {});
 });

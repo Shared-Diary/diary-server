@@ -4,8 +4,13 @@ import {
   AuthController as Controller,
   Register,
   LoginUser,
+  SendSms,
 } from './auth.controller.decorator';
-import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
+import {
+  LoginUserRequestDto,
+  RegisterRequestDto,
+  SendSmsRequestDto,
+} from '../dto/requests';
 import { AuthService } from '../service';
 import { LoginUserResponseDto } from '../dto/responses';
 
@@ -27,5 +32,12 @@ export class AuthController {
     const userTokens = await this.authService.loginUser(loginUserRequestDto);
 
     return new LoginUserResponseDto(userTokens);
+  }
+
+  @SendSms()
+  async sendSms(@Body() sendSmsRequestDto: SendSmsRequestDto): Promise<null> {
+    await this.authService.sendAuthSms(sendSmsRequestDto);
+
+    return null;
   }
 }
