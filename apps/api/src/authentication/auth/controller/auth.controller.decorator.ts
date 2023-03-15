@@ -29,3 +29,15 @@ export const LoginUser = () =>
       summary: '로그인 API',
     }),
   );
+
+export const SendSms = () =>
+  applyDecorators(
+    Post('/sms/'),
+    Throttler(),
+    ApiOperation({
+      summary: 'Sms 전송 API',
+    }),
+    ApiCreatedResponse({
+      schema: {},
+    }),
+  );

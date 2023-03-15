@@ -2,8 +2,15 @@ import { Injectable } from '@nestjs/common';
 
 import { PasswordEncoderService } from '@app/password-encoder';
 
+import { SmsService } from '@app/sms';
+import { CacheService } from '@app/cache';
+
 import { AuthService } from './auth.service';
-import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
+import {
+  LoginUserRequestDto,
+  RegisterRequestDto,
+  SendSmsRequestDto,
+} from '../dto/requests';
 import { UserService } from '../../../user/service';
 import { PasswordMismatchException } from '../exception';
 import { AccessTokenService } from '../../token/service';
@@ -15,6 +22,8 @@ export class AuthServiceImpl implements AuthService {
     private readonly userService: UserService,
     private readonly passwordEncoderService: PasswordEncoderService,
     private readonly accessTokenService: AccessTokenService,
+    private readonly smsService: SmsService,
+    private readonly cacheService: CacheService,
   ) {}
 
   async register({ email, password }: RegisterRequestDto): Promise<void> {
@@ -52,5 +61,23 @@ export class AuthServiceImpl implements AuthService {
       }),
       refreshToken: '',
     };
+  }
+
+  async sendAuthSms({ recipientNo }: SendSmsRequestDto): Promise<void> {
+    const randomCode = this.generateRandomCode();
+    await this.smsService.sendMessage(
+      recipientNo,
+      `[${randomCode}] Diary Service 에서 전송한 인증번호입니다`,
+    );
+
+    await this.cacheService.set<number>(
+      `sms:auth:${recipientNo}`,
+      randomCode,
+      300,
+    );
+  }
+
+  private generateRandomCode() {
+    return Math.floor(100000 + Math.random() * 900000);
   }
 }

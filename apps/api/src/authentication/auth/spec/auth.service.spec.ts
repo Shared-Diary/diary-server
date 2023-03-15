@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordEncoderService } from '@app/password-encoder';
 import { Mock } from '@app/shared/type';
 
+import { SmsService } from '@app/sms';
+import { CacheService } from '@app/cache';
 import { AuthService, AuthServiceImpl } from '../service';
 import { AuthController } from '../controller';
 import { UserService } from '../../../user/service';
@@ -17,6 +19,8 @@ describe('Auth Service', () => {
   let userService: Mock<UserService>;
   let passwordEncoderService: Mock<PasswordEncoderService>;
   let accessTokenService: Mock<AccessTokenService>;
+  let smsService: Mock<SmsService>;
+  let cacheService: Mock<CacheService>;
 
   const mockUserService = () => ({
     createUser: jest.fn(),
@@ -33,6 +37,14 @@ describe('Auth Service', () => {
   });
 
   const mockJwtStrategy = () => ({});
+
+  const mockSmsService = () => ({
+    sendMessage: jest.fn(),
+  });
+
+  const mockCacheService = () => ({
+    set: jest.fn(),
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -59,6 +71,14 @@ describe('Auth Service', () => {
           provide: JwtStrategy,
           useFactory: mockJwtStrategy,
         },
+        {
+          provide: SmsService,
+          useFactory: mockSmsService,
+        },
+        {
+          provide: CacheService,
+          useFactory: mockCacheService,
+        },
       ],
     }).compile();
 
@@ -66,6 +86,8 @@ describe('Auth Service', () => {
     userService = await module.get(UserService);
     passwordEncoderService = await module.get(PasswordEncoderService);
     accessTokenService = await module.get(AccessTokenService);
+    smsService = await module.get(SmsService);
+    cacheService = await module.get(CacheService);
   });
 
   describe('register', () => {
@@ -111,6 +133,18 @@ describe('Auth Service', () => {
       expect(userService.findUserByEmail).toHaveBeenCalledTimes(1);
       expect(passwordEncoderService.isMatches).toHaveBeenCalledTimes(1);
       expect(accessTokenService.generateAccessToken).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('sendAuthSms', () => {
+    it('Sms 인증 메시지 전송 성공', async () => {
+      const result = await authService.sendAuthSms({
+        recipientNo: '+821012345678',
+      });
+
+      expect(result).toBeUndefined();
+      expect(smsService.sendMessage).toHaveBeenCalledTimes(1);
+      expect(cacheService.set).toHaveBeenCalledTimes(1);
     });
   });
 });
