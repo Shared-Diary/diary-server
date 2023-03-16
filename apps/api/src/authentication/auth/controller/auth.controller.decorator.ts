@@ -41,3 +41,12 @@ export const SendSms = () =>
       schema: {},
     }),
   );
+
+export const VerifySmsCode = () =>
+  applyDecorators(
+    Post('/sms/verification'),
+    Throttler(),
+    ApiOperation({
+      summary: 'Sms Code 인증',
+    }),
+  );
