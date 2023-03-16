@@ -1,5 +1,5 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { Cache } from 'cache-manager';
+import { Cache, CachingConfig } from 'cache-manager';
 
 @Injectable()
 export class CacheService {
@@ -9,8 +9,8 @@ export class CacheService {
     return this.cache.get<T>(key);
   }
 
-  set<T>(key: string, value: T, ttl?: number) {
-    return this.cache.set(key, value, ttl);
+  async set<T>(key: string, value: T, options?: CachingConfig) {
+    await this.cache.set(key, value, options);
   }
 
   async delete(key: string) {

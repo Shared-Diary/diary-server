@@ -47,6 +47,8 @@ export class AuthController {
   async verifySmsCode(
     @Body() verifySmsCodeRequestDto: VerifySmsCodeRequestDto,
   ): Promise<null> {
+    await this.authService.verifySmsCode(verifySmsCodeRequestDto);
+
     return null;
   }
 }

@@ -49,4 +49,7 @@ export const VerifySmsCode = () =>
     ApiOperation({
       summary: 'Sms Code 인증',
     }),
+    ApiCreatedResponse({
+      schema: {},
+    }),
   );

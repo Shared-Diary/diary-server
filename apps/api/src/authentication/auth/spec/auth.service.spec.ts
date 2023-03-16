@@ -95,6 +95,7 @@ describe('Auth Service', () => {
       const dto: RegisterRequestDto = {
         email: 'test@test.com',
         password: 'testpassword!@',
+        phone: '+821012345678',
       };
       const result = await authService.register(dto);
 
