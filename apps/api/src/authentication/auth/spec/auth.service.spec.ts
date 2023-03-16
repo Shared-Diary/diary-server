@@ -10,7 +10,10 @@ import { AuthController } from '../controller';
 import { UserService } from '../../../user/service';
 import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
 import { AccessTokenService } from '../../token/service';
-import { PasswordMismatchException } from '../exception';
+import {
+  PasswordMismatchException,
+  VerificationCodeMismatchException,
+} from '../exception';
 import { JwtStrategy } from '../strategy/jwt.strategy';
 import ThrottlerModule from '../../../configs/modules/throttler.module';
 
@@ -44,6 +47,7 @@ describe('Auth Service', () => {
 
   const mockCacheService = () => ({
     set: jest.fn(),
+    get: jest.fn(),
   });
 
   beforeEach(async () => {
@@ -95,6 +99,7 @@ describe('Auth Service', () => {
       const dto: RegisterRequestDto = {
         email: 'test@test.com',
         password: 'testpassword!@',
+        phone: '+821012345678',
       };
       const result = await authService.register(dto);
 
@@ -145,6 +150,43 @@ describe('Auth Service', () => {
       expect(result).toBeUndefined();
       expect(smsService.sendMessage).toHaveBeenCalledTimes(1);
       expect(cacheService.set).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('verifySmsCode', () => {
+    it('Sms Code 인증 성공', async () => {
+      cacheService.get.mockResolvedValue(123456);
+
+      const result = await authService.verifySmsCode({
+        recipientNo: '+821012345678',
+        code: 123456,
+      });
+
+      expect(result).toBeUndefined();
+      expect(cacheService.get).toHaveBeenCalledTimes(1);
+      expect(cacheService.set).toHaveBeenCalledTimes(1);
+    });
+
+    it('Cache 의 Code 와 Request 받은 Code 가 다를 경우 예외처리 한다', async () => {
+      cacheService.get.mockResolvedValue(123456);
+
+      await expect(async () => {
+        await authService.verifySmsCode({
+          recipientNo: '+821012345678',
+          code: 654321,
+        });
+      }).rejects.toThrow(new VerificationCodeMismatchException());
+    });
+
+    it('Cache 의 Code 값이 없을 경우 예외처리 한다', async () => {
+      cacheService.get.mockResolvedValue(undefined);
+
+      await expect(async () => {
+        await authService.verifySmsCode({
+          recipientNo: '+821012345678',
+          code: 654321,
+        });
+      }).rejects.toThrow(new VerificationCodeMismatchException());
     });
   });
 });

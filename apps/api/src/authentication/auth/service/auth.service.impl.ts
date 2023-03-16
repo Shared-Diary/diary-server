@@ -10,9 +10,13 @@ import {
   LoginUserRequestDto,
   RegisterRequestDto,
   SendSmsRequestDto,
+  VerifySmsCodeRequestDto,
 } from '../dto/requests';
 import { UserService } from '../../../user/service';
-import { PasswordMismatchException } from '../exception';
+import {
+  PasswordMismatchException,
+  VerificationCodeMismatchException,
+} from '../exception';
 import { AccessTokenService } from '../../token/service';
 import { GetUserTokens } from '../type';
 
@@ -70,14 +74,32 @@ export class AuthServiceImpl implements AuthService {
       `[${randomCode}] Diary Service 에서 전송한 인증번호입니다`,
     );
 
-    await this.cacheService.set<number>(
-      `sms:auth:${recipientNo}`,
-      randomCode,
-      300,
-    );
+    await this.cacheService.set<number>(`sms:auth:${recipientNo}`, randomCode, {
+      ttl: 180,
+    });
   }
 
   private generateRandomCode() {
     return Math.floor(100000 + Math.random() * 900000);
+  }
+
+  async verifySmsCode({
+    recipientNo,
+    code,
+  }: VerifySmsCodeRequestDto): Promise<void> {
+    const smsCode = await this.cacheService.get<number>(
+      `sms:auth:${recipientNo}`,
+    );
+    if (!smsCode || code !== smsCode) {
+      throw new VerificationCodeMismatchException();
+    }
+
+    await this.setRegisterIsPossible(recipientNo);
+  }
+
+  private async setRegisterIsPossible(recipientNo: string): Promise<void> {
+    await this.cacheService.set<string>(`register:auth:${recipientNo}`, 'ok', {
+      ttl: 300,
+    });
   }
 }

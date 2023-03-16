@@ -5,11 +5,13 @@ import {
   Register,
   LoginUser,
   SendSms,
+  VerifySmsCode,
 } from './auth.controller.decorator';
 import {
   LoginUserRequestDto,
   RegisterRequestDto,
   SendSmsRequestDto,
+  VerifySmsCodeRequestDto,
 } from '../dto/requests';
 import { AuthService } from '../service';
 import { LoginUserResponseDto } from '../dto/responses';
@@ -37,6 +39,15 @@ export class AuthController {
   @SendSms()
   async sendSms(@Body() sendSmsRequestDto: SendSmsRequestDto): Promise<null> {
     await this.authService.sendAuthSms(sendSmsRequestDto);
+
+    return null;
+  }
+
+  @VerifySmsCode()
+  async verifySmsCode(
+    @Body() verifySmsCodeRequestDto: VerifySmsCodeRequestDto,
+  ): Promise<null> {
+    await this.authService.verifySmsCode(verifySmsCodeRequestDto);
 
     return null;
   }
