@@ -14,6 +14,7 @@ import {
 } from '../dto/requests';
 import { UserService } from '../../../user/service';
 import {
+  NoSmsAuthenticationException,
   PasswordMismatchException,
   VerificationCodeMismatchException,
 } from '../exception';
@@ -30,14 +31,27 @@ export class AuthServiceImpl implements AuthService {
     private readonly cacheService: CacheService,
   ) {}
 
-  async register({ email, password }: RegisterRequestDto): Promise<void> {
+  async register({
+    email,
+    password,
+    phone,
+  }: RegisterRequestDto): Promise<void> {
+    await this.validateSmsAuth(phone);
+
     await this.userService.createUser({
       email,
       password: await this.passwordEncoderService.encode(password),
     });
   }
 
-  private async validatePasswordMatch(
+  private async validateSmsAuth(phone: string) {
+    const isOk = await this.cacheService.get<string>(`register:auth:${phone}`);
+    if (!isOk || isOk !== 'ok') {
+      throw new NoSmsAuthenticationException();
+    }
+  }
+
+  private async validatePassword(
     password: string,
     hashedPassword: string,
   ): Promise<void> {
@@ -57,7 +71,7 @@ export class AuthServiceImpl implements AuthService {
     const { id: userId, password: hashedPassword } =
       await this.userService.findUserByEmail(email);
 
-    await this.validatePasswordMatch(password, hashedPassword);
+    await this.validatePassword(password, hashedPassword);
 
     return {
       accessToken: this.accessTokenService.generateAccessToken({
