@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { Regex } from '@app/regex';
 
@@ -7,6 +8,7 @@ export class RegisterRequestDto {
   @IsEmail()
   readonly email: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @Matches(Regex.PASSWORD, {

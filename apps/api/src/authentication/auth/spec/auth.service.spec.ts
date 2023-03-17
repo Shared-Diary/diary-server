@@ -11,6 +11,7 @@ import { UserService } from '../../../user/service';
 import { LoginUserRequestDto, RegisterRequestDto } from '../dto/requests';
 import { AccessTokenService } from '../../token/service';
 import {
+  NoSmsAuthenticationException,
   PasswordMismatchException,
   VerificationCodeMismatchException,
 } from '../exception';
@@ -96,6 +97,7 @@ describe('Auth Service', () => {
 
   describe('register', () => {
     it('회원가입 성공', async () => {
+      cacheService.get.mockResolvedValue('ok');
       const dto: RegisterRequestDto = {
         email: 'test@test.com',
         password: 'testpassword!@',
@@ -106,6 +108,32 @@ describe('Auth Service', () => {
       expect(passwordEncoderService.encode).toHaveBeenCalledTimes(1);
       expect(userService.createUser).toHaveBeenCalledTimes(1);
       expect(result).toBeUndefined();
+    });
+
+    it('sms 인증이 만료된 유저는 예외처리를 한다', async () => {
+      cacheService.get.mockResolvedValue(undefined);
+      const dto: RegisterRequestDto = {
+        email: 'test@test.com',
+        password: 'testpassword!@',
+        phone: '+821012345678',
+      };
+
+      await expect(async () => {
+        await authService.register(dto);
+      }).rejects.toThrow(new NoSmsAuthenticationException());
+    });
+
+    it('cache 에 저장된 값이 ok 라는 값이 아니라면 예외처리를 한다', async () => {
+      cacheService.get.mockResolvedValue('not ok');
+      const dto: RegisterRequestDto = {
+        email: 'test@test.com',
+        password: 'testpassword!@',
+        phone: '+821012345678',
+      };
+
+      await expect(async () => {
+        await authService.register(dto);
+      }).rejects.toThrow(new NoSmsAuthenticationException());
     });
   });
 
