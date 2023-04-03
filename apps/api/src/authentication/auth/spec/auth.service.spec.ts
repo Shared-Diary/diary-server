@@ -49,6 +49,7 @@ describe('Auth Service', () => {
   const mockCacheService = () => ({
     set: jest.fn(),
     get: jest.fn(),
+    delete: jest.fn(),
   });
 
   beforeEach(async () => {
@@ -107,6 +108,8 @@ describe('Auth Service', () => {
 
       expect(passwordEncoderService.encode).toHaveBeenCalledTimes(1);
       expect(userService.createUser).toHaveBeenCalledTimes(1);
+      expect(cacheService.get).toHaveBeenCalledTimes(1);
+      expect(cacheService.delete).toHaveBeenCalledTimes(1);
       expect(result).toBeUndefined();
     });
 
@@ -193,6 +196,7 @@ describe('Auth Service', () => {
       expect(result).toBeUndefined();
       expect(cacheService.get).toHaveBeenCalledTimes(1);
       expect(cacheService.set).toHaveBeenCalledTimes(1);
+      expect(cacheService.delete).toHaveBeenCalledTimes(1);
     });
 
     it('Cache 의 Code 와 Request 받은 Code 가 다를 경우 예외처리 한다', async () => {

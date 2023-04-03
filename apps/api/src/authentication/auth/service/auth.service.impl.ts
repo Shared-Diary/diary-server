@@ -49,6 +49,7 @@ export class AuthServiceImpl implements AuthService {
     if (!isOk || isOk !== 'ok') {
       throw new NoSmsAuthenticationException();
     }
+    await this.cacheService.delete(`register:auth:${phone}`);
   }
 
   private async validatePassword(
@@ -107,6 +108,7 @@ export class AuthServiceImpl implements AuthService {
     if (!smsCode || code !== smsCode) {
       throw new VerificationCodeMismatchException();
     }
+    await this.cacheService.delete(`sms:auth:${recipientNo}`);
 
     await this.setRegisterIsPossible(recipientNo);
   }
